@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lato, sans-serif'
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav-link {
+      @apply mx-2 p-2 mb-1 hover:bg-blackhover rounded-md
+      focus:outline-none focus:ring focus:ring-activeblue
+      lg:text-lg lg:font-semibold lg:ml-3 tracking-wide
+  }
+}
