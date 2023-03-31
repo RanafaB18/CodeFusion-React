@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 const Footer = () => {
     return (
         <footer className="mt-auto">
@@ -14,7 +15,6 @@ const Footer = () => {
             <div className="relative bg-blackish ">
                 <div className="absolute z-10 w-14 right-0 left-0 mx-auto -top-7 ">
                     <div className=" bg-blackish rounded-full p-3">
-
                         <img className="h-auto" src={"/svg-export/logo2.svg"} height={30} width={35} alt="" />
                     </div>
                 </div>
@@ -22,17 +22,17 @@ const Footer = () => {
                     <div className="py-16 flex flex-col items-center md:flex-row md:items-stretch">
                         <div className="mt-12 flex flex-col items-center w-full">
                             <p className="text-white pb-3 font-semibold uppercase">General</p>
-                            <a className="nav-a w-3/4 text-center text-gray-400" href='/'>Home</a>
-                            <a className="nav-a w-3/4 text-center text-gray-400" href='/contact'>Contact</a>
+                            <Link className="nav-link w-3/4 text-center text-gray-400" to={'/'}>Home</Link>
+                            <Link className="nav-link w-3/4 text-center text-gray-400" to={'/contact'}>Contact</Link>
                         </div>
                         <div className="mt-12 flex flex-col items-center w-full">
                             <p className="text-white pb-3 font-semibold uppercase">Product</p>
-                            <a className="nav-a w-3/4 text-center text-gray-400" href='/'>Features</a>
+                            <a className="nav-link w-3/4 text-center text-gray-400" href='#features'>Features</a>
                         </div>
                         <div className="mt-12 flex flex-col items-center w-full">
                             <p className="text-white pb-3 font-semibold uppercase">Legal</p>
-                            <a className="nav-a w-3/4 text-center text-gray-400" href='/'>Terms of Use</a>
-                            <a className="nav-a w-3/4 text-center text-gray-400" href='/'>Privacy Policy</a>
+                            <Link className="nav-link w-3/4 text-center text-gray-400" href='/'>Terms of Use</Link>
+                            <Link className="nav-link w-3/4 text-center text-gray-400" href='/'>Privacy Policy</Link>
                         </div>
                     </div>
                 </div>
