@@ -5,6 +5,7 @@ import Features from "./components/Features";
 import Layout from "./components/Layout";
 import axiosUtil from "./services";
 import { io } from "socket.io-client";
+import Button from "./components/Button";
 
 
 export async function action({ request, params }) {
@@ -76,13 +77,7 @@ export default function Home() {
                       onChange={(event) => setRoom(event.target.value)}
                     />
 
-                    <button
-                      className="bg-bluish text-white text-lg
-                font-semibold py-3 mt-2 rounded-md hover:bg-blue-500"
-                      type="submit"
-                    >
-                      Get A Room →
-                    </button>
+                    <Button text={"Get A Room →"} />
                   </Form>
                 </div>
               </div>
