@@ -14,6 +14,7 @@ const io = new Server(server, {
 app.use(express.json())
 
 app.use(cors())
+
 console.log("roomLinks", roomLinks)
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
@@ -21,11 +22,6 @@ io.on('connection', (socket) => {
     socket.on("join_room", (room) => {
         console.log(room, "made")
         socket.join(room)
-    })
-
-    socket.on("send_message", (data) => {
-        console.log(data.room)
-        socket.to(data.room).emit("receive_message", data)
     })
 })
 
