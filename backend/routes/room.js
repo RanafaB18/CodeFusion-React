@@ -2,6 +2,7 @@ const shortUUID = require('short-uuid')
 
 const roomRouter = require('express').Router()
 const roomLinks = []
+const Rooms = {}
 
 roomRouter.post('/', async (request, response) => {
     const body = request.body
@@ -18,4 +19,4 @@ roomRouter.get('/allRooms', (request, response) => {
     response.json({ rooms: roomLinks})
 })
 
-module.exports = { roomRouter, roomLinks }
+module.exports = { roomRouter, roomLinks, Rooms }

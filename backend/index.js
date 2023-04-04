@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const {roomRouter, roomLinks} = require('./routes/room')
+const { roomRouter, roomLinks, Rooms } = require('./routes/room')
 const http = require('http')
 const server = http.createServer(app)
 const cors = require('cors')
@@ -22,7 +22,20 @@ io.on('connection', (socket) => {
     socket.on("join_room", (room) => {
         console.log(room, "made")
         socket.join(room)
+        console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
     })
+    socket.on("user_joined", (obj) => {
+        if (!Rooms[obj.room]) {
+            Rooms[obj.room] = [obj.username]
+        } else {
+            Rooms[obj.room].push(obj.username)
+        }
+        console.log("New user: ", Rooms)
+        io.sockets.emit("all_users", Rooms)
+    })
+
+
+
 })
 
 app.use('/room', roomRouter)
