@@ -17,12 +17,6 @@ export async function action({ request, params }) {
 export const socket = io("http://localhost:3004");
 export default function Home() {
   const [room, setRoom] = useState("");
-
-  useEffect(() => {
-    socket.on("connection", (data) => {
-      console.log("Data", data)
-    })
-  })
   return (
     <HelmetProvider>
       <Layout>

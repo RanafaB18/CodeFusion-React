@@ -4,7 +4,8 @@ import Home, { action as joinAction } from "./index";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Contact from "./routes/contact";
-import JoinRoom, { loader as roomLoader } from "./routes/go";
+import JoinRoom from "./routes/go";
+import  { loader as roomLoader } from './components/JoinForm'
 
 const router = createBrowserRouter([
     {

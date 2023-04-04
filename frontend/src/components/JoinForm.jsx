@@ -1,12 +1,23 @@
 import { useState } from "react";
-const JoinForm = ({ userRoomName, setUserRoomName, setCreatedUsername }) => {
+import axiosUtil from '../services'
+import { socket } from "..";
+export async function loader({ params }) {
+  console.log("Params", params)
+  // const data = await axiosUtil.getAllRooms();
+  socket.emit("join_room", params.id);
+  // console.log(data.rooms);
+  // console.log(data.rooms.find((link) => link === params.id))
+  return params.id
+}
+const JoinForm = ({ room, userRoomName, setUserRoomName, setCreatedUsername }) => {
   const handleSubmit = () => {
+    socket.emit("user_joined", {username: userRoomName, room: room})
     setCreatedUsername(true);
   };
   return (
     <div className="pt-20">
       <div className="bg-white p-8 max-w-xs mx-auto rounded-md">
-        <form className="" onSubmit={handleSubmit}>
+        <form className="" onSubmit={handleSubmit} method="post">
           <p className="mb-6 text-center text-lg">
             Enter your name to join the room.
           </p>
@@ -16,6 +27,7 @@ const JoinForm = ({ userRoomName, setUserRoomName, setCreatedUsername }) => {
             placeholder="Your name"
             value={userRoomName}
             onChange={(event) => setUserRoomName(event.target.value)}
+            required
           />
           <button
             className="bg-bluish text-white text-lg
