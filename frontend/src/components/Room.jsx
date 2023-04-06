@@ -61,7 +61,7 @@ const Room = ({ room, username }) => {
   };
   return (
     <div>
-      <Bar invite={invite} username={username}/>
+      <Bar participants={participants} invite={invite} username={username}/>
       <div className="max-w-xs py-12 mx-auto">
         <Options />
       </div>
@@ -74,9 +74,6 @@ const Room = ({ room, username }) => {
         showOnClick={showOnClick}
       />
       <AnimatedModal showClipOnClick={showClipOnClick} />
-      {/* <div>
-        {participants.map((peep, index) => <div className="text-white text-xl" key={index}>{peep}</div>)}
-      </div> */}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { FaBars, FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import SideModal from "./SideModal";
 
-const Bar = ({ invite, username }) => {
+const Bar = ({ participants, invite, username }) => {
   const [showModal, setShowModal] = useState(false);
   const showSideModal = {
     display: showModal ? "" : "none",
@@ -49,7 +49,7 @@ const Bar = ({ invite, username }) => {
         </div>
       </div>
       {/* <Editors room={room} /> */}
-      <SideModal showSideModal={showSideModal} closeSideModal={closeSideModal} />
+      <SideModal participants={participants} showSideModal={showSideModal} closeSideModal={closeSideModal} />
     </div>
   );
 };
