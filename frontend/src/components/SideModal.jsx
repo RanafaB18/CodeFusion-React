@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Person from "./Person";
 
-const SideModal = ({participants, showSideModal, closeSideModal }) => {
+const SideModal = ({ participants, showSideModal, closeSideModal }) => {
   const chatRef = useRef(null);
   const peopleRef = useRef(null);
 
@@ -19,7 +19,7 @@ const SideModal = ({participants, showSideModal, closeSideModal }) => {
       className="absolute w-1/4 top-full
       right-0"
     >
-      <div className="border h-screen text-center pt-2">
+      <div className="border h-screen text-center pt-4">
         {/* <div className="flex justify-center p-2
         "> */}
         {/* <button ref={chatRef} onClick={chatClick} id="chat"
@@ -44,7 +44,7 @@ const SideModal = ({participants, showSideModal, closeSideModal }) => {
             <AiOutlineClose size={"21px"} color="white" />
           </button> */}
         {/* </div> */}
-        <button
+        {/* <button
           id="chat"
           type="button"
           className="peer/chat text-center px-4 py-2
@@ -73,13 +73,49 @@ const SideModal = ({participants, showSideModal, closeSideModal }) => {
             size={"21px"}
             color="white"
           />
-        </button>
+        </button> */}
+        <input
+          id="chat"
+          className="peer/chat hidden"
+          type="radio"
+          name="status"
+          defaultChecked
+        />
+        <label htmlFor="chat" className="cursor-pointer px-4 py-2
+            bg-white bg-opacity-5 rounded-tl-xl
+            rounded-bl-xl text-white peer-checked/chat:bg-white
+            peer-checked/chat:bg-opacity-50">
+          Chat
+        </label>
 
-        <div className="p-3 bg-white hidden peer-focus/chat:block"></div>
-        <div className="hidden peer-focus/people:block">
+        <input
+          id="people"
+          className="peer/people hidden"
+          type="radio"
+          name="status"
+        />
+        <label htmlFor="people" className="cursor-pointer px-4 py-2
+            bg-white bg-opacity-5 rounded-tr-xl
+            rounded-br-xl text-white peer-checked/people:bg-white peer-checked/people:bg-opacity-50">
+          People
+        </label>
+        <button
+          className="float-right my-1 mx-3 "
+          onClick={closeSideModal}
+        >
+          <AiOutlineClose
+            className="hover:fill-red-400"
+            size={"21px"}
+            color="white"
+          />
+        </button>
+        <hr className="my-4 opacity-25
+        "></hr>
+        <div className="p-3 bg-white hidden peer-checked/chat:block"></div>
+        <div className="hidden peer-checked/people:block">
           <div>
             {participants.map((peep, index) => (
-              <Person key={index} name={peep}/>
+              <Person key={index} name={peep} />
             ))}
           </div>
         </div>
