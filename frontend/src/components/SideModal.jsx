@@ -79,7 +79,7 @@ const SideModal = ({participants, showSideModal, closeSideModal }) => {
         <div className="hidden peer-focus/people:block">
           <div>
             {participants.map((peep, index) => (
-              <Person name={peep}/>
+              <Person key={index} name={peep}/>
             ))}
           </div>
         </div>

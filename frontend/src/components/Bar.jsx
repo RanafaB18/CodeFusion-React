@@ -26,7 +26,7 @@ const Bar = ({ participants, invite, username }) => {
       </div>
       <div className="flex justify-between bg-blackhover p-2 w-full">
         <div role="tabs"></div>
-        <div className="flex justify-around  w-1/3">
+        <div className="flex justify-evenly  w-1/5">
           <button
             className="bg-bluish
                 text-white text-md
