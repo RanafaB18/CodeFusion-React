@@ -21,7 +21,11 @@ import Room from "../components/Room";
 const JoinRoom = () => {
   const [createdUserName, setCreatedUsername] = useState(false);
   const [userRoomName, setUserRoomName] = useState("");
+  const [session, setSession] = useState(null)
 
+  useEffect(() => {
+    setSession(sessionStorage.getItem("user_room_name"))
+  })
   const room  = useLoaderData();
   return (
     <HelmetProvider>
@@ -31,10 +35,10 @@ const JoinRoom = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet>
       <div className="bg-blackish h-screen">
-        {!createdUserName ? (
+        {(!createdUserName && !session) ? (
           <JoinForm room={room} userRoomName={userRoomName} setUserRoomName={setUserRoomName} setCreatedUsername={setCreatedUsername}/>
         ) : (
-          <Room room={room} username={userRoomName} />
+          <Room room={room} username={userRoomName || session} />
         )}
       </div>
     </HelmetProvider>

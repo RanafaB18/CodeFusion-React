@@ -13,6 +13,7 @@ const Bar = ({ participants, invite, username }) => {
   const showParticipants = () => {
     setShowModal(!showModal)
   }
+  console.log("Bar...", username)
   return (
     <div className="flex flex-col relative w-full">
       <div className="text-white flex">

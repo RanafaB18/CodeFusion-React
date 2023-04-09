@@ -13,6 +13,7 @@ const JoinForm = ({ room, userRoomName, setUserRoomName, setCreatedUsername }) =
   const handleSubmit = () => {
     socket.emit("user_joined", {username: userRoomName, room: room})
     setCreatedUsername(true);
+    sessionStorage.setItem("user_room_name", userRoomName)
   };
   return (
     <div className="pt-20">

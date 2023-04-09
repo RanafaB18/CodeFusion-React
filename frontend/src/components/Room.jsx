@@ -4,6 +4,7 @@ import AnimatedModal from "./AnimatedModal";
 import Modal from "./Modal";
 import Bar from "./Bar";
 import { socket } from "..";
+import axiosUtil from '../services'
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -17,12 +18,26 @@ const Room = ({ room, username }) => {
   const showClipOnClick = {
     display: showClipBoardModal ? "" : "none",
   };
+  // useEffect(() => {
+  //   setRoomLink(window.location.href);
+  //   console.log("Peeps", participants)
+  //   socket.on('all_users', (users) => {
+  //     setParticipants(users[room])
+  //   })
+  // }, []);
   useEffect(() => {
     setRoomLink(window.location.href);
-    console.log("Peeps", participants)
-    socket.on('all_users', (users) => {
-      setParticipants(users[room])
-    })
+
+    async function fetchUsers() {
+      const usersInRoom = await axiosUtil.getUsers(room);
+      return usersInRoom;
+    }
+
+    fetchUsers().then(() => {
+      socket.on('all_users', (users) => {
+            setParticipants(users.rooms[room])
+      })
+    });
   }, []);
   const inviteModalRef = useRef(null);
   const closeButtonRef = useRef(null);
