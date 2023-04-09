@@ -31,7 +31,6 @@ io.on('connection', (socket) => {
             Rooms[obj.room].push(obj.username)
         }
         console.log("New user: ", Rooms)
-        io.sockets.emit("all_users", Rooms)
     })
 
 
@@ -39,7 +38,12 @@ io.on('connection', (socket) => {
 })
 
 app.use('/room', roomRouter)
-
+app.get('/:id/users', (req, res) => {
+    console.log("ID", req.params.id)
+    console.log("Rooms", Rooms)
+    io.sockets.emit("all_users", {rooms: Rooms})
+    return res.end()
+})
 
 const PORT = process.env.PORT
 server.listen(PORT, () => {

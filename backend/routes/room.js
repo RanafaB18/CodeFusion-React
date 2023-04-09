@@ -19,4 +19,6 @@ roomRouter.get('/allRooms', (request, response) => {
     response.json({ rooms: roomLinks})
 })
 
+
+
 module.exports = { roomRouter, roomLinks, Rooms }
