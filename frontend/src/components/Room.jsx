@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import Bar from "./Bar";
 import { socket } from "..";
 import axiosUtil from '../services'
+import BottomNavigationBar from "./BottomNavigationBar";
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -89,6 +90,7 @@ const Room = ({ room, username }) => {
         showOnClick={showOnClick}
       />
       <AnimatedModal showClipOnClick={showClipOnClick} />
+      <BottomNavigationBar />
     </div>
   );
 };

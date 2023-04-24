@@ -34,7 +34,7 @@ export default function Home() {
               <div
                 className="flex flex-col items-center
            max-w-md mx-auto sm:max-w-xl lg:items-start
-           lg:mx-10"
+           lg:mx-20"
               >
                 <div
                   className="flex justify-around text-white

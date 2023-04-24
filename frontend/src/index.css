@@ -15,4 +15,10 @@ body {
       focus:outline-none focus:ring focus:ring-activeblue
       lg:text-lg lg:font-semibold lg:ml-3 tracking-wide
   }
+  .btm-icons {
+    @apply text-2xl text-white opacity-75
+  }
+  .btm-nav {
+    @apply flex flex-1 justify-center text-center cursor-pointer hover:bg-blackish
+  }
 }

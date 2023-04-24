@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Person from "./Person";
 
@@ -17,9 +16,9 @@ const SideModal = ({ participants, showSideModal, closeSideModal }) => {
           name="status"
           defaultChecked
         />
-        <label htmlFor="chat" className="cursor-pointer px-4 py-2
-            bg-white bg-opacity-5 rounded-tl-xl
-            rounded-bl-xl text-white peer-checked/chat:bg-white
+        <label htmlFor="chat" className="cursor-pointer px-6 py-3
+            bg-white bg-opacity-5 rounded-tl-md
+            rounded-bl-md text-white peer-checked/chat:bg-white
             peer-checked/chat:bg-opacity-50">
           Chat
         </label>
@@ -30,13 +29,13 @@ const SideModal = ({ participants, showSideModal, closeSideModal }) => {
           type="radio"
           name="status"
         />
-        <label htmlFor="people" className="cursor-pointer px-4 py-2
-            bg-white bg-opacity-5 rounded-tr-xl
-            rounded-br-xl text-white peer-checked/people:bg-white peer-checked/people:bg-opacity-50">
+        <label htmlFor="people" className="cursor-pointer px-6 py-3
+            bg-white bg-opacity-5 rounded-tr-md
+            rounded-br-md text-white peer-checked/people:bg-white peer-checked/people:bg-opacity-50">
           People
         </label>
         <button
-          className="float-right my-1 mx-3 "
+          className="float-right mx-3 "
           onClick={closeSideModal}
         >
           <AiOutlineClose
