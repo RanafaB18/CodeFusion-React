@@ -7,40 +7,38 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 
+const icons = [
+  {id: 1, icon: <FaComment className="bottom-nav-icon" />},
+  {id: 2, icon: <FaVideo className="bottom-nav-icon" />},
+  {id: 3, icon: <FaPenSquare className="bottom-nav-icon" />},
+  {id: 4, icon: <FaUserFriends className="bottom-nav-icon" />},
+  {id: 5, icon: <FaTable className="bottom-nav-icon" />},
+]
 const BottomNavigationBar = () => {
-  const [index, setIndex] = useState(2);
+  const [activeIndex, setActiveIndex] = useState(2);
+  const makeActive = (index) => {
+    setActiveIndex(index)
+  }
   return (
     <div className="absolute w-full bottom-0">
       <div
-        className="h-16 bg-blackhover
-            "
+        className="h-16 bg-blackhover"
       >
         <div className="flex justify-around h-full ">
-          <div className="btm-nav">
-            <button>
-              <FaComment className="btm-icons" />
-            </button>
-          </div>
-          <div className="btm-nav">
-            <button>
-              <FaVideo className="btm-icons" />
-            </button>
-          </div>
-          <div className="btm-nav">
-            <button>
-              <FaPenSquare className="btm-icons" />
-            </button>
-          </div>
-          <div className="btm-nav">
-            <button>
-              <FaUserFriends className="btm-icons" />
-            </button>
-          </div>
-          <div className="btm-nav">
-            <button>
-              <FaTable className="btm-icons" />
-            </button>
-          </div>
+          {icons.map((iconData, index) => {
+            const {id, icon} = iconData
+            return (
+              <div
+              className={`bottom-nav ${index == activeIndex ? 'bg-blacklike' : ''}`}
+              key={id}
+              onClick={() => makeActive(index)}
+              >
+                <button type="button">
+                  {icon}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
