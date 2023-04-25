@@ -5,6 +5,7 @@ import Features from "./components/Features";
 import Layout from "./components/Layout";
 import axiosUtil from "./services";
 import { io } from "socket.io-client";
+import Button from "./components/Button";
 
 
 export async function action({ request, params }) {
@@ -16,12 +17,6 @@ export async function action({ request, params }) {
 export const socket = io("http://localhost:3004");
 export default function Home() {
   const [room, setRoom] = useState("");
-
-  useEffect(() => {
-    socket.on("connection", (data) => {
-      console.log("Data", data)
-    })
-  })
   return (
     <HelmetProvider>
       <Layout>
@@ -39,7 +34,7 @@ export default function Home() {
               <div
                 className="flex flex-col items-center
            max-w-md mx-auto sm:max-w-xl lg:items-start
-           lg:mx-10"
+           lg:mx-20"
               >
                 <div
                   className="flex justify-around text-white
@@ -76,13 +71,7 @@ export default function Home() {
                       onChange={(event) => setRoom(event.target.value)}
                     />
 
-                    <button
-                      className="bg-bluish text-white text-lg
-                font-semibold py-3 mt-2 rounded-md hover:bg-blue-500"
-                      type="submit"
-                    >
-                      Get A Room →
-                    </button>
+                    <Button text={"Get A Room →"} />
                   </Form>
                 </div>
               </div>
