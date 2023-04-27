@@ -3,6 +3,7 @@ import Options from "./Options";
 import Modal from "./Modal";
 import PeopleScreen from "./screens/PeopleScreen";
 import Bar from "./Bar";
+import TabScreen from "./screens/TabScreen";
 const VisibleScreen = ({
   participants,
   invite,
@@ -18,7 +19,8 @@ const VisibleScreen = ({
   return (
     <>
       {/* <Bar participants={participants} invite={invite} username={username} /> */}
-      <PeopleScreen invite={invite} participants={participants}/>
+      {/* <PeopleScreen invite={invite} participants={participants}/> */}
+      <TabScreen />
       <div className="max-w-xs py-12 mx-auto">{/* <Options /> */}</div>
       {/* <Modal
         closeButtonRef={closeButtonRef}
