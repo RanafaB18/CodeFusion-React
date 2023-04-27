@@ -16,9 +16,10 @@ body {
       lg:text-lg lg:font-semibold lg:ml-3 tracking-wide
   }
   .bottom-nav-icon {
-    @apply text-2xl text-white opacity-75
+    @apply text-2xl text-white opacity-75 
   }
   .bottom-nav {
-    @apply flex flex-1 justify-center text-center cursor-pointer hover:bg-blacklike
+    @apply flex flex-1 justify-center text-center cursor-pointer
+    hover:bg-blacklike
   }
 }
