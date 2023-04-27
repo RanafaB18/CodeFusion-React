@@ -21,7 +21,8 @@ const router = createBrowserRouter([
         element: <JoinRoom />,
         action: joinAction,
         loader: roomLoader
-    }
+    },
+    
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

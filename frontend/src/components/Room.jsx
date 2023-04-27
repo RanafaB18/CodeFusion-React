@@ -4,15 +4,16 @@ import AnimatedModal from "./AnimatedModal";
 import Modal from "./Modal";
 import Bar from "./Bar";
 import { socket } from "..";
-import axiosUtil from '../services'
+import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
+import VisibleScreen from "./VisibleScreen";
 
 const Room = ({ room, username }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
   const [roomLink, setRoomLink] = useState("");
-  const [participants, setParticipants] = useState([])
+  const [participants, setParticipants] = useState([]);
   const showOnClick = {
     display: visible ? "" : "none",
   };
@@ -35,9 +36,9 @@ const Room = ({ room, username }) => {
     }
 
     fetchUsers().then(() => {
-      socket.on('all_users', (users) => {
-            setParticipants(users.rooms[room])
-      })
+      socket.on("all_users", (users) => {
+        setParticipants(users.rooms[room]);
+      });
     });
   }, []);
   const inviteModalRef = useRef(null);
@@ -55,7 +56,7 @@ const Room = ({ room, username }) => {
       return;
     }
     setVisible(false);
-    setShowClipBoardModal(false)
+    setShowClipBoardModal(false);
   };
   const copyLink = async () => {
     const permission = await navigator.permissions.query({
@@ -77,19 +78,19 @@ const Room = ({ room, username }) => {
   };
   return (
     <div>
-      <Bar participants={participants} invite={invite} username={username}/>
-      <div className="max-w-xs py-12 mx-auto">
-        <Options />
-      </div>
-      <Modal
+
+      <VisibleScreen
+        participants={participants}
+        invite={invite}
+        username={username}
         closeButtonRef={closeButtonRef}
         closeInvite={closeInvite}
         copyLink={copyLink}
         inviteModalRef={inviteModalRef}
         roomLink={roomLink}
+        showClipOnClick={showClipOnClick}
         showOnClick={showOnClick}
       />
-      <AnimatedModal showClipOnClick={showClipOnClick} />
       <BottomNavigationBar />
     </div>
   );

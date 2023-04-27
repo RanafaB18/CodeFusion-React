@@ -10,7 +10,7 @@ const Person = ({ name }) => {
       >
         {name[0].toUpperCase()}
       </div>
-      <div className="mx-2 text-white">
+      <div className="mx-2 text-white text-lg">
         {name}
       </div>
     </div>
