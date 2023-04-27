@@ -21,7 +21,7 @@ const BottomNavigationBar = ({showScreen}) => {
     showScreen(index)
   }
   return (
-    <div className="absolute w-full bottom-0">
+    <div className="w-full">
       <div
         className="h-16 bg-blackhover"
       >

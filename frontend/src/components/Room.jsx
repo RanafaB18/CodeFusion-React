@@ -9,6 +9,7 @@ import BottomNavigationBar from "./BottomNavigationBar";
 import PeopleScreen from "./screens/PeopleScreen";
 import TabScreen from "./screens/TabScreen";
 import DefaultScreen from "./screens/DefaultScreen";
+import ChatScreen from "./screens/ChatScreen";
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -83,23 +84,28 @@ const Room = ({ room, username }) => {
     setScreenIndex(index);
   };
   return (
-    <div>
-      {screenIndex === 2 && <DefaultScreen />}
-      {screenIndex === 3 && (
-        <PeopleScreen
-          participants={participants}
-          invite={invite}
-          closeButtonRef={closeButtonRef}
-          closeInvite={closeInvite}
-          copyLink={copyLink}
-          inviteModalRef={inviteModalRef}
-          roomLink={roomLink}
-          showOnClick={showOnClick}
-          showClipOnClick={showClipOnClick}
-        />
-      )}
-      {screenIndex === 4 && <TabScreen />}
-      <BottomNavigationBar showScreen={showScreen} />
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-1 relative">
+        {screenIndex === 0 && <ChatScreen />}
+        {screenIndex === 2 && <DefaultScreen />}
+        {screenIndex === 3 && (
+          <PeopleScreen
+            participants={participants}
+            invite={invite}
+            closeButtonRef={closeButtonRef}
+            closeInvite={closeInvite}
+            copyLink={copyLink}
+            inviteModalRef={inviteModalRef}
+            roomLink={roomLink}
+            showOnClick={showOnClick}
+            showClipOnClick={showClipOnClick}
+          />
+        )}
+        {screenIndex === 4 && <TabScreen />}
+      </div>
+      <div className="h-16">
+        <BottomNavigationBar showScreen={showScreen} />
+      </div>
     </div>
   );
 };
