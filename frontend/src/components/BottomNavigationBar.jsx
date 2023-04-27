@@ -8,16 +8,17 @@ import {
 import { useState } from "react";
 
 const icons = [
-  {id: 1, icon: <FaComment className="bottom-nav-icon" />},
+  {id: 1, icon: <FaComment className="bottom-nav-icon"/>},
   {id: 2, icon: <FaVideo className="bottom-nav-icon" />},
   {id: 3, icon: <FaPenSquare className="bottom-nav-icon" />},
   {id: 4, icon: <FaUserFriends className="bottom-nav-icon" />},
   {id: 5, icon: <FaTable className="bottom-nav-icon" />},
 ]
-const BottomNavigationBar = () => {
+const BottomNavigationBar = ({showScreen}) => {
   const [activeIndex, setActiveIndex] = useState(2);
   const makeActive = (index) => {
     setActiveIndex(index)
+    showScreen(index)
   }
   return (
     <div className="absolute w-full bottom-0">

@@ -6,7 +6,9 @@ import Bar from "./Bar";
 import { socket } from "..";
 import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
-import VisibleScreen from "./VisibleScreen";
+import PeopleScreen from "./screens/PeopleScreen";
+import TabScreen from "./screens/TabScreen";
+import DefaultScreen from "./screens/DefaultScreen";
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -14,6 +16,7 @@ const Room = ({ room, username }) => {
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
+  const [screenIndex, setScreenIndex] = useState(2);
   const showOnClick = {
     display: visible ? "" : "none",
   };
@@ -76,22 +79,27 @@ const Room = ({ room, username }) => {
       );
     }
   };
+  const showScreen = (index) => {
+    setScreenIndex(index);
+  };
   return (
     <div>
-
-      <VisibleScreen
-        participants={participants}
-        invite={invite}
-        username={username}
-        closeButtonRef={closeButtonRef}
-        closeInvite={closeInvite}
-        copyLink={copyLink}
-        inviteModalRef={inviteModalRef}
-        roomLink={roomLink}
-        showClipOnClick={showClipOnClick}
-        showOnClick={showOnClick}
-      />
-      <BottomNavigationBar />
+      {screenIndex === 2 && <DefaultScreen />}
+      {screenIndex === 3 && (
+        <PeopleScreen
+          participants={participants}
+          invite={invite}
+          closeButtonRef={closeButtonRef}
+          closeInvite={closeInvite}
+          copyLink={copyLink}
+          inviteModalRef={inviteModalRef}
+          roomLink={roomLink}
+          showOnClick={showOnClick}
+          showClipOnClick={showClipOnClick}
+        />
+      )}
+      {screenIndex === 4 && <TabScreen />}
+      <BottomNavigationBar showScreen={showScreen} />
     </div>
   );
 };

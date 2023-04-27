@@ -1,7 +1,18 @@
-import { FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import Person from "../Person";
-
-const PeopleScreen = ({ invite, participants }) => {
+import Modal from "../Modal";
+import AnimatedModal from "../AnimatedModal";
+const PeopleScreen = ({
+  invite,
+  participants,
+  closeButtonRef,
+  closeInvite,
+  copyLink,
+  inviteModalRef,
+  roomLink,
+  showOnClick,
+  showClipOnClick
+}) => {
   return (
     <div>
       <div className="h-14 w-full bg-blackhover px-4 flex justify-between items-center">
@@ -28,6 +39,15 @@ const PeopleScreen = ({ invite, participants }) => {
           <Person key={index} name={peep} />
         ))}
       </div>
+      <Modal
+        closeButtonRef={closeButtonRef}
+        closeInvite={closeInvite}
+        copyLink={copyLink}
+        inviteModalRef={inviteModalRef}
+        roomLink={roomLink}
+        showOnClick={showOnClick}
+      />
+      <AnimatedModal showClipOnClick={showClipOnClick} />
     </div>
   );
 };
