@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const { roomRouter, roomLinks, Rooms } = require('./routes/room')
+const { roomRouter, roomLinks, Rooms, Messages } = require('./routes/room')
 const http = require('http')
 const server = http.createServer(app)
 const cors = require('cors')
@@ -32,6 +32,18 @@ io.on('connection', (socket) => {
         }
         console.log("New user: ", Rooms)
     })
+// Messages = {'room-name': {messages:[{message, username, time, id}],}}
+
+    socket.on("send_message", (messageData) => {
+        console.log("Message Data: ", messageData)
+        if (!Messages[messageData.room]) {
+            Messages[messageData.room] = {messages: [messageData]}
+        } else {
+            Messages[messageData.room].messages.push(messageData)
+        }
+        console.log("Array", Messages)
+        socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
+    })
 
 
 
@@ -43,6 +55,13 @@ app.get('/:id/users', (req, res) => {
     console.log("Rooms", Rooms)
     io.sockets.emit("all_users", {rooms: Rooms})
     return res.end()
+})
+app.get('/:room/messages', (req, res) => {
+    const room = req.params.room
+    console.log("room.js..", room)
+    console.log("room.js..", Messages[room])
+    io.sockets.emit("update_messages", {messageData: Messages[room]})
+    return res.json({messageData: Messages[room]})
 })
 
 const PORT = process.env.PORT

@@ -4,6 +4,9 @@ const roomRouter = require('express').Router()
 const roomLinks = []
 const Rooms = {}
 
+// Messages = {'room-name': {messages:[{message, username, time, id}],}}
+const Messages = {}
+
 roomRouter.post('/', async (request, response) => {
     const body = request.body
     const room = body.room
@@ -13,12 +16,11 @@ roomRouter.post('/', async (request, response) => {
     response.json({roomLink: roomLink})
 })
 
+
 roomRouter.get('/allRooms', (request, response) => {
-    console.log("Hello")
-    console.log(roomLinks)
     response.json({ rooms: roomLinks})
 })
 
 
 
-module.exports = { roomRouter, roomLinks, Rooms }
+module.exports = { roomRouter, roomLinks, Rooms, Messages }
