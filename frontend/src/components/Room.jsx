@@ -10,6 +10,7 @@ import PeopleScreen from "./screens/PeopleScreen";
 import TabScreen from "./screens/TabScreen";
 import DefaultScreen from "./screens/DefaultScreen";
 import ChatScreen from "./screens/ChatScreen";
+import { RoomContext } from "../context/RoomContext";
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -40,11 +41,17 @@ const Room = ({ room, username }) => {
     }
 
     fetchUsers().then(() => {
-      socket.on("all_users", (users) => {
-        setParticipants(users.rooms[room]);
-      });
+      socket.on("all_users", handleUsers);
     });
-  }, []);
+    return () => {
+      socket.off("all_users", handleUsers)
+    }
+  }, [room]);
+
+  const handleUsers = (users) => {
+    setParticipants(users.rooms[room]);
+  }
+
   const inviteModalRef = useRef(null);
   const closeButtonRef = useRef(null);
   const invite = () => {
@@ -85,24 +92,26 @@ const Room = ({ room, username }) => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-1 relative">
-        {screenIndex === 0 && <ChatScreen />}
-        {screenIndex === 2 && <DefaultScreen />}
-        {screenIndex === 3 && (
-          <PeopleScreen
-            participants={participants}
-            invite={invite}
-            closeButtonRef={closeButtonRef}
-            closeInvite={closeInvite}
-            copyLink={copyLink}
-            inviteModalRef={inviteModalRef}
-            roomLink={roomLink}
-            showOnClick={showOnClick}
-            showClipOnClick={showClipOnClick}
-          />
-        )}
-        {screenIndex === 4 && <TabScreen />}
-      </div>
+      <RoomContext.Provider value={room}>
+        <div className="flex-1 relative">
+          {screenIndex === 0 && <ChatScreen username={username} />}
+          {screenIndex === 2 && <DefaultScreen />}
+          {screenIndex === 3 && (
+            <PeopleScreen
+              participants={participants}
+              invite={invite}
+              closeButtonRef={closeButtonRef}
+              closeInvite={closeInvite}
+              copyLink={copyLink}
+              inviteModalRef={inviteModalRef}
+              roomLink={roomLink}
+              showOnClick={showOnClick}
+              showClipOnClick={showClipOnClick}
+            />
+          )}
+          {screenIndex === 4 && <TabScreen />}
+        </div>
+      </RoomContext.Provider>
       <div className="h-16">
         <BottomNavigationBar showScreen={showScreen} />
       </div>

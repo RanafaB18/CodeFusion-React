@@ -1,10 +1,11 @@
 import Person from "./Person"
 
 const Message = ({message, username, time}) => {
+    // console.log(username)
     return (
         <div className="p-3 font-semibold flex justify-end">
             <div className="text-white text-opacity-60 flex h-full items-end
-            gap-2 p-2 pb-0 rounded-lg bg-blackhover">
+            gap-4 p-2 pb-0 rounded-lg bg-blackhover">
                 {/* message */}
                 <p className="text-white pb-3 text-opacity-90">{message}</p>
                 <div className="flex flex-col items-center gap-3">

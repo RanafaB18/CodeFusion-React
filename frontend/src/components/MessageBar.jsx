@@ -1,17 +1,38 @@
 import { useState } from "react";
 import { FaPaperPlane, FaPaperclip, FaPlane, FaSmile } from "react-icons/fa";
-
+import { socket } from "..";
+import { useContext } from "react";
+import { RoomContext } from "../context/RoomContext";
 // message: {message: "What's up?", user: username, time}
 
 
-const MessageBar = () => {
+const MessageBar = ({username, addMessages}) => {
   const [message, setMessage] = useState("");
-
+  const room = useContext(RoomContext)
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
+
+  const sendMessage = (event) => {
+    event.preventDefault()
+    if (message === "") {
+      return
+    }
+    const date = new Date()
+    const minutes = date.getMinutes()
+    const time = `${date.getHours()}:${minutes < 10 ? '0'+minutes : minutes}`
+    const messageData = {
+      message: message,
+      username: username,
+      time: time,
+      id: Date.now(),
+      room: room
+    }
+    addMessages(messageData)
+    setMessage("")
+  }
   return (
-    <div className="flex flex-col m-2">
+    <form className="flex flex-col m-2" onSubmit={sendMessage}>
       <div>
         <input
           type="text"
@@ -34,12 +55,12 @@ const MessageBar = () => {
           <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
             <FaSmile className="bottom-nav-icon text-xl" />
           </button>
-          <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
-            <FaPaperPlane className="bottom-nav-icon text-xl" />
+          <button disabled={message === ""} type="submit" className="enabled:hover:bg-white enabled:hover:bg-opacity-25 p-1 rounded-md">
+            <FaPaperPlane className={`${message === "" ? "text-opacity-10" : ""} bottom-nav-icon text-xl`} />
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

@@ -15,4 +15,9 @@ const getUsers = async (room) => {
     return response.data
 }
 
-export default { getRoomID, getAllRooms, getUsers }
+const getMessages = async (room) => {
+    const response = await axios.get(`http://localhost:3004/${room}/messages`)
+    return response.data
+}
+
+export default { getRoomID, getAllRooms, getUsers, getMessages }
