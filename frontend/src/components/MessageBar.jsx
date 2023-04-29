@@ -20,10 +20,11 @@ const MessageBar = ({username, addMessages}) => {
     }
     const date = new Date()
     const minutes = date.getMinutes()
-    const time = `${date.getHours()}:${minutes < 10 ? '0'+minutes : minutes}`
+    const hours = date.getHours()
+    const time = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`
     const messageData = {
       message: message,
-      username: username,
+      user: username,
       time: time,
       id: Date.now(),
       room: room
@@ -39,7 +40,7 @@ const MessageBar = ({username, addMessages}) => {
           className="w-full p-3 bg-blackhover border-b-2 border-b-gray-500 rounded-tr-md
           rounded-tl-md text-white text-lg focus:outline-none
           focus:border-b-bluish placeholder:tracking-wide"
-          placeholder="Write a message..."
+          placeholder={`Write a message...${username}`}
           value={message}
           onChange={handleMessageChange}
         />

@@ -92,7 +92,7 @@ const Room = ({ room, username }) => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <RoomContext.Provider value={room}>
+      <RoomContext.Provider value={room} >
         <div className="flex-1 relative">
           {screenIndex === 0 && <ChatScreen username={username} />}
           {screenIndex === 2 && <DefaultScreen />}

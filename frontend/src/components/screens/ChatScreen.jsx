@@ -8,11 +8,11 @@ const ChatScreen = ({ username }) => {
   const [messages, setMessages] = useState([]);
   const room = useContext(RoomContext);
   const scrollableContainer = useRef(null)
-
   useEffect(() => {
     console.log("Scrolling")
     scrollableContainer.current?.scrollIntoView()
   }, [messages])
+
   useEffect(() => {
     console.log("User effect run");
     async function fetchMessages() {
@@ -34,7 +34,12 @@ const ChatScreen = ({ username }) => {
     return () => {
       socket.off("chat-message", handleMessages)
     }
+
   }, []);
+
+  // useEffect(() => {
+
+  // }, [messages])
   const handleMessages = (messageData) => {
     console.log("Messages: ", messageData.messages);
     setMessages(messageData.messages);
@@ -44,19 +49,31 @@ const ChatScreen = ({ username }) => {
     socket.emit("send_message", messageData);
   };
 
+  const handleDelete = async (id) => {
+    // const updatedMessages = await axiosUtil.deleteMessage(room, id)
+    setMessages(messages.filter((obj) => obj.id !== id))
+    socket.emit("delete-message",{room, id})
+  }
+
 
   return (
     //Hiding messages thingie is here
     <div className="flex flex-col w-full absolute top-0 bottom-0">
       <div className="flex-1 overflow-y-scroll">
         {messages.map((messageData) => {
-          const { message, time, username, id } = messageData;
+          const { message, time, user, id } = messageData;
+          const userRoomName = sessionStorage.getItem("user_room_name")
+
+          console.log(user, userRoomName, user === userRoomName )
           return (
             <Message
               key={id}
               message={message}
               time={time}
-              username={username}
+              username={user}
+              isReply={user !== userRoomName}
+              deleteFxn={handleDelete}
+              id={Number(id)}
             />
           );
         })}
