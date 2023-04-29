@@ -58,7 +58,7 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
               </button>
               {visible && (
                 <button
-                  className="absolute right-0 w-max
+                  className="absolute top-full right-0 w-max
                   bg-slate-700 rounded-md p-2
                     hover:bg-slate-500
                    active:bg-blackhover"
