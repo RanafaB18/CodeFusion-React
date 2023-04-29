@@ -6,7 +6,7 @@ const Person = ({ name, showOnlyCircle, color="red", small }) => {
         flex items-center justify-center
             bg-blacklike
             border-2 border-${color}-600
-            text-white rounded-full shrink-0 grow-0 w-${small ? 8 : 11} h-${small ? 8 : 11}`}
+            text-white rounded-full shrink-0 grow-0 ${small ? "w-8" : "w-11"} ${small ? "h-8" : "h-11"}`}
       >
         {name[0].toUpperCase()}
       </div>
