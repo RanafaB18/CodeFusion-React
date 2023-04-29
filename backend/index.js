@@ -41,28 +41,33 @@ io.on('connection', (socket) => {
         } else {
             Messages[messageData.room].messages.push(messageData)
         }
-        console.log("Array", Messages)
         socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
     })
 
+    socket.on("delete-message", (messageData) => {
+        console.log("Deleted message", messageData)
+        const id = messageData.id
+        const room = messageData.room
+        console.log("id and room", id, room)
+
+        Messages[room].messages = Messages[room].messages.filter((obj) => obj.id !== id)
+        socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
+    })
 
 
 })
 
 app.use('/room', roomRouter)
 app.get('/:id/users', (req, res) => {
-    console.log("ID", req.params.id)
-    console.log("Rooms", Rooms)
     io.sockets.emit("all_users", {rooms: Rooms})
     return res.end()
 })
 app.get('/:room/messages', (req, res) => {
     const room = req.params.room
-    console.log("room.js..", room)
-    console.log("room.js..", Messages[room])
     io.sockets.emit("update_messages", {messageData: Messages[room]})
     return res.json({messageData: Messages[room]})
 })
+
 
 const PORT = process.env.PORT
 server.listen(PORT, () => {
