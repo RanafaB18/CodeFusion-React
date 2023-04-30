@@ -18,7 +18,7 @@ const Room = ({ room, username }) => {
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
-  const [screenIndex, setScreenIndex] = useState(2);
+  const [screenIndex, setScreenIndex] = useState(0);
   const showOnClick = {
     display: visible ? "" : "none",
   };

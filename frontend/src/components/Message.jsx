@@ -3,7 +3,7 @@ import Person from "./Person";
 import { useState } from "react";
 
 const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
-  // console.log(username)
+
   const [isHovering, setIsHovering] = useState(false);
   const [visible, setVisible] = useState(false);
   const handleMouseOver = () => {
@@ -11,7 +11,6 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
   };
   const handleMouseOut = () => {
     setIsHovering(false);
-    // setVisible(false);
   };
   const handleClick = () => {
     setVisible(!visible);
@@ -20,7 +19,7 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
     setVisible(false);
   };
   const handleDelete = () => {
-    deleteFxn(id)
+    deleteFxn(id, username)
   }
   return (
     <div
@@ -46,7 +45,7 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
           <p className="text-white text-opacity-90">{message}</p>
           <span className="self-end">{time}</span>
         </div>
-        {isHovering && (
+        {(isHovering && !isReply) && (
           <div className="absolute top-0 right-0">
             <div className="relative">
               <button

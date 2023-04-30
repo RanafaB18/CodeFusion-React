@@ -1,6 +1,6 @@
 const Person = ({ name, showOnlyCircle, color="red", small }) => {
   return (
-    <div className={`mx-${small ? 2:4} my-${small ? 0:2} flex items-center`}>
+    <div className={`${small ? "mx-2":"mx-4"} ${small ? "my-0":"my-2"} flex items-center`}>
       <div
         className={`
         flex items-center justify-center
