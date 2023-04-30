@@ -4,9 +4,10 @@ const roomRouter = require('express').Router()
 const roomLinks = []
 const Rooms = {}
 
-// Messages = {'room-name': {messages:[{message, username, time, id}],}}
-const Messages = {}
+// Messages = {'room-name': {messages:[{message, username, time, id}], }}
+// Deleted = {'room-name': [ids]}
 
+const Messages = {}
 roomRouter.post('/', async (request, response) => {
     const body = request.body
     const room = body.room

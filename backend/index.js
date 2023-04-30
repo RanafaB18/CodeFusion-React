@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
     socket.on("send_message", (messageData) => {
-        console.log("Message Data: ", messageData)
+        // console.log("Message Data: ", messageData)
         if (!Messages[messageData.room]) {
             Messages[messageData.room] = {messages: [messageData]}
         } else {
@@ -45,16 +45,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on("delete-message", (messageData) => {
-        console.log("Deleted message", messageData)
         const id = messageData.id
         const room = messageData.room
-        console.log("id and room", id, room)
-
         Messages[room].messages = Messages[room].messages.filter((obj) => obj.id !== id)
         socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
+
     })
-
-
 })
 
 app.use('/room', roomRouter)
@@ -64,10 +60,8 @@ app.get('/:id/users', (req, res) => {
 })
 app.get('/:room/messages', (req, res) => {
     const room = req.params.room
-    io.sockets.emit("update_messages", {messageData: Messages[room]})
-    return res.json({messageData: Messages[room]})
+    return res.json({messageData: Messages[room], deletedMessageIds: DeletedMessageIds})
 })
-
 
 const PORT = process.env.PORT
 server.listen(PORT, () => {
