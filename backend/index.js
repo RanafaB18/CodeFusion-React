@@ -51,16 +51,23 @@ io.on('connection', (socket) => {
         socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
 
     })
+
+    socket.on('get-users', () => {
+        io.sockets.emit("all_users", {rooms: Rooms})
+    })
+    socket.on('disconnect', () => {
+        console.log(`${socket.id} has disconnected`)
+    })
 })
 
+
+
 app.use('/room', roomRouter)
-app.get('/:id/users', (req, res) => {
-    io.sockets.emit("all_users", {rooms: Rooms})
-    return res.end()
-})
+
+
 app.get('/:room/messages', (req, res) => {
     const room = req.params.room
-    return res.json({messageData: Messages[room], deletedMessageIds: DeletedMessageIds})
+    return res.json({messageData: Messages[room]})
 })
 
 const PORT = process.env.PORT
