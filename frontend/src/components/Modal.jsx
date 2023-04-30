@@ -1,24 +1,26 @@
 import { AiOutlineClose } from "react-icons/ai";
 
 const Modal = ({
-  showOnClick,
+  visible,
   roomLink,
   closeInvite,
   inviteModalRef,
   closeButtonRef,
   copyLink
 }) => {
+  if (!visible) {
+    return
+  }
   return (
     <div
       ref={inviteModalRef}
-      style={showOnClick}
       onClick={closeInvite}
       className="absolute h-screen w-screen top-0 pt-12 backdrop-blur-sm"
     >
       <div className="z-10 top-0 max-w-sm mx-auto p-4 bg-white rounded">
         <div className="flex justify-between items-center pb-6">
           <p className="text-lg">Invite People To Join</p>
-          <button ref={closeButtonRef} onClick={closeInvite}>
+          <button className="hover:bg-gray-200 rounded-lg" ref={closeButtonRef} onClick={closeInvite}>
             <AiOutlineClose size={"21px"} />
           </button>
         </div>

@@ -1,6 +1,6 @@
-const AnimatedModal = ({showClipOnClick}) => {
+const AnimatedModal = () => {
   return (
-    <div style={showClipOnClick} className="absolute w-full top-24">
+    <div className="absolute w-full top-24">
       <div
         className="relative max-w-xl mx-auto bg-blackhover py-4 px-5
         rounded-lg"

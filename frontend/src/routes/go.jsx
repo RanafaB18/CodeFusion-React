@@ -8,16 +8,6 @@ import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 
 
-// export async function loader({ params }) {
-//   console.log("Params", params)
-//   const data = await axiosUtil.getAllRooms();
-//   socket.emit("join_room", params.id);
-//   console.log(data.rooms);
-//   console.log(data.rooms.find((link) => link === params.id))
-//   return params.id
-// }
-
-
 const JoinRoom = () => {
   const [createdUserName, setCreatedUsername] = useState(false);
   const [userRoomName, setUserRoomName] = useState("");

@@ -10,8 +10,8 @@ const PeopleScreen = ({
   copyLink,
   inviteModalRef,
   roomLink,
-  showOnClick,
-  showClipOnClick
+  visible,
+  showClipBoardModal
 }) => {
   return (
     <div>
@@ -45,9 +45,9 @@ const PeopleScreen = ({
         copyLink={copyLink}
         inviteModalRef={inviteModalRef}
         roomLink={roomLink}
-        showOnClick={showOnClick}
+        visible={visible}
       />
-      <AnimatedModal showClipOnClick={showClipOnClick} />
+      {showClipBoardModal && (<AnimatedModal />)}
     </div>
   );
 };

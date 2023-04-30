@@ -11,20 +11,17 @@ import TabScreen from "./screens/TabScreen";
 import DefaultScreen from "./screens/DefaultScreen";
 import ChatScreen from "./screens/ChatScreen";
 import { RoomContext } from "../context/RoomContext";
+import UserJoinedModal from "./UserJoinedModal";
 
 const Room = ({ room, username }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
+  // const [showUserJoined, setUserJoined] = useState(false)
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(0);
-  const showOnClick = {
-    display: visible ? "" : "none",
-  };
-  const showClipOnClick = {
-    display: showClipBoardModal ? "" : "none",
-  };
+
   // useEffect(() => {
   //   setRoomLink(window.location.href);
   //   console.log("Peeps", participants)
@@ -35,19 +32,26 @@ const Room = ({ room, username }) => {
   useEffect(() => {
     setRoomLink(window.location.href);
 
-    async function fetchUsers() {
-      const usersInRoom = await axiosUtil.getUsers(room);
-      return usersInRoom;
-    }
+    // async function fetchUsers() {
+    //   const usersInRoom = await axiosUtil.getUsers(room);
+    //   return usersInRoom;
+    // }
+    socket.emit('get-users')
 
-    fetchUsers().then(() => {
-      socket.on("all_users", handleUsers);
-    });
+    socket.on("all_users", handleUsers);
+    // fetchUsers().then(() => {
+    // });
+
+    window.addEventListener('beforeunload', handleTabClose)
     return () => {
       socket.off("all_users", handleUsers)
+      window.removeEventListener('beforeunload', handleTabClose)
     }
   }, [room]);
 
+  const handleTabClose = async () => {
+    socket.emit('leave-room', { room, username })
+  }
   const handleUsers = (users) => {
     setParticipants(users.rooms[room]);
   }
@@ -105,15 +109,16 @@ const Room = ({ room, username }) => {
               copyLink={copyLink}
               inviteModalRef={inviteModalRef}
               roomLink={roomLink}
-              showOnClick={showOnClick}
-              showClipOnClick={showClipOnClick}
+              visible={visible}
+              showClipBoardModal={showClipBoardModal}
             />
           )}
           {screenIndex === 4 && <TabScreen />}
         </div>
       </RoomContext.Provider>
-      <div className="h-16">
+      <div className="relative h-16">
         <BottomNavigationBar showScreen={showScreen} />
+        {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
     </div>
   );
