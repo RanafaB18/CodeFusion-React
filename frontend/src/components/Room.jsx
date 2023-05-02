@@ -22,34 +22,38 @@ const Room = ({ room, username }) => {
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(0);
 
-  // useEffect(() => {
-  //   setRoomLink(window.location.href);
-  //   console.log("Peeps", participants)
-  //   socket.on('all_users', (users) => {
-  //     setParticipants(users[room])
-  //   })
-  // }, []);
+
+  useEffect(() => {
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload)
+    }
+  }, [room, username])
   useEffect(() => {
     setRoomLink(window.location.href);
-
-    // async function fetchUsers() {
-    //   const usersInRoom = await axiosUtil.getUsers(room);
-    //   return usersInRoom;
-    // }
     socket.emit('get-users')
-
     socket.on("all_users", handleUsers);
-    // fetchUsers().then(() => {
-    // });
+    socket.on("message", notifyUsers)
 
-    window.addEventListener('beforeunload', handleTabClose)
+    // window.addEventListener("beforeunload", handleUnload);
     return () => {
       socket.off("all_users", handleUsers)
-      window.removeEventListener('beforeunload', handleTabClose)
+      // window.removeEventListener("beforeunload", handleUnload)
     }
   }, [room]);
-
-  const handleTabClose = async () => {
+  const notifyUsers = ({username}) => {
+    console.log(`${username} has joined the chat`)
+  }
+  // When the back button is pressed
+  const handleUnload = (event) => {
+    // Send a signal to the server using an asynchronous HTTP request
+    socket.emit('leave-room', { room, username })
+    console.log("Leaving")
+    return (event.returnValue = "")
+  };
+  const handleTabClose = (event) => {
+    event.preventDefault()
     socket.emit('leave-room', { room, username })
   }
   const handleUsers = (users) => {

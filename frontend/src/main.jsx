@@ -10,7 +10,7 @@ import  { loader as roomLoader } from './components/JoinForm'
 const router = createBrowserRouter([
     {
         index: true,
-        element: <Home />
+        element: <Home />,
     },
     {
         path: "/contact",
@@ -20,8 +20,13 @@ const router = createBrowserRouter([
         path: "/go/:id",
         element: <JoinRoom />,
         action: joinAction,
-        loader: roomLoader
+        loader: roomLoader,
     },
+    {
+        path: "*",
+        element: <Home />,
+        
+    }
 
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
