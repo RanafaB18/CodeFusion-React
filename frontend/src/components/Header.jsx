@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 import { useRef, useState, useEffect } from "react";
 
@@ -28,7 +29,7 @@ const Header = () => {
       <nav>
         <div className="md:max-w-5xl md:mx-auto xl:max-w-screen-xl">
           <div className="flex justify-between px-3">
-            <div className="flex items-center">
+            <Link to={"/"} className="flex items-center">
               <img
                 src="/svg-export/logo2.svg"
                 className="h-auto"
@@ -39,7 +40,7 @@ const Header = () => {
               <span className="pb-1 text-3xl text-white font-semibold pl-2">
                 codefusion
               </span>
-            </div>
+            </Link>
             <div className="relative" ref={menuRef}>
               <button
                 className="border px-4 py-2 rounded-md cursor-pointer
