@@ -31,6 +31,7 @@ io.on('connection', (socket) => {
             Rooms[obj.room].push(obj.username)
         }
         console.log("New user: ", Rooms)
+        socket.broadcast.to(obj.room).emit("message", {username: obj.username})
     })
 // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
@@ -55,7 +56,11 @@ io.on('connection', (socket) => {
     socket.on('get-users', () => {
         io.sockets.emit("all_users", {rooms: Rooms})
     })
+    socket.on("leave-room", ({ room, username }) => {
+        console.log(`${username} has left the room`)
+    })
     socket.on('disconnect', () => {
+        // Tab was closed
         console.log(`${socket.id} has disconnected`)
     })
 })
