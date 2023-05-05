@@ -50,7 +50,6 @@ const Room = ({ room, username }) => {
     // Send a signal to the server using an asynchronous HTTP request
     socket.emit('leave-room', { room, username })
     console.log("Leaving")
-    return (event.returnValue = "")
   };
   const handleTabClose = (event) => {
     event.preventDefault()

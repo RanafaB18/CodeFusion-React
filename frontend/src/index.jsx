@@ -9,6 +9,7 @@ import Button from "./components/Button";
 
 
 export async function action({ request, params }) {
+  console.log("Params  id", params.id)
   const data = await axiosUtil.getRoomID(params.id);
   socket.emit("join_room", data.roomLink);
   return redirect(`/go/${data.roomLink}`);

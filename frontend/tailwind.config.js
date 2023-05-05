@@ -21,7 +21,9 @@ export default {
         'buttonBlue': '#59adeb',
         'colorFrom': '#ff7a1b',
         'colorTo': '#de3fe3',
-        'colorVia': '#22dcbd'
+        'colorVia': '#22dcbd',
+        'brandBackground': '#02000f',
+        'iconColor': '#4a5568'
       },
       animation: {
         decrease: 'decrease 3s linear forwards',
