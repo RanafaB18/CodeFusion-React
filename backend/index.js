@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     socket.on("user_joined", (obj) => {
         Rooms[obj.room].push(obj.username)
         console.log("New user: ", Rooms)
-        socket.broadcast.to(obj.room).emit("message", { username: obj.username })
+        socket.to(obj.room).emit("message", { username: obj.username })
     })
     // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
@@ -56,21 +56,23 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('get-users', () => {
-        io.sockets.emit("all_users", { rooms: Rooms })
+    socket.on('get-users', ({room}) => {
+        io.to(room).emit("all_users", { rooms: Rooms })
     })
     socket.on("leave-room", ({ room, username }) => {
         console.log(`${username} has left the meeting`)
         Rooms[room] = Rooms[room].filter((name) => name !== username)
-        socket.broadcast.to(room).emit("left-room", { rooms: Rooms })
+        if (Rooms[room].length === 0) {
+            delete Rooms[room]
+            delete Messages[room]
+            console.log("New Rooms after deletion", Rooms)
+            console.log("New Messages after deletion", Messages)
+        }
+        io.to(room).emit("left-room", { rooms: Rooms })
         console.log("Peeps left", Rooms)
         socket.leave(room)
     })
 
-    socket.on("window-closing", ({ username, room }) => {
-        console.log("Window is closing")
-        console.log(`${username} left`)
-    })
     socket.on('disconnect', () => {
         // Tab was closed
         console.log(`${socket.id} has disconnected`)
@@ -93,7 +95,14 @@ app.post('/:room/users', (req, res) => {
     console.log("Req body", req.body)
     console.log(`${name} wants to leave`)
     Rooms[room] = Rooms[room].filter((usernames) => usernames != name)
-    return res.json({ usersInRoom: Rooms })
+    if (Rooms[room].length === 0) {
+        delete Rooms[room]
+        delete Messages[room]
+        console.log("New Rooms after deletion", Rooms)
+        console.log("New Messages after deletion", Messages)
+    }
+    io.to(room).emit("all_users", {rooms: Rooms})
+    return res.end()
 })
 
 const PORT = process.env.PORT
