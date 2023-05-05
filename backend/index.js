@@ -20,25 +20,28 @@ io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
 
     socket.on("join_room", (room) => {
-        console.log(room, "made")
-        socket.join(room)
-        console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
+        if (Rooms[room]) {
+            console.log(room, "made")
+            socket.join(room)
+            console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
+        }
+    })
+    socket.on("is-valid-room", (room) => {
+        if (Rooms[room]) {
+            socket.emit("valid-room")
+        }
     })
     socket.on("user_joined", (obj) => {
-        if (!Rooms[obj.room]) {
-            Rooms[obj.room] = [obj.username]
-        } else {
-            Rooms[obj.room].push(obj.username)
-        }
+        Rooms[obj.room].push(obj.username)
         console.log("New user: ", Rooms)
-        socket.broadcast.to(obj.room).emit("message", {username: obj.username})
+        socket.broadcast.to(obj.room).emit("message", { username: obj.username })
     })
-// Messages = {'room-name': {messages:[{message, username, time, id}],}}
+    // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
     socket.on("send_message", (messageData) => {
         // console.log("Message Data: ", messageData)
         if (!Messages[messageData.room]) {
-            Messages[messageData.room] = {messages: [messageData]}
+            Messages[messageData.room] = { messages: [messageData] }
         } else {
             Messages[messageData.room].messages.push(messageData)
         }
@@ -54,10 +57,19 @@ io.on('connection', (socket) => {
     })
 
     socket.on('get-users', () => {
-        io.sockets.emit("all_users", {rooms: Rooms})
+        io.sockets.emit("all_users", { rooms: Rooms })
     })
     socket.on("leave-room", ({ room, username }) => {
-        console.log(`${username} has left the room`)
+        console.log(`${username} has left the meeting`)
+        Rooms[room] = Rooms[room].filter((name) => name !== username)
+        socket.broadcast.to(room).emit("left-room", { rooms: Rooms })
+        console.log("Peeps left", Rooms)
+        socket.leave(room)
+    })
+
+    socket.on("window-closing", ({ username, room }) => {
+        console.log("Window is closing")
+        console.log(`${username} left`)
     })
     socket.on('disconnect', () => {
         // Tab was closed
@@ -72,7 +84,13 @@ app.use('/room', roomRouter)
 
 app.get('/:room/messages', (req, res) => {
     const room = req.params.room
-    return res.json({messageData: Messages[room]})
+    return res.json({ messageData: Messages[room] })
+})
+
+app.delete('/:room/users', (req, res) => {
+    console.log("Req body", req.body)
+    console.log(`${req.body.username} wants to leave`)
+    return res.json({ meeting_rooms: Rooms })
 })
 
 const PORT = process.env.PORT

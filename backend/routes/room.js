@@ -13,6 +13,9 @@ roomRouter.post('/', async (request, response) => {
     const room = body.room
     const id = shortUUID.generate()
     const roomLink = `${room}-${id}`
+    if (!Rooms[roomLink]) {
+        Rooms[roomLink] = []
+    }
     roomLinks.push(roomLink)
     response.json({roomLink: roomLink})
 })
