@@ -24,7 +24,7 @@ const Room = ({ room, username }) => {
 
   useEffect(() => {
     setRoomLink(window.location.href);
-    socket.emit('get-users')
+    socket.emit('get-users', { room: room})
     socket.on("all_users", handleUsers);
     socket.on("message", notifyUsers)
     socket.on("left-room", handleUsers)
@@ -44,13 +44,14 @@ const Room = ({ room, username }) => {
   const handleTabClose = (event) => {
     event.preventDefault()
     const leaving = async () => {
-      const roomParticipants = await axiosUtil.updateUsers(username, room)
-      console.log("Room Participants", roomParticipants)
+      await axiosUtil.updateUsers(username, room)
+      socket.emit('get-users', { room: room})
     }
     leaving()
-    return (event.returnValue = "")
+    // return (event.returnValue = "")
   }
   const handleUsers = (users) => {
+    console.log("Running here")
     setParticipants(users.rooms[room]);
   }
 
@@ -97,7 +98,7 @@ const Room = ({ room, username }) => {
       <RoomContext.Provider value={room} >
         <div className="flex-1 relative">
           {screenIndex === 0 && <ChatScreen username={username} />}
-          {screenIndex === 2 && <DefaultScreen />}
+          {screenIndex === 2 && <DefaultScreen username={username} room={room} />}
           {screenIndex === 3 && (
             <PeopleScreen
               participants={participants}

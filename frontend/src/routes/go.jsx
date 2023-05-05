@@ -14,7 +14,6 @@ const JoinRoom = () => {
   const [session, setSession] = useState(null);
   const [validRoom, setValidRoom] = useState(false);
   const room = useLoaderData();
-  console.log(room);
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
     socket.emit("is-valid-room", room);
