@@ -27,11 +27,14 @@ const Room = ({ room, username }) => {
     socket.emit('get-users')
     socket.on("all_users", handleUsers);
     socket.on("message", notifyUsers)
+    socket.on("left-room", handleUsers)
     window.addEventListener("beforeunload", handleTabClose);
 
 
     return () => {
       socket.off("all_users", handleUsers)
+      socket.off("message", notifyUsers)
+      socket.off("left-room", handleUsers)
       window.removeEventListener("beforeunload", handleTabClose)
     }
   }, [room]);
