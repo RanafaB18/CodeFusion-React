@@ -87,10 +87,13 @@ app.get('/:room/messages', (req, res) => {
     return res.json({ messageData: Messages[room] })
 })
 
-app.delete('/:room/users', (req, res) => {
+app.post('/:room/users', (req, res) => {
+    const name = req.body.name
+    const room = req.body.room
     console.log("Req body", req.body)
-    console.log(`${req.body.username} wants to leave`)
-    return res.json({ meeting_rooms: Rooms })
+    console.log(`${name} wants to leave`)
+    Rooms[room] = Rooms[room].filter((usernames) => usernames != name)
+    return res.json({ usersInRoom: Rooms })
 })
 
 const PORT = process.env.PORT
