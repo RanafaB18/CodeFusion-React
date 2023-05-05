@@ -71,6 +71,9 @@ io.on('connection', (socket) => {
         console.log("Window is closing")
         console.log(`${username} left`)
     })
+    socket.on("leave-room", ({ room, username }) => {
+        console.log(`${username} has left the room`)
+    })
     socket.on('disconnect', () => {
         // Tab was closed
         console.log(`${socket.id} has disconnected`)
