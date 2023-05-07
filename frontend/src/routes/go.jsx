@@ -7,21 +7,31 @@ import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
+import Loading from "../components/Loading";
 
 const JoinRoom = () => {
   const [createdUserName, setCreatedUsername] = useState(false);
   const [userRoomName, setUserRoomName] = useState("");
   const [session, setSession] = useState(null);
   const [validRoom, setValidRoom] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const room = useLoaderData();
+
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
     socket.emit("is-valid-room", room);
+    socket.on("valid-room", (isValid) => {
+      setValidRoom(isValid);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800)
+    });
   }, []);
 
-  socket.on("valid-room", () => {
-    setValidRoom(true)
-  });
+  if (isLoading) {
+    return <Loading />
+  }
+
   if (validRoom) {
     return (
       <HelmetProvider>

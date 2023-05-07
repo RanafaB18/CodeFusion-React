@@ -21,39 +21,44 @@ const Room = ({ room, username }) => {
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(0);
-
+  let pageAccessedByReload =
+    (window.performance.navigation &&
+      window.performance.navigation.type === 1) ||
+    window.performance
+      .getEntriesByType("navigation")
+      .map((nav) => nav.type)
+      .includes("reload");
   useEffect(() => {
     setRoomLink(window.location.href);
-    socket.emit('get-users', { room: room})
+    socket.emit("get-users", { room: room });
     socket.on("all_users", handleUsers);
-    socket.on("message", notifyUsers)
-    socket.on("left-room", handleUsers)
-    window.addEventListener("beforeunload", handleTabClose);
-
+    socket.on("message", notifyUsers);
+    socket.on("left-room", handleUsers);
+    window.addEventListener("unload", handleTabClose);
 
     return () => {
-      socket.off("all_users", handleUsers)
-      socket.off("message", notifyUsers)
-      socket.off("left-room", handleUsers)
-      window.removeEventListener("beforeunload", handleTabClose)
-    }
+      socket.off("all_users", handleUsers);
+      socket.off("message", notifyUsers);
+      socket.off("left-room", handleUsers);
+      window.removeEventListener("unload", handleTabClose);
+    };
   }, [room]);
-  const notifyUsers = ({username}) => {
-    console.log(`${username} has joined the chat`)
-  }
+  const notifyUsers = ({ username }) => {
+    console.log(`${username} has joined the chat`);
+  };
   const handleTabClose = (event) => {
-    event.preventDefault()
-    const leaving = async () => {
-      await axiosUtil.updateUsers(username, room)
-      socket.emit('get-users', { room: room})
+    if (event && event.returnValue) {
+      const leaving = async () => {
+        await axiosUtil.updateUsers(username, room);
+        socket.emit("get-users", { room: room });
+      };
+      leaving();
     }
-    leaving()
-    // return (event.returnValue = "")
-  }
+  };
   const handleUsers = (users) => {
-    console.log("Running here")
+    console.log("Running here");
     setParticipants(users.rooms[room]);
-  }
+  };
 
   const inviteModalRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -95,10 +100,12 @@ const Room = ({ room, username }) => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <RoomContext.Provider value={room} >
+      <RoomContext.Provider value={room}>
         <div className="flex-1 relative">
           {screenIndex === 0 && <ChatScreen username={username} />}
-          {screenIndex === 2 && <DefaultScreen username={username} room={room} />}
+          {screenIndex === 2 && (
+            <DefaultScreen username={username} room={room} />
+          )}
           {screenIndex === 3 && (
             <PeopleScreen
               participants={participants}
