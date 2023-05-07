@@ -15,7 +15,7 @@ const icons = [
   {id: 5, icon: <FaTable className="bottom-nav-icon" />},
 ]
 const BottomNavigationBar = ({showScreen}) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(2);
   const makeActive = (index) => {
     setActiveIndex(index)
     showScreen(index)

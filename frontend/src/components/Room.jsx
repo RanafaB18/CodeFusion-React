@@ -20,7 +20,7 @@ const Room = ({ room, username }) => {
   // const [showUserJoined, setUserJoined] = useState(false)
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
-  const [screenIndex, setScreenIndex] = useState(0);
+  const [screenIndex, setScreenIndex] = useState(2);
   let pageAccessedByReload =
     (window.performance.navigation &&
       window.performance.navigation.type === 1) ||
@@ -122,7 +122,7 @@ const Room = ({ room, username }) => {
           {screenIndex === 4 && <TabScreen />}
         </div>
       </RoomContext.Provider>
-      <div className="relative h-16">
+      <div className="relative h-16 md:hidden">
         <BottomNavigationBar showScreen={showScreen} />
         {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
