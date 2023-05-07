@@ -28,7 +28,9 @@ io.on('connection', (socket) => {
     })
     socket.on("is-valid-room", (room) => {
         if (Rooms[room]) {
-            socket.emit("valid-room")
+            socket.emit("valid-room", true)
+        } else {
+            socket.emit("valid-room", false)
         }
     })
     socket.on("user_joined", (obj) => {
@@ -56,9 +58,14 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('get-users', ({room}) => {
+    socket.on('get-users', ({ room }) => {
+        console.log("Informing all clients in the room")
         io.to(room).emit("all_users", { rooms: Rooms })
     })
+    socket.on("close-tab", () => {
+        console.log("Tab is closing")
+    })
+
     socket.on("leave-room", ({ room, username }) => {
         console.log(`${username} has left the meeting`)
         Rooms[room] = Rooms[room].filter((name) => name !== username)
@@ -92,16 +99,19 @@ app.get('/:room/messages', (req, res) => {
 app.post('/:room/users', (req, res) => {
     const name = req.body.name
     const room = req.body.room
-    console.log("Req body", req.body)
-    console.log(`${name} wants to leave`)
-    Rooms[room] = Rooms[room].filter((usernames) => usernames != name)
-    if (Rooms[room].length === 0) {
-        delete Rooms[room]
-        delete Messages[room]
-        console.log("New Rooms after deletion", Rooms)
-        console.log("New Messages after deletion", Messages)
+    console.log(`${name} is either leaving`)
+    // Check if it's a refresh
+    if (Rooms[room]) {
+        Rooms[room] = Rooms[room].filter((usernames) => usernames != name)
+        if (Rooms[room].length === 0) {
+            delete Rooms[room]
+            delete Messages[room]
+            console.log("New Rooms after deletion", Rooms)
+            console.log("New Messages after deletion", Messages)
+            io.local.socketsLeave(room)
+        }
+        io.to(room).emit("all_users", { rooms: Rooms })
     }
-    io.to(room).emit("all_users", {rooms: Rooms})
     return res.end()
 })
 
