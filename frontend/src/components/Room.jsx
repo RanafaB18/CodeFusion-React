@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import Options from "./Options";
 import AnimatedModal from "./AnimatedModal";
 import Modal from "./Modal";
-import Bar from "./Bar";
 import { socket } from "..";
 import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
@@ -104,7 +103,7 @@ const Room = ({ room, username }) => {
         <div className="flex-1 relative">
           {screenIndex === 0 && <ChatScreen username={username} />}
           {screenIndex === 2 && (
-            <DefaultScreen username={username} room={room} />
+            <DefaultScreen participants={participants} invite={invite} username={username} room={room} />
           )}
           {screenIndex === 3 && (
             <PeopleScreen
