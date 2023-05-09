@@ -48,7 +48,6 @@ const DefaultScreen = ({ username, room, participants, invite }) => {
         </div>
       </div>
 
-
       <div className="flex h-full">
         <div className="max-w-xs py-12 mx-auto">
           <Options />
@@ -62,7 +61,7 @@ const DefaultScreen = ({ username, room, participants, invite }) => {
             />
           )}
         </div>
-        <SideBar />
+        <SideBar setShowModal={setShowModal} showModal={showModal} />
       </div>
     </main>
   );
