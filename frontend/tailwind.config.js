@@ -27,6 +27,7 @@ export default {
       },
       animation: {
         decrease: 'decrease 3s linear forwards',
+        slideIn: 'slideIn .3s ease-out reverse'
       },
       keyframes: {
         decrease: {
@@ -35,6 +36,10 @@ export default {
           '50%': { width: '50%' },
           '75%': { width: '25%' },
           '100%': { width: '0' }
+        },
+        slideIn: {
+          '0%': { transform:  'translateX(0px)' },
+          '100%': { transform:'translateX(100%)' }
         }
       }
     },

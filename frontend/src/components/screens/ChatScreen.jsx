@@ -5,7 +5,7 @@ import axiosUtil from "../../services";
 import { RoomContext } from "../../context/RoomContext";
 import { socket } from "../..";
 
-const ChatScreen = ({ username }) => {
+const ChatScreen = ({ username, isSmall }) => {
   const [messages, setMessages] = useState([]);
   const room = useContext(RoomContext);
   const scrollableContainer = useRef(null);
@@ -53,8 +53,8 @@ const ChatScreen = ({ username }) => {
   };
   return (
     //Hiding messages thingie is here
-    <div className="flex flex-col w-full absolute top-0 bottom-0">
-      <div className="flex-1 overflow-y-scroll">
+    <div className={`flex flex-col w-full absolute top-0 bottom-0`}>
+      <div className="flex-1 overflow-y-auto">
         {messages.map((messageData) => {
           const { message, time, user, id } = messageData;
           return (

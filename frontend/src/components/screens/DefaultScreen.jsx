@@ -4,16 +4,32 @@ import { socket } from "../..";
 import { Link, redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";
+import { useState } from "react";
+import SideModal from "../SideModal";
 
 const DefaultScreen = ({ username, room, participants, invite }) => {
+  const [showModal, setShowModal] = useState(false);
+  const closeSideModal = () => {
+    setShowModal(false);
+  };
   const handleLeave = () => {
     sessionStorage.clear("user_room_name");
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
   return (
-    <main className="flex flex-col">
-      <Bar participants={participants} invite={invite} username={username} />
+    <main className="flex flex-col md:h-screen">
+      <div className="h-90">
+        <Bar
+          participants={participants}
+          setShowModal={setShowModal}
+          showModal={showModal}
+          invite={invite}
+          username={username}
+        />
+      </div>
+
+      {/* Hidden */}
       <div className="flex flex-col relative w-full md:hidden">
         <div className="flex justify-between h-14 bg-blackhover">
           <Link
@@ -31,9 +47,20 @@ const DefaultScreen = ({ username, room, participants, invite }) => {
           </div>
         </div>
       </div>
-      <div className="flex">
-        <div className="flex-1 max-w-xs py-12 mx-auto">
+
+
+      <div className="flex h-full">
+        <div className="max-w-xs py-12 mx-auto">
           <Options />
+        </div>
+        <div className="hidden md:block">
+          {showModal && (
+            <SideModal
+              participants={participants}
+              closeSideModal={closeSideModal}
+              username={username}
+            />
+          )}
         </div>
         <SideBar />
       </div>
