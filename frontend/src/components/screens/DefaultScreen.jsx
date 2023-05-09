@@ -4,14 +4,19 @@ import { socket } from "../..";
 import { Link, redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideModal from "../SideModal";
 
-const DefaultScreen = ({ username, room, participants, invite }) => {
+const DefaultScreen = ({ username, room, participants, invite, chatOpen }) => {
   const [showModal, setShowModal] = useState(false);
   const closeSideModal = () => {
     setShowModal(false);
   };
+  useEffect(() => {
+    if (chatOpen) {
+      setShowModal(true)
+    }
+  }, [chatOpen])
   const handleLeave = () => {
     sessionStorage.clear("user_room_name");
     socket.emit("leave-room", { room, username });

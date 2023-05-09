@@ -100,25 +100,45 @@ const Room = ({ room, username }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <RoomContext.Provider value={room}>
-        <div className="flex-1 relative">
-          {screenIndex === 0 && <ChatScreen username={username} />}
-          {screenIndex === 2 && (
-            <DefaultScreen participants={participants} invite={invite} username={username} room={room} />
-          )}
-          {screenIndex === 3 && (
-            <PeopleScreen
+        {screenIndex !== 2 && (
+          <div className="hidden md:block">
+            <DefaultScreen
               participants={participants}
               invite={invite}
-              closeButtonRef={closeButtonRef}
-              closeInvite={closeInvite}
-              copyLink={copyLink}
-              inviteModalRef={inviteModalRef}
-              roomLink={roomLink}
-              visible={visible}
-              showClipBoardModal={showClipBoardModal}
+              username={username}
+              room={room}
+              chatOpen={screenIndex === 0}
+            />
+          </div>
+        )}
+        <div className="flex-1 relative">
+          <div className="md:hidden">
+            {screenIndex === 0 && <ChatScreen username={username} />}
+          </div>
+          {screenIndex === 2 && (
+            <DefaultScreen
+              participants={participants}
+              invite={invite}
+              username={username}
+              room={room}
             />
           )}
-          {screenIndex === 4 && <TabScreen />}
+          <div className="md:hidden">
+            {screenIndex === 3 && (
+              <PeopleScreen
+                participants={participants}
+                invite={invite}
+                closeButtonRef={closeButtonRef}
+                closeInvite={closeInvite}
+                copyLink={copyLink}
+                inviteModalRef={inviteModalRef}
+                roomLink={roomLink}
+                visible={visible}
+                showClipBoardModal={showClipBoardModal}
+              />
+            )}
+          </div>
+          <div className="md:hidden">{screenIndex === 4 && <TabScreen />}</div>
         </div>
       </RoomContext.Provider>
       <div className="relative h-16 md:hidden">
