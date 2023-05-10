@@ -16,10 +16,16 @@ body {
       lg:text-lg lg:font-semibold lg:ml-3 tracking-wide
   }
   .bottom-nav-icon {
-    @apply text-2xl text-white opacity-75 
+    @apply text-2xl text-white opacity-75
   }
   .bottom-nav {
     @apply flex flex-1 justify-center text-center cursor-pointer
     hover:bg-blacklike
+  }
+  .sidebar-icon {
+    @apply
+    before:absolute text-lg whitespace-nowrap before:mr-3 before:text-white
+    before:right-full
+    my-2 mx-auto hover:bg-blackhover rounded p-3 cursor-pointer
   }
 }
