@@ -6,17 +6,32 @@ import Bar from "../Bar";
 import SideBar from "../SideBar";
 import { useEffect, useState } from "react";
 import SideModal from "../SideModal";
+import Modal from "../Modal";
+import AnimatedModal from "../AnimatedModal";
 
-const DefaultScreen = ({ username, room, participants, invite, chatOpen }) => {
+const DefaultScreen = ({
+  username,
+  room,
+  participants,
+  invite,
+  chatOpen,
+  visible,
+  roomLink,
+  closeInvite,
+  inviteModalRef,
+  closeButtonRef,
+  copyLink,
+  showClipBoardModal
+}) => {
   const [showModal, setShowModal] = useState(false);
   const closeSideModal = () => {
     setShowModal(false);
   };
   useEffect(() => {
     if (chatOpen) {
-      setShowModal(true)
+      setShowModal(true);
     }
-  }, [chatOpen])
+  }, [chatOpen]);
   const handleLeave = () => {
     sessionStorage.clear("user_room_name");
     socket.emit("leave-room", { room, username });
@@ -54,7 +69,7 @@ const DefaultScreen = ({ username, room, participants, invite, chatOpen }) => {
       </div>
 
       <div className="flex h-full">
-        <div className="max-w-xs py-12 mx-auto">
+        <div className="relative max-w-xs py-12 mx-auto">
           <Options />
         </div>
         <div className="hidden md:block">
@@ -68,6 +83,15 @@ const DefaultScreen = ({ username, room, participants, invite, chatOpen }) => {
         </div>
         <SideBar setShowModal={setShowModal} showModal={showModal} />
       </div>
+      <Modal
+        closeButtonRef={closeButtonRef}
+        closeInvite={closeInvite}
+        copyLink={copyLink}
+        inviteModalRef={inviteModalRef}
+        roomLink={roomLink}
+        visible={visible}
+      />
+      {showClipBoardModal && <AnimatedModal />}
     </main>
   );
 };

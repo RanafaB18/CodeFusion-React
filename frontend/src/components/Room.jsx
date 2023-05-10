@@ -65,16 +65,12 @@ const Room = ({ room, username }) => {
     setVisible(true);
   };
   const closeInvite = (event) => {
-    if (
-      inviteModalRef.current &&
-      event.target !== inviteModalRef.current &&
-      !closeButtonRef.current.contains(event.target)
-    ) {
-      console.log("You touched the form");
-      return;
+    event.stopPropagation() // Stops parent from running closeInvite
+    if (event.target === event.currentTarget || event.currentTarget.tagName === "BUTTON") {
+      setVisible(false);
+      // Comment the below line of code when implementing the "stop-animation-on-hover" thingie
+      // setShowClipBoardModal(false);
     }
-    setVisible(false);
-    setShowClipBoardModal(false);
   };
   const copyLink = async () => {
     const permission = await navigator.permissions.query({
@@ -108,6 +104,13 @@ const Room = ({ room, username }) => {
               username={username}
               room={room}
               chatOpen={screenIndex === 0}
+              closeButtonRef={closeButtonRef}
+              closeInvite={closeInvite}
+              copyLink={copyLink}
+              inviteModalRef={inviteModalRef}
+              roomLink={roomLink}
+              showClipBoardModal={showClipBoardModal}
+              visible={visible}
             />
           </div>
         )}
@@ -121,6 +124,13 @@ const Room = ({ room, username }) => {
               invite={invite}
               username={username}
               room={room}
+              closeButtonRef={closeButtonRef}
+              closeInvite={closeInvite}
+              copyLink={copyLink}
+              inviteModalRef={inviteModalRef}
+              roomLink={roomLink}
+              showClipBoardModal={showClipBoardModal}
+              visible={visible}
             />
           )}
           <div className="md:hidden">

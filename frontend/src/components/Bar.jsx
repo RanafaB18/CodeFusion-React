@@ -7,7 +7,6 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const handleClick = () => {
     setShowModal(!showModal);
   };
-  console.log("Bar...", username);
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
