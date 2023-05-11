@@ -11,6 +11,7 @@ import DefaultScreen from "./screens/DefaultScreen";
 import ChatScreen from "./screens/ChatScreen";
 import { RoomContext } from "../context/RoomContext";
 import UserJoinedModal from "./UserJoinedModal";
+import VideoScreen from "./screens/VideoScreen";
 
 const Room = ({ room, username }) => {
   // let roomLink;
@@ -117,6 +118,9 @@ const Room = ({ room, username }) => {
         <div className="flex-1 relative">
           <div className="md:hidden">
             {screenIndex === 0 && <ChatScreen username={username} />}
+          </div>
+          <div className="md:hidden">
+            {screenIndex === 1 && <VideoScreen username={username} />}
           </div>
           {screenIndex === 2 && (
             <DefaultScreen
