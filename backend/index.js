@@ -34,10 +34,18 @@ io.on('connection', (socket) => {
         }
     })
     socket.on("user_joined", (obj) => {
-        Rooms[obj.room].push(obj.username)
+        Rooms[obj.room].push({ username: obj.username, userId: socket.id })
         console.log("New user: ", Rooms)
         socket.to(obj.room).emit("message", { username: obj.username })
     })
+
+    socket.on('sending-signal', payload => {
+        io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload })
+    })
+
+    socket.on("returning signal", payload => {
+        io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
+    });
     // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
     socket.on("send_message", (messageData) => {
@@ -60,7 +68,7 @@ io.on('connection', (socket) => {
 
     socket.on('get-users', ({ room }) => {
         console.log("Informing all clients in the room")
-        io.to(room).emit("all_users", { rooms: Rooms })
+        io.to(room).emit("all_users", { users: Rooms[room] })
     })
     socket.on("close-tab", () => {
         console.log("Tab is closing")
@@ -68,7 +76,7 @@ io.on('connection', (socket) => {
 
     socket.on("leave-room", ({ room, username }) => {
         console.log(`${username} has left the meeting`)
-        Rooms[room] = Rooms[room].filter((name) => name !== username)
+        Rooms[room] = Rooms[room].filter((name) => name.username !== username)
         if (Rooms[room].length === 0) {
             delete Rooms[room]
             delete Messages[room]
@@ -102,7 +110,7 @@ app.post('/:room/users', (req, res) => {
     console.log(`${name} is either leaving`)
     // Check if it's a refresh
     if (Rooms[room]) {
-        Rooms[room] = Rooms[room].filter((usernames) => usernames != name)
+        Rooms[room] = Rooms[room].filter((user) => user.username != name)
         if (Rooms[room].length === 0) {
             delete Rooms[room]
             delete Messages[room]
