@@ -36,7 +36,7 @@ const PeopleScreen = ({
       </div>
       <div className="py-4">
         {participants.map((peep, index) => (
-          <Person key={index} name={peep} />
+          <Person key={index} name={peep.username} />
         ))}
       </div>
       <Modal

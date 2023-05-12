@@ -57,7 +57,8 @@ const Room = ({ room, username }) => {
   };
   const handleUsers = (users) => {
     console.log("Running here");
-    setParticipants(users.rooms[room]);
+    console.log(users.users)
+    setParticipants(users.users);
   };
 
   const inviteModalRef = useRef(null);
