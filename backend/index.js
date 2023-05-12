@@ -26,6 +26,9 @@ io.on('connection', (socket) => {
             console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
         }
     })
+    socket.on("join-video", (room) => {
+        socket.emit("all_participants", Rooms[room])
+    })
     socket.on("is-valid-room", (room) => {
         if (Rooms[room]) {
             socket.emit("valid-room", true)
@@ -40,6 +43,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sending-signal', payload => {
+        console.log("Payload", payload)
         io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload })
     })
 
