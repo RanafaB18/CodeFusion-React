@@ -1,3 +1,5 @@
+import { useRef, useEffect } from "react";
+
 const Video = (props) => {
     const ref = useRef();
 
