@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaPaperPlane, FaPaperclip, FaPlane, FaSmile } from "react-icons/fa";
-import { socket } from "..";
+import { socket } from "../Home";
 import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
 // message: {message: "What's up?", user: username, time}

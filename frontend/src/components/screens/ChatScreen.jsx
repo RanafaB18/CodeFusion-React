@@ -3,7 +3,7 @@ import MessageBar from "../MessageBar";
 import Message from "../Message";
 import axiosUtil from "../../services";
 import { RoomContext } from "../../context/RoomContext";
-import { socket } from "../..";
+import { socket } from "../../Home";
 
 const ChatScreen = ({ username, isSmall }) => {
   const [messages, setMessages] = useState([]);

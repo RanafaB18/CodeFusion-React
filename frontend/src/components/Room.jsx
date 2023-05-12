@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Options from "./Options";
 import AnimatedModal from "./AnimatedModal";
 import Modal from "./Modal";
-import { socket } from "..";
+import { socket } from "../Home";
 import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
 import PeopleScreen from "./screens/PeopleScreen";

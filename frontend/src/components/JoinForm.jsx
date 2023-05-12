@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axiosUtil from '../services'
-import { socket } from "..";
+import { socket } from "../Home";
 export async function loader({ params }) {
   console.log("Params", params)
   socket.emit("join_room", params.id);

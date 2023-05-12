@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Home, { action as joinAction } from "./index";
+import Home, { action as joinAction } from "./Home";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Contact from "./routes/contact";
-import JoinRoom from "./routes/go";
+import JoinRoom from "./routes/JoinRoom";
 import  { loader as roomLoader } from './components/JoinForm'
 
 const router = createBrowserRouter([

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Outlet, useLoaderData } from "react-router-dom";
-import Home, { socket } from "..";
+import Home, { socket } from "../Home";
 import axiosUtil from "../services";
 import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
