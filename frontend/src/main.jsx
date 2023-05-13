@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Contact from "./routes/contact";
 import JoinRoom from "./routes/JoinRoom";
 import  { loader as roomLoader } from './components/JoinForm'
+import { RoomProvider } from "./context/RoomContext";
 
 const router = createBrowserRouter([
     {
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
 
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <RouterProvider router={router} />
+    <RoomProvider>
+        <RouterProvider router={router} />
+    </RoomProvider>
 );
   // <React.StrictMode>
   //   <RouterProvider router={router} />

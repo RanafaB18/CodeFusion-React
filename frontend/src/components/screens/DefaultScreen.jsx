@@ -1,6 +1,5 @@
 import { FaEllipsisV } from "react-icons/fa";
 import Options from "../Options";
-import { socket } from "../../Home";
 import { Link, redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";

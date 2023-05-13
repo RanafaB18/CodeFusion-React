@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaPaperPlane, FaPaperclip, FaPlane, FaSmile } from "react-icons/fa";
-import { socket } from "../Home";
 import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
 // message: {message: "What's up?", user: username, time}
@@ -8,7 +7,7 @@ import { RoomContext } from "../context/RoomContext";
 
 const MessageBar = ({username, addMessages}) => {
   const [message, setMessage] = useState("");
-  const room = useContext(RoomContext)
+  const { room } = useContext(RoomContext)
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };

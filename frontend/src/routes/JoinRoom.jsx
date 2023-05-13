@@ -1,22 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Outlet, useLoaderData } from "react-router-dom";
-import Home, { socket } from "../Home";
+import Home from "../Home";
 import axiosUtil from "../services";
 import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
 import Loading from "../components/Loading";
+import { RoomContext } from "../context/RoomContext";
 
 const JoinRoom = () => {
+  const { socket } = useContext(RoomContext)
   const [createdUserName, setCreatedUsername] = useState(false);
   const [userRoomName, setUserRoomName] = useState("");
   const [session, setSession] = useState(null);
   const [validRoom, setValidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const room = useLoaderData();
-
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
     socket.emit("is-valid-room", room);

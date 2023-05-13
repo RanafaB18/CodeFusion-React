@@ -1,17 +1,25 @@
-import { useState } from "react";
-import axiosUtil from '../services'
-import { socket } from "../Home";
+import { useContext, useState, useEffect } from "react";
+import axiosUtil from "../services";
+import { RoomContext } from "../context/RoomContext";
+import { useLoaderData } from "react-router";
 export async function loader({ params }) {
-  console.log("Params", params)
-  socket.emit("join_room", params.id);
-  return params.id
+  console.log("Params", params);
+  return params.id;
 }
-const JoinForm = ({ room, userRoomName, setUserRoomName, setCreatedUsername }) => {
+const JoinForm = ({
+  room,
+  userRoomName,
+  setUserRoomName,
+  setCreatedUsername,
+}) => {
+  const { socket, me } = useContext(RoomContext);
+  const roomLink = useLoaderData();
   const handleSubmit = () => {
-    socket.emit("user_joined", {username: userRoomName, room: room})
+    socket.emit("join_room", roomLink);
     setCreatedUsername(true);
-    sessionStorage.setItem("user_room_name", userRoomName)
+    sessionStorage.setItem("user_room_name", userRoomName);
   };
+
   return (
     <div className="pt-20">
       <div className="bg-white p-8 max-w-xs mx-auto rounded-md">

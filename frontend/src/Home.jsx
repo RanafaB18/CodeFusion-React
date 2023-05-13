@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Form, redirect } from "react-router-dom";
 import Features from "./components/Features";
 import Layout from "./components/Layout";
 import axiosUtil from "./services";
-import { io } from "socket.io-client";
 import Button from "./components/Button";
 
 
 export async function action({ request, params }) {
   console.log("Params  id", params.id)
   const data = await axiosUtil.getRoomID(params.id);
-  socket.emit("join_room", data.roomLink);
   return redirect(`/go/${data.roomLink}`);
 }
 
-export const socket = io("http://localhost:3004");
 export default function Home() {
   const [room, setRoom] = useState("");
   return (

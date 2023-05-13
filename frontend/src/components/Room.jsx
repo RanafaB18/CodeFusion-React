@@ -1,8 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import Options from "./Options";
 import AnimatedModal from "./AnimatedModal";
 import Modal from "./Modal";
-import { socket } from "../Home";
 import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
 import PeopleScreen from "./screens/PeopleScreen";
@@ -21,45 +20,32 @@ const Room = ({ room, username }) => {
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
-  let pageAccessedByReload =
-    (window.performance.navigation &&
-      window.performance.navigation.type === 1) ||
-    window.performance
-      .getEntriesByType("navigation")
-      .map((nav) => nav.type)
-      .includes("reload");
+  const { socket, me, stream } = useContext(RoomContext)
+
   useEffect(() => {
     setRoomLink(window.location.href);
-    socket.emit("get-users", { room: room });
-    socket.on("all_users", handleUsers);
     socket.on("message", notifyUsers);
-    socket.on("left-room", handleUsers);
-    window.addEventListener("unload", handleTabClose);
+    socket.emit("user_joined", { username: username, room: room, peerId: me._id})
+    socket.on("get-users", handleUsers);
+
+    // socket.on("left-room", handleUsers);
 
     return () => {
-      socket.off("all_users", handleUsers);
+      // socket.off("get-users", handleUsers);
       socket.off("message", notifyUsers);
-      socket.off("left-room", handleUsers);
-      window.removeEventListener("unload", handleTabClose);
+      // socket.off("left-room", handleUsers);
     };
   }, [room]);
-  const notifyUsers = ({ username }) => {
+  const handleUsers = ({room, participants}) => {
+    console.log("Participants", participants)
+    setParticipants(participants);
+  };
+  const notifyUsers = ({ username, participants }) => {
     console.log(`${username} has joined the chat`);
+    setParticipants(participants)
   };
-  const handleTabClose = (event) => {
-    if (event && event.returnValue) {
-      const leaving = async () => {
-        await axiosUtil.updateUsers(username, room);
-        socket.emit("get-users", { room: room });
-      };
-      leaving();
-    }
-  };
-  const handleUsers = (users) => {
-    console.log("Running here");
-    console.log(users.users)
-    setParticipants(users.users);
-  };
+
+
 
   const inviteModalRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -97,7 +83,7 @@ const Room = ({ room, username }) => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <RoomContext.Provider value={room}>
+      <RoomContext.Provider value={{room, socket}}>
         {screenIndex !== 2 && (
           <div className="hidden md:block">
             <DefaultScreen
@@ -121,7 +107,7 @@ const Room = ({ room, username }) => {
             {screenIndex === 0 && <ChatScreen username={username} />}
           </div>
           <div className="md:hidden">
-            {screenIndex === 1 && <VideoScreen username={username} />}
+            {screenIndex === 1 && <VideoScreen username={username} stream={stream} />}
           </div>
           {screenIndex === 2 && (
             <DefaultScreen

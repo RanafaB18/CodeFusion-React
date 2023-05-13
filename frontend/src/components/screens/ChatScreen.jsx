@@ -3,16 +3,16 @@ import MessageBar from "../MessageBar";
 import Message from "../Message";
 import axiosUtil from "../../services";
 import { RoomContext } from "../../context/RoomContext";
-import { socket } from "../../Home";
 
 const ChatScreen = ({ username, isSmall }) => {
   const [messages, setMessages] = useState([]);
-  const room = useContext(RoomContext);
+  const { room, socket } = useContext(RoomContext);
   const scrollableContainer = useRef(null);
   const userRoomName = sessionStorage.getItem("user_room_name");
-
   useEffect(() => {
     console.log("User effect run");
+    console.log("Socket", socket);
+    console.log("Room", room);
     async function fetchMessages() {
       const roomMessages = await axiosUtil.getMessages(room);
       return roomMessages;

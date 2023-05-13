@@ -1,16 +1,17 @@
 import { useRef, useEffect } from "react";
 
-const Video = (props) => {
-    const ref = useRef();
+const Video = ({stream}) => {
+    const videoRef = useRef(null);
+    console.log("Stream", stream)
 
     useEffect(() => {
-        props.peer.on("stream", stream => {
-            ref.current.srcObject = stream;
-        })
+        if (videoRef.current){
+            videoRef.current.srcObject = stream;
+        }
     }, []);
 
     return (
-        <video playsInline autoPlay ref={ref} />
+        <video muted autoPlay ref={videoRef} />
     );
 }
 
