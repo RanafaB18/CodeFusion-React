@@ -36,10 +36,26 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
-    socket.on("user_joined", (obj) => {
-        Rooms[obj.room].push({ username: obj.username, userId: socket.id })
-        console.log("New user: ", Rooms)
-        socket.to(obj.room).emit("message", { username: obj.username })
+    socket.on("user_joined", ({ username, room, peerId}) => {
+        if (Rooms[room]){
+            Rooms[room].push({ username: username, userId: peerId })
+            socket.join(room)
+            socket.to(room).emit("user-joined", { peerId, username })
+            console.log("New user: ", username, peerId)
+            socket.emit('get-users', {room: room, participants: Rooms[room]})
+            console.log("Specific Rooms", Rooms[room])
+            console.log("Rooms", Rooms)
+
+            io.to(room).emit("message", { username: username, participants: Rooms[room] })
+            socket.on('disconnect', () => {
+                console.log(`${username} left the room`)
+                Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
+                io.to(room).emit('message', {username: username, participants: Rooms[room]})
+                
+                // Might change
+                socket.to(room).emit('user-disconnected', peerId)
+            })
+        }
     })
 
     socket.on('sending-signal', payload => {
@@ -70,10 +86,10 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('get-users', ({ room }) => {
-        console.log("Informing all clients in the room")
-        io.to(room).emit("all_users", { users: Rooms[room] })
-    })
+    // socket.on('get-users', ({ room }) => {
+    //     console.log("Informing all clients in the room")
+    //     io.to(room).emit("all_users", { users: Rooms[room] })
+    // })
     socket.on("close-tab", () => {
         console.log("Tab is closing")
     })
@@ -92,10 +108,10 @@ io.on('connection', (socket) => {
         socket.leave(room)
     })
 
-    socket.on('disconnect', () => {
-        // Tab was closed
-        console.log(`${socket.id} has disconnected`)
-    })
+    // socket.on('disconnect', () => {
+    //     // Tab was closed
+    //     console.log(`${socket.id} has disconnected`)
+    // })
 })
 
 
