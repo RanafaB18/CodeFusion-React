@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-const Video = ({stream}) => {
+const Video = ({stream, username}) => {
     const videoRef = useRef(null);
     console.log("Stream", stream)
 
@@ -11,7 +11,13 @@ const Video = ({stream}) => {
     }, []);
 
     return (
-        <video muted autoPlay ref={videoRef} />
+        <div className="relative">
+            <video muted autoPlay ref={videoRef} />
+            <div className="absolute bottom-0">
+                <span className="text-2xl text-white">{username === undefined ? "Unknown" : username}</span>
+            </div>
+
+        </div>
     );
 }
 

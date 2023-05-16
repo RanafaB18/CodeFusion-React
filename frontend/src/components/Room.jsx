@@ -20,7 +20,7 @@ const Room = ({ room, username }) => {
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
-  const { socket, me, stream } = useContext(RoomContext)
+  const { socket, me, stream, peers } = useContext(RoomContext)
 
   useEffect(() => {
     setRoomLink(window.location.href);
@@ -83,7 +83,7 @@ const Room = ({ room, username }) => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <RoomContext.Provider value={{room, socket}}>
+      <RoomContext.Provider value={{room, socket, peers}}>
         {screenIndex !== 2 && (
           <div className="hidden md:block">
             <DefaultScreen
@@ -107,7 +107,7 @@ const Room = ({ room, username }) => {
             {screenIndex === 0 && <ChatScreen username={username} />}
           </div>
           <div className="md:hidden">
-            {screenIndex === 1 && <VideoScreen username={username} stream={stream} />}
+            {screenIndex === 1 && <VideoScreen username={username} stream={stream} peers={peers} />}
           </div>
           {screenIndex === 2 && (
             <DefaultScreen
