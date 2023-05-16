@@ -12,18 +12,8 @@ const io = new Server(server, {
     }
 })
 app.use(express.json())
-const whitelist = ["https://code-fusion-react-r4y6.vercel.app"]
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error("Not allowed by CORS"))
-    }
-  },
-  credentials: true,
-}
-app.use(cors(corsOptions))
+
+app.use(cors())
 
 console.log("roomLinks", roomLinks)
 io.on('connection', (socket) => {
