@@ -7,23 +7,13 @@ const server = http.createServer(app)
 const cors = require('cors')
 const { Server } = require('socket.io')
 const io = new Server(server, {
-    cors: {
-        origin: "https://code-fusion-react-r4y6.vercel.app"
+    allowRequest: (req, callback) => {
+        const noOriginHeader = req.headers.origin === undefined;
+        callback(null, noOriginHeader);
     }
 })
 app.use(express.json())
-const whitelist = ["https://code-fusion-react-r4y6.vercel.app"]
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error("Not allowed by CORS"))
-    }
-  },
-  credentials: true,
-}
-app.use(cors(corsOptions))
+app.use(cors())
 
 console.log("roomLinks", roomLinks)
 io.on('connection', (socket) => {
