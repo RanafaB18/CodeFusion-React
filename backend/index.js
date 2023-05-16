@@ -7,7 +7,9 @@ const server = http.createServer(app)
 const cors = require('cors')
 const { Server } = require('socket.io')
 const io = new Server(server, {
-    cors: { origin : '*',}}
+    cors: { origin: '*', },
+    transports: ['websocket', 'polling']
+}
 )
 
 app.use(express.json())
@@ -34,13 +36,13 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
-    socket.on("user_joined", ({ username, room, peerId}) => {
-        if (Rooms[room]){
+    socket.on("user_joined", ({ username, room, peerId }) => {
+        if (Rooms[room]) {
             Rooms[room].push({ username: username, userId: peerId })
             socket.join(room)
             socket.to(room).emit("user-joined", { peerId, username })
             console.log("New user: ", username, peerId)
-            socket.emit('get-users', {room: room, participants: Rooms[room]})
+            socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
 
@@ -48,7 +50,7 @@ io.on('connection', (socket) => {
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
-                io.to(room).emit('message', {username: username, participants: Rooms[room]})
+                io.to(room).emit('message', { username: username, participants: Rooms[room] })
 
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
