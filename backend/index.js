@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
                 io.to(room).emit('message', {username: username, participants: Rooms[room]})
-                
+
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
             })
@@ -143,7 +143,7 @@ app.post('/:room/users', (req, res) => {
     return res.end()
 })
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000
 server.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 })
