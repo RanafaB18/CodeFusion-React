@@ -9,9 +9,9 @@ const { Server } = require('socket.io')
 const io = new Server(server, {
     cors: { origin: '*', }
 })
+app.use(cors())
 
 app.use(express.json())
-app.use(cors())
 
 console.log("roomLinks", roomLinks)
 io.on('connection', (socket) => {
