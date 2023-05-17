@@ -7,7 +7,8 @@ import { addPeerAction, removePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
 const socket = io("https://code-fusion-react.vercel.app/", {
-  withCredentials: true
+  withCredentials: true,
+  transports: ['websocket']
 });
 
 export const RoomProvider = ({ children }) => {
