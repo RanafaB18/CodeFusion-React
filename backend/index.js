@@ -7,10 +7,8 @@ const server = http.createServer(app)
 const cors = require('cors')
 const { Server } = require('socket.io')
 const io = new Server(server, {
-    cors: { origin: '*', },
-    transports: ['websocket']
-}
-)
+    cors: { origin: '*', }
+})
 
 app.use(express.json())
 app.use(cors())
