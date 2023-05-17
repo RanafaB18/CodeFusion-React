@@ -6,10 +6,9 @@ import { peerReducer } from "./peerReducer";
 import { addPeerAction, removePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
-const socket = io("https://code-fusion-react.vercel.app", {
-  withCredentials: true,
-  transports: ['websocket']
-});
+// const url = "https://code-fusion-react.vercel.app"
+const url = "https://localhost:3004"
+const socket = io(url);
 
 export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState();
