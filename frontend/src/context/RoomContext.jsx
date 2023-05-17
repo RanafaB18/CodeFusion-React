@@ -49,7 +49,7 @@ export const RoomProvider = ({ children }) => {
       call.on("stream", (peerStream) => {
         console.log("Peers", peers)
         console.dir(call)
-        dispatch(addPeerAction(call.peer, peerStream, call.metadata));
+        dispatch(addPeerAction(call.peer, peerStream, "Unknown"));
       });
     });
   });
