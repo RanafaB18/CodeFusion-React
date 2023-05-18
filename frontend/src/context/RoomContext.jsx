@@ -21,14 +21,16 @@ export const RoomProvider = ({ children }) => {
     const peer = new Peer(meId);
     setMe(peer);
 
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setStream(stream);
-      })
-      .catch((err) => {
-        console.log("Error:", err);
-      });
+    socket.on('get-permissions', () => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          setStream(stream);
+        })
+        .catch((err) => {
+          console.log("Error:", err);
+        });
+    })
     socket.on("user-disconnected", removePeer)
   }, []);
 
