@@ -36,22 +36,26 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
-    socket.on("user_joined", ({ username, room, peerId}) => {
-        if (Rooms[room]){
+    socket.on("user_joined", ({ username, room, peerId }) => {
+        if (Rooms[room]) {
             Rooms[room].push({ username: username, userId: peerId })
             socket.join(room)
             socket.to(room).emit("user-joined", { peerId, username })
             console.log("New user: ", username, peerId)
-            socket.emit('get-users', {room: room, participants: Rooms[room]})
+            socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
-
+            socket.emit('get-permissions')
             io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
-                io.to(room).emit('message', {username: username, participants: Rooms[room]})
-                
+                io.to(room).emit('message', { username: username, participants: Rooms[room] })
+                if (Rooms[room].length === 0) {
+                    delete Rooms[room]
+                    delete Messages[room]
+                }
+                console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
             })
