@@ -5,30 +5,59 @@ import { RoomContext } from "../../context/RoomContext";
 const PermissionScreen = ({ setPermissionReceived }) => {
   const mouseRef = useRef();
   const buttonRef = useRef();
+  const allowButtonRef = useRef()
   const { socket, setStream } = useContext(RoomContext);
   useEffect(() => {
+    const mouse = mouseRef.current;
+    const button = buttonRef.current;
+    const allowButton = allowButtonRef.current
+    const elementsOverlap = (el1, el2) => {
+      const domRect1 = el1.getBoundingClientRect();
+      const domRect2 = el2.getBoundingClientRect();
+
+      return !(
+        domRect1.top > domRect2.bottom ||
+        domRect1.right < domRect2.left ||
+        domRect1.bottom < domRect2.top ||
+        domRect1.left > domRect2.right
+      );
+    }
     const animateMouse = () => {
-      mouseRef.current.classList.add("move-down", "animate-moveDown");
+      mouse.classList.add("move-down", "animate-moveDown");
+
       setTimeout(() => {
-        buttonRef.current.classList.remove('scale-75')
-        mouseRef.current.classList.remove("move-down", "animate-moveDown");
-        mouseRef.current.classList.add("move-up", "animate-moveUp");
+        if (elementsOverlap(mouse, button)) {
+          button.classList.add("scale-95");
+          setTimeout(() => {
+            button.classList.remove("scale-95");
+            mouse.classList.remove("move-down", "animate-moveDown");
+          }, 200);
+        }
+        mouse.classList.add("move-up", "animate-moveUp");
       }, 2000);
+
       setTimeout(() => {
-        mouseRef.current.classList.remove("move-up", "animate-moveUp");
-        mouseRef.current.classList.add("reset", "animate-reset");
+        if (elementsOverlap(mouse, allowButton)){
+          allowButton.classList.add("scale-95")
+          setTimeout(() => {
+            allowButton.classList.remove("scale-95")
+          }, 200);
+        }
+        mouse.classList.remove("move-up", "animate-moveUp");
+        mouse.classList.add("reset", "animate-reset");
       }, 4000);
       setTimeout(() => {
-        mouseRef.current.classList.remove("reset", "animate-reset");
+        mouse.classList.remove("reset", "animate-reset");
       }, 6000);
+      console.log(mouse.getBoundingClientRect())
+      console.log(button.getBoundingClientRect())
     };
 
     animateMouse();
     const intervalId = setInterval(animateMouse, 6000);
-
     return () => {
       clearInterval(intervalId);
-    }
+    };
   }, []);
   const handlePermissions = () => {
     navigator.mediaDevices
@@ -65,8 +94,8 @@ const PermissionScreen = ({ setPermissionReceived }) => {
               <div className="bg-[#9ca3af] h-3 w-2/4 rounded-xl"></div>
             </div>
             <div className="flex items-center justify-around">
-              <button className="border px-6 text-[#9ca3af]">Block</button>
-              <button className="font-bold border px-6">Allow</button>
+              <button className="border shadow-md px-6 text-[#9ca3af]">Block</button>
+              <button ref={allowButtonRef} className="font-bold border shadow-md px-6">Allow</button>
             </div>
           </div>
           <div className="flex flex-col max-w-xs mx-auto p-3 bg-white gap-3 rounded-md">
