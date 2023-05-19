@@ -10,6 +10,7 @@ import ErrorPage from "../components/ErrorPage";
 import Loading from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
 import PermissionScreen from "../components/screens/PermissionScreen";
+import PermissionModal from "../components/PermissionModal";
 
 const JoinRoom = () => {
   const { socket } = useContext(RoomContext)
@@ -53,7 +54,7 @@ const JoinRoom = () => {
             />
           ) : (!permissionReceived ?
             // <Room room={room} username={userRoomName || session} />
-            <PermissionScreen setPermissionReceived={setPermissionReceived} /> : <Room room={room} username={userRoomName || session} />)
+            <PermissionScreen setPermissionReceived={setPermissionReceived} /> : <PermissionModal username={userRoomName || session} room={room}/>)
           }
         </div>
       </HelmetProvider>

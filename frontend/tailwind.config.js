@@ -31,6 +31,7 @@ export default {
         moveDown: 'moveDown 1s ease-out forwards;',
         moveUp: 'moveUp 1s ease-out forwards;',
         reset: 'reset 1s ease-out forwards;',
+        move: 'move 500s ease-out forwards'
       },
       keyframes: {
         decrease: {
@@ -52,6 +53,10 @@ export default {
         },
         reset: {
           "100%": { "offset-distance": '100%' }
+        },
+        move: {
+          '0%': { "justify-content": "start"},
+          "100%": { "justify-content": 'end' }
         }
       }
     },
