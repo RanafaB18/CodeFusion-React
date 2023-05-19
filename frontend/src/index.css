@@ -9,6 +9,20 @@ body {
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .move-down {
+    offset-path: path("M0 0 L0 120");
+    transform: rotate(260deg);
+  }
+  .move-up {
+    offset-path: path("M0 120 L-140 -100");
+    transform: rotate(120deg);
+  }
+  .reset {
+    offset-path: path("M-140 -100 L0 0");
+    transform: rotate(-30deg);
+  }
+}
 @layer components {
   .nav-link {
       @apply mx-2 p-2 mb-1 hover:bg-blackhover rounded-md

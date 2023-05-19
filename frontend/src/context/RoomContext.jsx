@@ -21,16 +21,7 @@ export const RoomProvider = ({ children }) => {
     const peer = new Peer(meId);
     setMe(peer);
 
-    socket.on('get-permissions', () => {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          setStream(stream);
-        })
-        .catch((err) => {
-          console.log("Error:", err);
-        });
-    })
+
     socket.on("user-disconnected", removePeer)
   }, []);
 
@@ -56,7 +47,7 @@ export const RoomProvider = ({ children }) => {
     });
   });
   return (
-    <RoomContext.Provider value={{ socket, me, stream, peers }}>
+    <RoomContext.Provider value={{ socket, me, stream, peers, setStream }}>
       {children}
     </RoomContext.Provider>
   );

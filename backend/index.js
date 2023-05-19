@@ -36,6 +36,9 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
+    socket.on('request-permissions', () => {
+        socket.emit('get-permissions')
+    })
     socket.on("user_joined", ({ username, room, peerId }) => {
         if (Rooms[room]) {
             Rooms[room].push({ username: username, userId: peerId })
@@ -45,7 +48,6 @@ io.on('connection', (socket) => {
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
-            socket.emit('get-permissions')
             io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)

@@ -27,19 +27,31 @@ export default {
       },
       animation: {
         decrease: 'decrease 3s linear forwards',
-        slideIn: 'slideIn .3s ease-out reverse'
+        slideIn: 'slideIn .3s ease-out reverse',
+        moveDown: 'moveDown 1s ease-out forwards;',
+        moveUp: 'moveUp 1s ease-out forwards;',
+        reset: 'reset 1s ease-out forwards;',
       },
       keyframes: {
         decrease: {
           '0%': { width: '100%' },
-          '25%': { width: '75$'},
+          '25%': { width: '75$' },
           '50%': { width: '50%' },
           '75%': { width: '25%' },
           '100%': { width: '0' }
         },
         slideIn: {
-          '0%': { transform:  'translateX(0px)' },
-          '100%': { transform:'translateX(100%)' }
+          '0%': { transform: 'translateX(0px)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
+        moveDown: {
+          '100%': { "offset-distance": '100%' }
+        },
+        moveUp: {
+          "100%": { "offset-distance": '100%' }
+        },
+        reset: {
+          "100%": { "offset-distance": '100%' }
         }
       }
     },

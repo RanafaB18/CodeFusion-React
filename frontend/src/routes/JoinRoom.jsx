@@ -9,6 +9,7 @@ import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
 import Loading from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
+import PermissionScreen from "../components/screens/PermissionScreen";
 
 const JoinRoom = () => {
   const { socket } = useContext(RoomContext)
@@ -17,6 +18,7 @@ const JoinRoom = () => {
   const [session, setSession] = useState(null);
   const [validRoom, setValidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [permissionReceived, setPermissionReceived] = useState(false)
   const room = useLoaderData();
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
@@ -49,9 +51,10 @@ const JoinRoom = () => {
               setUserRoomName={setUserRoomName}
               setCreatedUsername={setCreatedUsername}
             />
-          ) : (
-            <Room room={room} username={userRoomName || session} />
-          )}
+          ) : (!permissionReceived ?
+            // <Room room={room} username={userRoomName || session} />
+            <PermissionScreen setPermissionReceived={setPermissionReceived} /> : <Room room={room} username={userRoomName || session} />)
+          }
         </div>
       </HelmetProvider>
     );
