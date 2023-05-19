@@ -7,16 +7,28 @@ const PermissionScreen = ({ setPermissionReceived }) => {
   const buttonRef = useRef();
   const { socket, setStream } = useContext(RoomContext);
   useEffect(() => {
-    mouseRef.current.classList.add("move-down", "animate-moveDown");
-    setTimeout(() => {
-      mouseRef.current.classList.remove("move-down", "animate-moveDown");
-      mouseRef.current.classList.add("move-up", "animate-moveUp");
-    }, 2000);
-    setTimeout(() => {
-      mouseRef.current.classList.remove("move-up", "animate-moveUp");
-      mouseRef.current.classList.add("reset", "animate-reset");
-    }, 4000);
-    mouseRef.current.classList.remove("reset", "animate-reset");
+    const animateMouse = () => {
+      mouseRef.current.classList.add("move-down", "animate-moveDown");
+      setTimeout(() => {
+        buttonRef.current.classList.remove('scale-75')
+        mouseRef.current.classList.remove("move-down", "animate-moveDown");
+        mouseRef.current.classList.add("move-up", "animate-moveUp");
+      }, 2000);
+      setTimeout(() => {
+        mouseRef.current.classList.remove("move-up", "animate-moveUp");
+        mouseRef.current.classList.add("reset", "animate-reset");
+      }, 4000);
+      setTimeout(() => {
+        mouseRef.current.classList.remove("reset", "animate-reset");
+      }, 6000);
+    };
+
+    animateMouse();
+    const intervalId = setInterval(animateMouse, 6000);
+
+    return () => {
+      clearInterval(intervalId);
+    }
   }, []);
   const handlePermissions = () => {
     navigator.mediaDevices

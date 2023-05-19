@@ -20,7 +20,7 @@ body {
   }
   .reset {
     offset-path: path("M-140 -100 L0 0");
-    transform: rotate(-30deg);
+    transform: rotate(-40deg);
   }
 }
 @layer components {
