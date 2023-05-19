@@ -49,8 +49,6 @@ const PermissionScreen = ({ setPermissionReceived }) => {
       setTimeout(() => {
         mouse.classList.remove("reset", "animate-reset");
       }, 6000);
-      console.log(mouse.getBoundingClientRect())
-      console.log(button.getBoundingClientRect())
     };
 
     animateMouse();
