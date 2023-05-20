@@ -39,11 +39,12 @@ io.on('connection', (socket) => {
     socket.on('request-permissions', () => {
         socket.emit('get-permissions')
     })
-    socket.on("user_joined", ({ username, room, peerId }) => {
+    socket.on("user_joined", ({ username, room, peerId, viewStream }) => {
         if (Rooms[room]) {
-            Rooms[room].push({ username: username, userId: peerId })
+            Rooms[room].push({ username: username, userId: peerId, viewStream: viewStream })
             socket.join(room)
-            socket.to(room).emit("user-joined", { peerId, username })
+            console.log("View stream ?", viewStream)
+            socket.to(room).emit("user-joined", { peerId, username, viewStream })
             console.log("New user: ", username, peerId)
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
@@ -53,10 +54,12 @@ io.on('connection', (socket) => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
                 io.to(room).emit('message', { username: username, participants: Rooms[room] })
-                if (Rooms[room].length === 0) {
-                    delete Rooms[room]
-                    delete Messages[room]
-                }
+                // setTimeout(() => {
+                //     if (Rooms[room].length === 0) {
+                //         delete Rooms[room]
+                //         delete Messages[room]
+                //     }
+                // }, 4000);
                 console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
