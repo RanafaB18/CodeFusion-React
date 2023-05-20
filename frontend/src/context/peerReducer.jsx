@@ -8,7 +8,8 @@ export const peerReducer = (state, action) => {
                 ...state,
                 [action.payload.peerId]: {
                     stream: action.payload.stream,
-                    username: action.payload.username
+                    username: action.payload.username,
+                    viewStream: action.payload.viewStream
                 }
             }
         case ACTIONS.REMOVE_PEER:

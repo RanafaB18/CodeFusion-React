@@ -12,7 +12,7 @@ import { RoomContext } from "../context/RoomContext";
 import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
 
-const Room = ({ room, username }) => {
+const Room = ({ room, username, showStream }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
@@ -25,7 +25,7 @@ const Room = ({ room, username }) => {
   useEffect(() => {
     setRoomLink(window.location.href);
     socket.on("message", notifyUsers);
-    socket.emit("user_joined", { username: username, room: room, peerId: me._id})
+    socket.emit("user_joined", { username: username, room: room, peerId: me._id, viewStream: showStream})
     socket.on("get-users", handleUsers);
 
     // socket.on("left-room", handleUsers);
@@ -107,7 +107,7 @@ const Room = ({ room, username }) => {
             {screenIndex === 0 && <ChatScreen username={username} />}
           </div>
           <div className="md:hidden">
-            {screenIndex === 1 && <VideoScreen username={username} stream={stream} peers={peers} />}
+            {screenIndex === 1 && <VideoScreen showStream={showStream} username={username} stream={stream} peers={peers} />}
           </div>
           {screenIndex === 2 && (
             <DefaultScreen

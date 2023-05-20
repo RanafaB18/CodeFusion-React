@@ -12,6 +12,7 @@ export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState();
   const [stream, setStream] = useState();
   const [peers, dispatch] = useReducer(peerReducer, {});
+  const [allUsers, setAllUsers] = useState([])
   const removePeer = (peerId) => {
     dispatch(removePeerAction(peerId))
   }
@@ -29,11 +30,17 @@ export const RoomProvider = ({ children }) => {
     if (!me) return;
     if (!stream) return;
 
-    socket.on("user-joined", ({ peerId, username }) => {
+    socket.on('get-users', ({room, participants}) => {
+      console.log("In RoomContext: ", room, participants)
+      setAllUsers(participants)
+    })
+
+    socket.on("user-joined", ({ peerId, username, viewStream }) => {
+      setAllUsers(allUsers.concat({userId: peerId, username: username, viewStream: viewStream}))
       const call = me.call(peerId, stream, {metadata: username});
       console.dir(call)
       call.on("stream", (peerStream) => {
-        dispatch(addPeerAction(peerId, peerStream, username));
+        dispatch(addPeerAction(peerId, peerStream, username, viewStream));
       });
     });
 
@@ -42,7 +49,13 @@ export const RoomProvider = ({ children }) => {
       call.on("stream", (peerStream) => {
         console.log("Peers", peers)
         console.dir(call)
-        dispatch(addPeerAction(call.peer, peerStream, "Unknown"));
+        console.log("All Users: ", allUsers)
+        const user = allUsers.find((user) => user.userId === call.peer)
+        const username = user ? user.username : "unknown"
+        const viewStream = user ? user.viewStream : null
+        console.log("User", username)
+        dispatch(addPeerAction(call.peer, peerStream, username, viewStream));
+        console.log(call.peer);
       });
     });
   });

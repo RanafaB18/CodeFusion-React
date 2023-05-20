@@ -42,7 +42,7 @@ const PermissionModal = ({ username, room }) => {
       </div>
     );
   }
-  return <Room room={room} username={username}/>;
+  return <Room room={room} username={username} showStream={showStream}/>;
 };
 
 export default PermissionModal;
