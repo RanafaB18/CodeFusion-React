@@ -32,7 +32,7 @@ const Video = ({ stream, showStream, username }) => {
           </div>
         </div>
       ) : (
-        <div className="relative  bg-[#22262a] p-3 h-full flex flex-col items-center justify-center rounded-lg">
+        <div className="relative  bg-[#22262a] p-3 h-64 flex flex-col items-center justify-center rounded-lg">
           <Person name={username} showOnlyCircle />
           <div className="video-text">
             <span className="text-lg text-white">
