@@ -26,7 +26,7 @@ const PermissionModal = ({ username, room }) => {
       <div className="w-screen h-screen pt-12">
         <div className="rounded-md p-4 max-w-lg mx-auto min-h-2/3 bg-white">
           <Video showStream={showStream} stream={stream} username={username} />
-          <div className="flex pt-4 gap-2 items-center mt-4 ml-1">
+          <div className="flex gap-2 items-center mt-4 ml-1">
             <FaVideo className="w-4 h-4 text-[#353a41]" />
             <ToggleButton handleState={handleVideo} />
             <FaMicrophone className="w-4 h-4 text-[#353a41]" />

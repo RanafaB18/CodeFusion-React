@@ -12,14 +12,14 @@ const Video = ({ stream, showStream, username }) => {
   }, [showStream]);
 
   return (
-    <div className="relative h-64">
+    <div className="relative">
       {showStream ? (
         <div className="relative">
           <video
             muted
             autoPlay
             ref={videoRef}
-            className="object-cover min-w-full min-h-full rounded-lg"
+            className="object-cover h-64 w-full rounded-lg"
           />
           <div className="video-text">
             <span className="text-lg text-white">
