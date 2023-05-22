@@ -1,7 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
 import Video from "../Video";
-import { RoomContext } from "../../context/RoomContext";
-
 const VideoScreen = ({ username, stream, peers, showStream }) => {
   console.log("VideoScren Peers", peers)
   return (
