@@ -24,6 +24,7 @@ const Room = ({ room, username, showStream }) => {
 
   useEffect(() => {
     setRoomLink(window.location.href);
+    document.title = `${getRoomName(room)} | codefusion meeting`
     socket.on("message", notifyUsers);
     socket.emit("user_joined", { username: username, room: room, peerId: me._id, viewStream: showStream})
     socket.on("get-users", handleUsers);
@@ -36,6 +37,10 @@ const Room = ({ room, username, showStream }) => {
       // socket.off("left-room", handleUsers);
     };
   }, [room]);
+  const getRoomName = (roomString) => {
+    const roomName = roomString.replace(/-(?:[^-]*)$/, '');
+    return roomName;
+  }
   const handleUsers = ({room, participants}) => {
     console.log("Participants", participants)
     setParticipants(participants);
