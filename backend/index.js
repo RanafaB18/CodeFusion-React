@@ -49,11 +49,12 @@ io.on('connection', (socket) => {
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
-            io.to(room).emit("message", { username: username, participants: Rooms[room] })
+            // io.to(room).emit("message", { username: username, participants: Rooms[room] })
+            socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
-                io.to(room).emit('message', { username: username, participants: Rooms[room] })
+                socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
                 console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
@@ -98,25 +99,6 @@ io.on('connection', (socket) => {
     socket.on("close-tab", () => {
         console.log("Tab is closing")
     })
-
-    socket.on("leave-room", ({ room, username }) => {
-        console.log(`${username} has left the meeting`)
-        Rooms[room] = Rooms[room].filter((name) => name.username !== username)
-        if (Rooms[room].length === 0) {
-            delete Rooms[room]
-            delete Messages[room]
-            console.log("New Rooms after deletion", Rooms)
-            console.log("New Messages after deletion", Messages)
-        }
-        io.to(room).emit("left-room", { rooms: Rooms })
-        console.log("Peeps left", Rooms)
-        socket.leave(room)
-    })
-
-    // socket.on('disconnect', () => {
-    //     // Tab was closed
-    //     console.log(`${socket.id} has disconnected`)
-    // })
 })
 
 // Delete empty rooms every 10 mins
@@ -124,7 +106,7 @@ setInterval(() => {
     if (Rooms !== {}) {
         for (let key in Rooms) {
             if (Rooms[key].length === 0) {
-                console.log("Deleting");
+                console.log("Deleting", key);
                 delete Rooms[key]
                 delete Messages[key]
             }
