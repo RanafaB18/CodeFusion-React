@@ -140,7 +140,7 @@ const PermissionScreen = ({ setPermissionReceived }) => {
         </div>
         <button
           onClick={handlePermissions}
-          className="bg-[#4299E1] text-lg text-white py-4 rounded-md mt-6"
+          className="bg-[#4299E1] hover:bg-blue-700 active:scale-x-95 text-lg text-white py-4 rounded-md mt-6"
         >
           Request Permission
         </button>

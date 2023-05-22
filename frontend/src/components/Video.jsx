@@ -3,7 +3,6 @@ import Person from "./Person";
 
 const Video = ({ stream, showStream, username }) => {
   const videoRef = useRef(null);
-  console.log("Stream", stream);
 
   useEffect(() => {
     if (videoRef.current) {

@@ -9,7 +9,6 @@ const Header = () => {
     setVisible(!visible);
   };
   useEffect(() => {
-    console.log("Effect ran");
     const handleClick = (event) => {
       if (
         menuRef.current &&

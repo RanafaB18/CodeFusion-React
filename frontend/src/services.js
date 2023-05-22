@@ -12,7 +12,6 @@ const getMessages = async (room) => {
 }
 
 const updateUsers = async (username, room) => {
-    console.log("Request sent")
     const response = await axios.post(`${rootUrl}/${room}/users`, { name: username, room: room })
     return response.data
 }
