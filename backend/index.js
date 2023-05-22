@@ -54,12 +54,6 @@ io.on('connection', (socket) => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
                 io.to(room).emit('message', { username: username, participants: Rooms[room] })
-                // setTimeout(() => {
-                //     if (Rooms[room].length === 0) {
-                //         delete Rooms[room]
-                //         delete Messages[room]
-                //     }
-                // }, 4000);
                 console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
@@ -95,6 +89,8 @@ io.on('connection', (socket) => {
 
     })
 
+
+
     // socket.on('get-users', ({ room }) => {
     //     console.log("Informing all clients in the room")
     //     io.to(room).emit("all_users", { users: Rooms[room] })
@@ -123,7 +119,18 @@ io.on('connection', (socket) => {
     // })
 })
 
-
+// Delete empty rooms every 10 mins
+setInterval(() => {
+    if (Rooms !== {}) {
+        for (let key in Rooms) {
+            if (Rooms[key].length === 0) {
+                console.log("Deleting");
+                delete Rooms[key]
+                delete Messages[key]
+            }
+        }
+    }
+}, 600000)
 
 app.use('/room', roomRouter)
 
