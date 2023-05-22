@@ -31,14 +31,12 @@ export const RoomProvider = ({ children }) => {
     if (!stream) return;
 
     socket.on('get-users', ({room, participants}) => {
-      console.log("In RoomContext: ", room, participants)
       setAllUsers(participants)
     })
 
     socket.on("user-joined", ({ peerId, username, viewStream }) => {
       setAllUsers(allUsers.concat({userId: peerId, username: username, viewStream: viewStream}))
       const call = me.call(peerId, stream, {metadata: username});
-      console.dir(call)
       call.on("stream", (peerStream) => {
         dispatch(addPeerAction(peerId, peerStream, username, viewStream));
       });
@@ -47,15 +45,10 @@ export const RoomProvider = ({ children }) => {
     me.on("call", (call) => {
       call.answer(stream);
       call.on("stream", (peerStream) => {
-        console.log("Peers", peers)
-        console.dir(call)
-        console.log("All Users: ", allUsers)
         const user = allUsers.find((user) => user.userId === call.peer)
         const username = user ? user.username : "unknown"
         const viewStream = user ? user.viewStream : null
-        console.log("User", username)
         dispatch(addPeerAction(call.peer, peerStream, username, viewStream));
-        console.log(call.peer);
       });
     });
   });

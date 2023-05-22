@@ -11,7 +11,6 @@ const PermissionModal = ({ username, room }) => {
   const [clicked, setClicked] = useState(false);
 
   const handleVideo = (on) => {
-    console.log("Video Clicked", on);
     setShowStream(on);
   };
 

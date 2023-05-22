@@ -10,9 +10,6 @@ const ChatScreen = ({ username, isSmall }) => {
   const scrollableContainer = useRef(null);
   const userRoomName = sessionStorage.getItem("user_room_name");
   useEffect(() => {
-    console.log("User effect run");
-    console.log("Socket", socket);
-    console.log("Room", room);
     async function fetchMessages() {
       const roomMessages = await axiosUtil.getMessages(room);
       return roomMessages;
@@ -20,8 +17,6 @@ const ChatScreen = ({ username, isSmall }) => {
 
     fetchMessages().then((roomMessages) => {
       const updatedMessages = roomMessages.messageData;
-
-      console.log("room messages...", updatedMessages);
       setMessages(updatedMessages?.messages || []);
     });
   }, []);

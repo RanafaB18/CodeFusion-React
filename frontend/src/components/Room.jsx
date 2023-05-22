@@ -11,6 +11,7 @@ import ChatScreen from "./screens/ChatScreen";
 import { RoomContext } from "../context/RoomContext";
 import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
+import Toast from "./Toast";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -20,12 +21,20 @@ const Room = ({ room, username, showStream }) => {
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
-  const { socket, me, stream, peers } = useContext(RoomContext)
+  const { socket, me, stream, peers } = useContext(RoomContext);
+  const [toast, setToast] = useState({name: "", text: ""});
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     setRoomLink(window.location.href);
+    document.title = `${getRoomName(room)} | codefusion meeting`;
     socket.on("message", notifyUsers);
-    socket.emit("user_joined", { username: username, room: room, peerId: me._id, viewStream: showStream})
+    socket.emit("user_joined", {
+      username: username,
+      room: room,
+      peerId: me._id,
+      viewStream: showStream,
+    });
     socket.on("get-users", handleUsers);
 
     // socket.on("left-room", handleUsers);
@@ -36,16 +45,27 @@ const Room = ({ room, username, showStream }) => {
       // socket.off("left-room", handleUsers);
     };
   }, [room]);
-  const handleUsers = ({room, participants}) => {
-    console.log("Participants", participants)
+  const getRoomName = (roomString) => {
+    const roomName = roomString.replace(/-(?:[^-]*)$/, "");
+    return roomName;
+  };
+  const handleUsers = ({ room, participants }) => {
+    console.log("Participants", participants);
     setParticipants(participants);
   };
-  const notifyUsers = ({ username, participants }) => {
+  const notifyUsers = ({ username, participants, joinedStatus }) => {
+    if (joinedStatus === "joined") {
+      setToast({name: username.toUpperCase(), text: "has joined"});
+    } else {
+      setToast({name: username.toUpperCase(), text: "has left"});
+    }
     console.log(`${username} has joined the chat`);
-    setParticipants(participants)
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
+    setParticipants(participants);
   };
-
-
 
   const inviteModalRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -53,8 +73,11 @@ const Room = ({ room, username, showStream }) => {
     setVisible(true);
   };
   const closeInvite = (event) => {
-    event.stopPropagation() // Stops parent from running closeInvite
-    if (event.target === event.currentTarget || event.currentTarget.tagName === "BUTTON") {
+    event.stopPropagation(); // Stops parent from running closeInvite
+    if (
+      event.target === event.currentTarget ||
+      event.currentTarget.tagName === "BUTTON"
+    ) {
       setVisible(false);
       // Comment the below line of code when implementing the "stop-animation-on-hover" thingie
       // setShowClipBoardModal(false);
@@ -82,8 +105,9 @@ const Room = ({ room, username, showStream }) => {
     setScreenIndex(index);
   };
   return (
-    <div className="flex flex-col min-h-screen">
-      <RoomContext.Provider value={{room, socket, peers}}>
+    <div className="flex flex-col min-h-screen relative">
+      <Toast toast={toast} showToast={showToast}/>
+      <RoomContext.Provider value={{ room, socket, peers }}>
         {screenIndex !== 2 && (
           <div className="hidden md:block">
             <DefaultScreen
@@ -107,7 +131,14 @@ const Room = ({ room, username, showStream }) => {
             {screenIndex === 0 && <ChatScreen username={username} />}
           </div>
           <div className="md:hidden">
-            {screenIndex === 1 && <VideoScreen showStream={showStream} username={username} stream={stream} peers={peers} />}
+            {screenIndex === 1 && (
+              <VideoScreen
+                showStream={showStream}
+                username={username}
+                stream={stream}
+                peers={peers}
+              />
+            )}
           </div>
           {screenIndex === 2 && (
             <DefaultScreen

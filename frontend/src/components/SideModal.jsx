@@ -5,7 +5,6 @@ import { useState } from "react";
 
 const SideModal = ({ participants, username, closeSideModal }) => {
   const [toggled, setToggled] = useState({ first: true, second: false });
-  console.log("Participants", participants)
   return (
     // <div className="h-full">
     //   <div className="border border-r-0 text-center pt-4 h-full">

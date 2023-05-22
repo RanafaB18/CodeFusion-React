@@ -22,10 +22,10 @@ const JoinForm = ({
 
   return (
     <div className="pt-20">
-      <div className="bg-white p-8 max-w-xs mx-auto rounded-md">
+      <div className="bg-white p-8 max-w-sm mx-auto rounded-md">
         <form className="" onSubmit={handleSubmit} method="post">
           <p className="mb-6 text-center text-lg">
-            Enter your name to join the room.
+            Enter your name to join the room
           </p>
           <input
             className="focus:outline-none focus:ring focus:ring-bluish mb-2 text-lg border px-3 py-2 rounded-lg w-full"
