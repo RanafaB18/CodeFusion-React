@@ -93,6 +93,7 @@ const Room = ({ room, username, showStream }) => {
           setShowClipBoardModal(true);
           setTimeout(() => {
             setShowClipBoardModal(false);
+            setVisible(false)
           }, 3000);
         },
         () => {
