@@ -3,7 +3,6 @@ import Person from "./Person";
 import { useState } from "react";
 
 const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
-
   const [isHovering, setIsHovering] = useState(false);
   const [visible, setVisible] = useState(false);
   const handleMouseOver = () => {
@@ -19,8 +18,8 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
     setVisible(false);
   };
   const handleDelete = () => {
-    deleteFxn(id, username)
-  }
+    deleteFxn(id, username);
+  };
   return (
     <div
       className={`p-3 font-semibold flex ${
@@ -30,22 +29,29 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
       <div
         className={`relative text-white text-opacity-60 flex ${
           isReply && "flex-row-reverse"
-        } h-full items-end
+        } h-full items-end whitespace-pre-wrap
             gap-4 p-2 pb-0 rounded-lg bg-blackhover`}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       >
         {/* message */}
-        <div className="flex flex-col">
+        <div className="flex flex-col max-w-sm">
           {/* username
                     time */}
           <span className={`${isReply ? "self-start" : "self-end"}`}>
             {username}
           </span>
-          <p className="text-white text-opacity-90">{message}</p>
-          <span className="self-end">{time}</span>
+          <p
+            className={`text-white text-opacity-90 break-words
+          ${isReply ? "pr-3" : "pl-3"}`}
+          >
+            {message}
+          </p>
+          <span className={`${isReply ? "self-start" : "self-end"}`}>
+            {time}
+          </span>
         </div>
-        {(isHovering && !isReply) && (
+        {isHovering && !isReply && (
           <div className="absolute top-0 right-0">
             <div className="relative">
               <button

@@ -1,62 +1,104 @@
-import { useState } from "react";
-import { FaPaperPlane, FaPaperclip, FaPlane, FaSmile } from "react-icons/fa";
-import { useContext } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
+import {
+  FaInfo,
+  FaInfoCircle,
+  FaPaperPlane,
+  FaPaperclip,
+  FaPlane,
+  FaSmile,
+} from "react-icons/fa";
 import { RoomContext } from "../context/RoomContext";
 // message: {message: "What's up?", user: username, time}
 
-
-const MessageBar = ({username, addMessages}) => {
+const MessageBar = ({ username, addMessages }) => {
   const [message, setMessage] = useState("");
-  const { room } = useContext(RoomContext)
+  const { room } = useContext(RoomContext);
+  const textAreaRef = useRef();
+  const formRef = useRef();
+
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+    textArea.addEventListener("keydown", handleEnterKeyPress);
+    return () => {
+      textArea.removeEventListener("keydown", handleEnterKeyPress);
+    };
+  }, []);
+  const handleEnterKeyPress = (event) => {
+    if (event.shiftKey === false && event.key === "Enter") {
+      event.preventDefault();
+      formRef.current.requestSubmit();
+    }
+  };
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
 
   const sendMessage = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (message === "") {
-      return
+      return;
     }
-    const date = new Date()
-    const minutes = date.getMinutes()
-    const hours = date.getHours()
-    const time = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`
+    const date = new Date();
+    const minutes = date.getMinutes();
+    const hours = date.getHours();
+    const time = `${hours < 10 ? "0" + hours : hours}:${
+      minutes < 10 ? "0" + minutes : minutes
+    }`;
     const messageData = {
       message: message,
       user: username,
       time: time,
       id: Date.now(),
-      room: room
-    }
-    addMessages(messageData)
-    setMessage("")
-  }
+      room: room,
+    };
+    addMessages(messageData);
+    setMessage("");
+  };
   return (
-    <form className="flex flex-col m-2" onSubmit={sendMessage}>
-      <div>
-        <input
-          type="text"
-          className="w-full p-3 bg-blackhover border-b-2 border-b-gray-500 rounded-tr-md
-          rounded-tl-md text-white text-lg focus:outline-none
+    <form className="flex flex-col m-2" onSubmit={sendMessage} ref={formRef}>
+      <textarea
+        ref={textAreaRef}
+        rows={1}
+        type="text"
+        className="resize-none w-full p-3 bg-blackhover border-b-2 border-b-gray-500
+          rounded-t-md text-white text-lg focus:outline-none
           focus:border-b-bluish placeholder:tracking-wide"
-          placeholder={`Write a message...${username}`}
-          value={message}
-          onChange={handleMessageChange}
-        />
-      </div>
+        placeholder={`Write a message...${username}`}
+        value={message}
+        onChange={handleMessageChange}
+      />
       <div
-        className="flex justify-between px-4 py-2 bg-blacklike rounded-bl-md
+        className="flex justify-between px-2 py-2 bg-blacklike rounded-bl-md
        rounded-br-md"
       >
-        <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
-          <FaPaperclip className="bottom-nav-icon -rotate-90 text-xl" />
-        </button>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2 relative">
+          <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
+            <FaPaperclip className="bottom-nav-icon -rotate-90 text-xl" />
+          </button>
+          <div
+            after="Shift + Enter for a newline"
+            className="hover:bg-white after:absolute
+            after:left-full after:top-0 after:pl-2 after:bottom-0 whitespace-nowrap
+            hover:after:content-[attr(after)]
+            text-white hover:bg-opacity-25 p-1 rounded-md "
+          >
+            <FaInfoCircle className="bottom-nav-icon text-bluish text-sm" />
+          </div>
+        </div>
+        <div className="flex gap-1">
           <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
             <FaSmile className="bottom-nav-icon text-xl" />
           </button>
-          <button disabled={message === ""} type="submit" className="enabled:hover:bg-white enabled:hover:bg-opacity-25 p-1 rounded-md">
-            <FaPaperPlane className={`${message === "" ? "text-opacity-10" : ""} bottom-nav-icon text-xl`} />
+          <button
+            disabled={message === ""}
+            type="submit"
+            className="enabled:hover:bg-white enabled:hover:bg-opacity-25 p-1 rounded-md"
+          >
+            <FaPaperPlane
+              className={`${
+                message === "" ? "text-opacity-10" : ""
+              } bottom-nav-icon text-xl`}
+            />
           </button>
         </div>
       </div>
