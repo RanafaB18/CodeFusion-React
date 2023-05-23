@@ -15,12 +15,16 @@ const MessageBar = ({ username, addMessages }) => {
   const { room } = useContext(RoomContext);
   const textAreaRef = useRef();
   const formRef = useRef();
+  const animateRef = useRef()
 
   useEffect(() => {
     const textArea = textAreaRef.current;
+    const animator = animateRef.current
     textArea.addEventListener("keydown", handleEnterKeyPress);
+    animator.addEventListener('mouseover', handleHover, {once: true})
     return () => {
       textArea.removeEventListener("keydown", handleEnterKeyPress);
+      animator.removeEventListener('mouseover', handleHover)
     };
   }, []);
   const handleEnterKeyPress = (event) => {
@@ -29,6 +33,9 @@ const MessageBar = ({ username, addMessages }) => {
       formRef.current.requestSubmit();
     }
   };
+  const handleHover = (event) => {
+    animateRef.current.classList.remove("animate-ping")
+  }
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
@@ -82,7 +89,12 @@ const MessageBar = ({ username, addMessages }) => {
             hover:after:content-[attr(after)]
             text-white hover:bg-opacity-25 p-1 rounded-md "
           >
-            <FaInfoCircle className="bottom-nav-icon text-bluish text-sm" />
+            <span className="relative flex cursor-pointer">
+              <FaInfoCircle className=" inline-flex bottom-nav-icon text-bluish text-sm" />
+              <span ref={animateRef} className="absolute bottom-nav-icon animate-ping text-bluish text-sm">
+                <FaInfoCircle />
+              </span>
+            </span>
           </div>
         </div>
         <div className="flex gap-1">
