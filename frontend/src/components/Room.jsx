@@ -12,6 +12,7 @@ import { RoomContext } from "../context/RoomContext";
 import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
+import { redirect } from "react-router-dom";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -36,15 +37,18 @@ const Room = ({ room, username, showStream }) => {
       viewStream: showStream,
     });
     socket.on("get-users", handleUsers);
-
-    // socket.on("left-room", handleUsers);
+    window.addEventListener('popstate', leaveRoomViaBackButton, { once: true})
 
     return () => {
-      // socket.off("get-users", handleUsers);
+      socket.off("get-users", handleUsers);
       socket.off("message", notifyUsers);
-      // socket.off("left-room", handleUsers);
+      // window.removeEventListener('popstate', leaveRoomViaBackButton)
     };
   }, [room]);
+  const leaveRoomViaBackButton = (event) => {
+    console.log("Back button was clicked");
+    socket.emit('leave-room', { username: username, room: room, userId: me._id})
+  }
   const getRoomName = (roomString) => {
     const roomName = roomString.replace(/-(?:[^-]*)$/, "");
     return roomName;
