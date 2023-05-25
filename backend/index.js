@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
             })
         }
     })
+    socket.on('message-sent', (message) => {
+        console.log("Receiving message: ", message)
+        socket.to(message.room).emit('show-message-toast', message)
+    })
     socket.on('leave-room', ({ username, room, userId }) => {
         socket.leave(room)
         Rooms[room] = Rooms[room].filter((user) => user.userId !== userId)
