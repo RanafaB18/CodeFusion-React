@@ -12,6 +12,8 @@ import { RoomContext } from "../context/RoomContext";
 import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
+import { redirect } from "react-router-dom";
+import MessageToast from "./MessageToast";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -22,12 +24,34 @@ const Room = ({ room, username, showStream }) => {
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
   const { socket, me, stream, peers } = useContext(RoomContext);
-  const [toast, setToast] = useState({name: "", text: ""});
+  const [toast, setToast] = useState({ name: "", text: "" });
   const [showToast, setShowToast] = useState(false);
+  const [showMessageToast, setShowMessageToast] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const resize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    const currentIndex = screenIndex;
+    window.addEventListener("resize", resize);
 
+    if (windowWidth >= 768) {
+      console.log("Resetting width");
+      if (screenIndex === 0) {
+        setScreenIndex(2);
+        showScreen(2);
+      }
+    }
+    console.log(windowWidth);
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, [windowWidth]);
   useEffect(() => {
     setRoomLink(window.location.href);
     document.title = `${getRoomName(room)} | codefusion meeting`;
+
     socket.on("message", notifyUsers);
     socket.emit("user_joined", {
       username: username,
@@ -35,16 +59,34 @@ const Room = ({ room, username, showStream }) => {
       peerId: me._id,
       viewStream: showStream,
     });
+    socket.on("show-message-toast", handleMessageToast);
     socket.on("get-users", handleUsers);
-
-    // socket.on("left-room", handleUsers);
+    window.addEventListener("popstate", leaveRoomViaBackButton, { once: true });
 
     return () => {
-      // socket.off("get-users", handleUsers);
+      socket.off("show-message-toast", handleMessageToast);
+      socket.off("get-users", handleUsers);
       socket.off("message", notifyUsers);
-      // socket.off("left-room", handleUsers);
+      // window.removeEventListener('popstate', leaveRoomViaBackButton)
     };
   }, [room]);
+  const handleMessageToast = (messageData) => {
+    setShowMessageToast(true);
+    const first = messageData.user.charAt(0).toUpperCase();
+    const messageName = first + messageData.user.slice(1);
+    setToast({ name: messageName, text: messageData.message });
+    setTimeout(() => {
+      setShowMessageToast(false);
+    }, 4000);
+  };
+  const leaveRoomViaBackButton = (event) => {
+    console.log("Back button was clicked");
+    socket.emit("leave-room", {
+      username: username,
+      room: room,
+      userId: me._id,
+    });
+  };
   const getRoomName = (roomString) => {
     const roomName = roomString.replace(/-(?:[^-]*)$/, "");
     return roomName;
@@ -55,9 +97,9 @@ const Room = ({ room, username, showStream }) => {
   };
   const notifyUsers = ({ username, participants, joinedStatus }) => {
     if (joinedStatus === "joined") {
-      setToast({name: username.toUpperCase(), text: "has joined"});
+      setToast({ name: username.toUpperCase(), text: "has joined" });
     } else {
-      setToast({name: username.toUpperCase(), text: "has left"});
+      setToast({ name: username.toUpperCase(), text: "has left" });
     }
     console.log(`${username} has joined the chat`);
     setShowToast(true);
@@ -93,6 +135,7 @@ const Room = ({ room, username, showStream }) => {
           setShowClipBoardModal(true);
           setTimeout(() => {
             setShowClipBoardModal(false);
+            setVisible(false);
           }, 3000);
         },
         () => {
@@ -104,9 +147,19 @@ const Room = ({ room, username, showStream }) => {
   const showScreen = (index) => {
     setScreenIndex(index);
   };
+  console.log("Screen Index", screenIndex);
+  console.log("Show modal", showModal);
   return (
     <div className="flex flex-col min-h-screen relative">
-      <Toast toast={toast} showToast={showToast}/>
+      {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
+      <Toast toast={toast} showToast={showToast} />
+      {screenIndex !== 0 && !showModal && (
+        <MessageToast
+          toast={toast}
+          showMessageToast={showMessageToast}
+          setScreenIndex={setScreenIndex}
+        />
+      )}
       <RoomContext.Provider value={{ room, socket, peers }}>
         {screenIndex !== 2 && (
           <div className="hidden md:block">
@@ -123,6 +176,8 @@ const Room = ({ room, username, showStream }) => {
               roomLink={roomLink}
               showClipBoardModal={showClipBoardModal}
               visible={visible}
+              showModal={showModal}
+              setShowModal={setShowModal}
             />
           </div>
         )}
@@ -153,6 +208,8 @@ const Room = ({ room, username, showStream }) => {
               roomLink={roomLink}
               showClipBoardModal={showClipBoardModal}
               visible={visible}
+              showModal={showModal}
+              setShowModal={setShowModal}
             />
           )}
           <div className="md:hidden">
@@ -174,7 +231,7 @@ const Room = ({ room, username, showStream }) => {
         </div>
       </RoomContext.Provider>
       <div className="relative h-16 md:hidden">
-        <BottomNavigationBar showScreen={showScreen} />
+        <BottomNavigationBar showScreen={showScreen} screenIndex={screenIndex} setScreenIndex={setScreenIndex}/>
         {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
     </div>

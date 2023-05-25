@@ -14,10 +14,10 @@ const icons = [
   {id: 4, icon: <FaUserFriends className="bottom-nav-icon" />},
   {id: 5, icon: <FaTable className="bottom-nav-icon" />},
 ]
-const BottomNavigationBar = ({showScreen}) => {
-  const [activeIndex, setActiveIndex] = useState(2);
+const BottomNavigationBar = ({showScreen, screenIndex, setScreenIndex}) => {
+  // const [activeIndex, setActiveIndex] = useState(2);
   const makeActive = (index) => {
-    setActiveIndex(index)
+    setScreenIndex(index)
     showScreen(index)
   }
   return (
@@ -30,7 +30,7 @@ const BottomNavigationBar = ({showScreen}) => {
             const {id, icon} = iconData
             return (
               <div
-              className={`bottom-nav ${index == activeIndex ? 'bg-blacklike' : ''}`}
+              className={`bottom-nav ${index == screenIndex ? 'bg-blacklike' : ''}`}
               key={id}
               onClick={() => makeActive(index)}
               >

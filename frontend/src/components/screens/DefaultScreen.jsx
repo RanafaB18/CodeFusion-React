@@ -20,9 +20,10 @@ const DefaultScreen = ({
   inviteModalRef,
   closeButtonRef,
   copyLink,
-  showClipBoardModal
+  showClipBoardModal,
+  showModal,
+  setShowModal,
 }) => {
-  const [showModal, setShowModal] = useState(false);
   const closeSideModal = () => {
     setShowModal(false);
   };

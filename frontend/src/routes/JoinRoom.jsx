@@ -11,15 +11,17 @@ import Loading from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
 import PermissionScreen from "../components/screens/PermissionScreen";
 import PermissionModal from "../components/PermissionModal";
+import ErrorModal from "../components/ErrorModal";
 
 const JoinRoom = () => {
-  const { socket } = useContext(RoomContext)
+  const { socket } = useContext(RoomContext);
   const [createdUserName, setCreatedUsername] = useState(false);
   const [userRoomName, setUserRoomName] = useState("");
   const [session, setSession] = useState(null);
   const [validRoom, setValidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [permissionReceived, setPermissionReceived] = useState(false)
+  const [permissionReceived, setPermissionReceived] = useState(false);
+  const [error, setError] = useState(false);
   const room = useLoaderData();
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
@@ -28,12 +30,13 @@ const JoinRoom = () => {
       setValidRoom(isValid);
       setTimeout(() => {
         setIsLoading(false);
-      }, 800)
+      }, 800);
     });
   }, []);
+  console.log("Error:", error);
 
   if (isLoading) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (validRoom) {
@@ -52,15 +55,25 @@ const JoinRoom = () => {
               setUserRoomName={setUserRoomName}
               setCreatedUsername={setCreatedUsername}
             />
-          ) : (!permissionReceived ?
-            // <Room room={room} username={userRoomName || session} />
-            <PermissionScreen setPermissionReceived={setPermissionReceived} /> : <PermissionModal username={userRoomName || session} room={room}/>)
+          ) : <Room room={room} username={userRoomName || session} />
+
+          // : !permissionReceived && error === false ? (
+          //   // <Room room={room} username={userRoomName || session} />
+          //   <PermissionScreen
+          //     setPermissionReceived={setPermissionReceived}
+          //     setError={setError}
+          //   />
+          // ) : error ? (
+          //   <ErrorModal username={userRoomName || session} room={room} />
+          // ) : (
+          //   <PermissionModal username={userRoomName || session} room={room} />
+          // )
           }
         </div>
       </HelmetProvider>
     );
   } else {
-    return <ErrorPage room={room} />
+    return <ErrorPage room={room} />;
   }
 };
 

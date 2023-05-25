@@ -46,11 +46,11 @@ io.on('connection', (socket) => {
             console.log("View stream ?", viewStream)
             socket.to(room).emit("user-joined", { peerId, username, viewStream })
             console.log("New user: ", username, peerId)
+            socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
-            socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
@@ -60,6 +60,18 @@ io.on('connection', (socket) => {
                 socket.to(room).emit('user-disconnected', peerId)
             })
         }
+    })
+    socket.on('message-sent', (message) => {
+        console.log("Receiving message: ", message)
+        socket.to(message.room).emit('show-message-toast', message)
+    })
+    socket.on('leave-room', ({ username, room, userId }) => {
+        socket.leave(room)
+        Rooms[room] = Rooms[room].filter((user) => user.userId !== userId)
+        socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
+        console.log(Rooms)
+        // Might change
+        socket.to(room).emit('user-disconnected', userId)
     })
 
     socket.on('sending-signal', payload => {
@@ -87,15 +99,8 @@ io.on('connection', (socket) => {
         const room = messageData.room
         Messages[room].messages = Messages[room].messages.filter((obj) => obj.id !== id)
         socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
-
     })
 
-
-
-    // socket.on('get-users', ({ room }) => {
-    //     console.log("Informing all clients in the room")
-    //     io.to(room).emit("all_users", { users: Rooms[room] })
-    // })
     socket.on("close-tab", () => {
         console.log("Tab is closing")
     })
