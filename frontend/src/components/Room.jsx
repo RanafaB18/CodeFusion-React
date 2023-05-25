@@ -13,6 +13,7 @@ import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
 import { redirect } from "react-router-dom";
+import MessageToast from "./MessageToast";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -23,8 +24,9 @@ const Room = ({ room, username, showStream }) => {
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
   const { socket, me, stream, peers } = useContext(RoomContext);
-  const [toast, setToast] = useState({name: "", text: ""});
+  const [toast, setToast] = useState({ name: "", text: "" });
   const [showToast, setShowToast] = useState(false);
+  const [showMessageToast, setShowMessageToast] = useState(false);
 
   useEffect(() => {
     setRoomLink(window.location.href);
@@ -36,19 +38,34 @@ const Room = ({ room, username, showStream }) => {
       peerId: me._id,
       viewStream: showStream,
     });
+    socket.on("show-message-toast", handleMessageToast);
     socket.on("get-users", handleUsers);
-    window.addEventListener('popstate', leaveRoomViaBackButton, { once: true})
+    window.addEventListener("popstate", leaveRoomViaBackButton, { once: true });
 
     return () => {
+      socket.off("show-message-toast", handleMessageToast);
       socket.off("get-users", handleUsers);
       socket.off("message", notifyUsers);
       // window.removeEventListener('popstate', leaveRoomViaBackButton)
     };
   }, [room]);
+  const handleMessageToast = (messageData) => {
+    setShowMessageToast(true);
+    const first = messageData.user.charAt(0).toUpperCase();
+    const messageName = first + messageData.user.slice(1);
+    setToast({ name: messageName, text: messageData.message });
+    setTimeout(() => {
+      setShowMessageToast(false);
+    }, 4000);
+  };
   const leaveRoomViaBackButton = (event) => {
     console.log("Back button was clicked");
-    socket.emit('leave-room', { username: username, room: room, userId: me._id})
-  }
+    socket.emit("leave-room", {
+      username: username,
+      room: room,
+      userId: me._id,
+    });
+  };
   const getRoomName = (roomString) => {
     const roomName = roomString.replace(/-(?:[^-]*)$/, "");
     return roomName;
@@ -59,9 +76,9 @@ const Room = ({ room, username, showStream }) => {
   };
   const notifyUsers = ({ username, participants, joinedStatus }) => {
     if (joinedStatus === "joined") {
-      setToast({name: username.toUpperCase(), text: "has joined"});
+      setToast({ name: username.toUpperCase(), text: "has joined" });
     } else {
-      setToast({name: username.toUpperCase(), text: "has left"});
+      setToast({ name: username.toUpperCase(), text: "has left" });
     }
     console.log(`${username} has joined the chat`);
     setShowToast(true);
@@ -97,7 +114,7 @@ const Room = ({ room, username, showStream }) => {
           setShowClipBoardModal(true);
           setTimeout(() => {
             setShowClipBoardModal(false);
-            setVisible(false)
+            setVisible(false);
           }, 3000);
         },
         () => {
@@ -111,7 +128,14 @@ const Room = ({ room, username, showStream }) => {
   };
   return (
     <div className="flex flex-col min-h-screen relative">
-      <Toast toast={toast} showToast={showToast}/>
+      <Toast toast={toast} showToast={showToast} />
+      {screenIndex !== 0 && (
+        <MessageToast
+          toast={toast}
+          showMessageToast={showMessageToast}
+          setScreenIndex={setScreenIndex}
+        />
+      )}
       <RoomContext.Provider value={{ room, socket, peers }}>
         {screenIndex !== 2 && (
           <div className="hidden md:block">

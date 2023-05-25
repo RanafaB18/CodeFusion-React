@@ -12,7 +12,7 @@ import { RoomContext } from "../context/RoomContext";
 
 const MessageBar = ({ username, addMessages }) => {
   const [message, setMessage] = useState("");
-  const { room } = useContext(RoomContext);
+  const { room, socket } = useContext(RoomContext);
   const textAreaRef = useRef();
   const formRef = useRef();
   const animateRef = useRef()
@@ -59,6 +59,7 @@ const MessageBar = ({ username, addMessages }) => {
       room: room,
     };
     addMessages(messageData);
+    socket.emit('message-sent', messageData)
     setMessage("");
   };
   return (
