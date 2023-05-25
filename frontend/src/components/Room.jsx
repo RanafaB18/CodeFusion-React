@@ -27,10 +27,31 @@ const Room = ({ room, username, showStream }) => {
   const [toast, setToast] = useState({ name: "", text: "" });
   const [showToast, setShowToast] = useState(false);
   const [showMessageToast, setShowMessageToast] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const resize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    const currentIndex = screenIndex;
+    window.addEventListener("resize", resize);
 
+    if (windowWidth >= 768) {
+      console.log("Resetting width");
+      if (screenIndex === 0) {
+        setScreenIndex(2);
+        showScreen(2);
+      }
+    }
+    console.log(windowWidth);
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, [windowWidth]);
   useEffect(() => {
     setRoomLink(window.location.href);
     document.title = `${getRoomName(room)} | codefusion meeting`;
+
     socket.on("message", notifyUsers);
     socket.emit("user_joined", {
       username: username,
@@ -126,10 +147,13 @@ const Room = ({ room, username, showStream }) => {
   const showScreen = (index) => {
     setScreenIndex(index);
   };
+  console.log("Screen Index", screenIndex);
+  console.log("Show modal", showModal);
   return (
     <div className="flex flex-col min-h-screen relative">
+      {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
       <Toast toast={toast} showToast={showToast} />
-      {screenIndex !== 0 && (
+      {screenIndex !== 0 && !showModal && (
         <MessageToast
           toast={toast}
           showMessageToast={showMessageToast}
@@ -152,6 +176,8 @@ const Room = ({ room, username, showStream }) => {
               roomLink={roomLink}
               showClipBoardModal={showClipBoardModal}
               visible={visible}
+              showModal={showModal}
+              setShowModal={setShowModal}
             />
           </div>
         )}
@@ -182,6 +208,8 @@ const Room = ({ room, username, showStream }) => {
               roomLink={roomLink}
               showClipBoardModal={showClipBoardModal}
               visible={visible}
+              showModal={showModal}
+              setShowModal={setShowModal}
             />
           )}
           <div className="md:hidden">
@@ -203,7 +231,7 @@ const Room = ({ room, username, showStream }) => {
         </div>
       </RoomContext.Provider>
       <div className="relative h-16 md:hidden">
-        <BottomNavigationBar showScreen={showScreen} />
+        <BottomNavigationBar showScreen={showScreen} screenIndex={screenIndex} setScreenIndex={setScreenIndex}/>
         {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
     </div>
