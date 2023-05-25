@@ -5,9 +5,9 @@ import { FaMicrophone, FaVideo } from "react-icons/fa";
 import ToggleButton from "./ToggleButton";
 import Room from "./Room";
 
-const PermissionModal = ({ username, room }) => {
+const PermissionModal = ({ username, room, viewStream=true }) => {
   const { stream } = useContext(RoomContext);
-  const [showStream, setShowStream] = useState(true);
+  const [showStream, setShowStream] = useState(viewStream);
   const [clicked, setClicked] = useState(false);
 
   const handleVideo = (on) => {

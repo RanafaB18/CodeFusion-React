@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FaLock, FaMicrophone, FaMousePointer, FaVideo } from "react-icons/fa";
 import { RoomContext } from "../../context/RoomContext";
 
-const PermissionScreen = ({ setPermissionReceived }) => {
+const PermissionScreen = ({ setPermissionReceived, setError }) => {
   const mouseRef = useRef();
   const buttonRef = useRef();
   const allowButtonRef = useRef()
@@ -66,6 +66,7 @@ const PermissionScreen = ({ setPermissionReceived }) => {
       })
       .catch((err) => {
         console.log("Error:", err);
+        setError(true)
       });
   };
   return (

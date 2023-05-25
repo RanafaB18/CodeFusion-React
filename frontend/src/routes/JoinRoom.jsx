@@ -11,6 +11,7 @@ import Loading from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
 import PermissionScreen from "../components/screens/PermissionScreen";
 import PermissionModal from "../components/PermissionModal";
+import ErrorModal from "../components/ErrorModal";
 
 const JoinRoom = () => {
   const { socket } = useContext(RoomContext)
@@ -20,6 +21,7 @@ const JoinRoom = () => {
   const [validRoom, setValidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [permissionReceived, setPermissionReceived] = useState(false)
+  const [error, setError] = useState(false)
   const room = useLoaderData();
   useEffect(() => {
     setSession(sessionStorage.getItem("user_room_name"));
@@ -31,6 +33,7 @@ const JoinRoom = () => {
       }, 800)
     });
   }, []);
+  console.log("Error:", error)
 
   if (isLoading) {
     return <Loading />
@@ -52,9 +55,9 @@ const JoinRoom = () => {
               setUserRoomName={setUserRoomName}
               setCreatedUsername={setCreatedUsername}
             />
-          ) : (!permissionReceived ?
+          ) : ((!permissionReceived && error === false) ?
             // <Room room={room} username={userRoomName || session} />
-            <PermissionScreen setPermissionReceived={setPermissionReceived} /> : <PermissionModal username={userRoomName || session} room={room}/>)
+            <PermissionScreen setPermissionReceived={setPermissionReceived} setError={setError}/> : (error ? <ErrorModal username={userRoomName || session} room={room}/> : <PermissionModal username={userRoomName || session} room={room}/>))
           }
         </div>
       </HelmetProvider>
