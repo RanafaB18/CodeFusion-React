@@ -126,23 +126,18 @@ const Room = ({ room, username, showStream }) => {
     }
   };
   const copyLink = async () => {
-    const permission = await navigator.permissions.query({
-      name: "clipboard-write",
-    });
-    if (permission.state === "granted" || permission.state === "prompt") {
-      navigator.clipboard.writeText(roomLink).then(
-        () => {
-          setShowClipBoardModal(true);
-          setTimeout(() => {
-            setShowClipBoardModal(false);
-            setVisible(false);
-          }, 3000);
-        },
-        () => {
-          console.log("Permission errors, Mozilla");
-        }
-      );
-    }
+    navigator.clipboard.writeText(roomLink).then(
+      () => {
+        setShowClipBoardModal(true);
+        setTimeout(() => {
+          setShowClipBoardModal(false);
+          setVisible(false);
+        }, 3000);
+      },
+      () => {
+        console.log("Error copying to clipboard");
+      }
+    );
   };
   const showScreen = (index) => {
     setScreenIndex(index);
