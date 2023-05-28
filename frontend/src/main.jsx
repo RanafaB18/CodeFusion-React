@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Home, { action as joinAction } from "./Home";
+import Home from "./Home";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Contact from "./routes/contact";
@@ -20,7 +20,6 @@ const router = createBrowserRouter([
     {
         path: "/go/:id",
         element: <JoinRoom />,
-        action: joinAction,
         loader: roomLoader,
     },
     {
