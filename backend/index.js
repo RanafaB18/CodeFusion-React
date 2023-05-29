@@ -17,17 +17,22 @@ app.use(cors())
 
 console.log("roomLinks", roomLinks)
 // Delete empty rooms every 10 mins
+let deleteInterval = 0
 setInterval(() => {
-    if (Rooms !== {}) {
-        for (let key in Rooms) {
-            if (Rooms[key].length === 0) {
-                console.log("Deleting", key);
-                delete Rooms[key]
-                delete Messages[key]
+    deleteInterval = deleteInterval + 1000
+    if (deleteInterval === 600000) {
+            if (Rooms !== {}) {
+                for (let key in Rooms) {
+                    if (Rooms[key].length === 0) {
+                        console.log("Deleting", key);
+                        delete Rooms[key]
+                        delete Messages[key]
+                    }
+                }
             }
-        }
+            deleteInterval = 0
     }
-}, 600000)
+}, 1000)
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
 
@@ -62,6 +67,7 @@ io.on('connection', (socket) => {
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
+            deleteInterval = 0
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', () => {
                 console.log(`${username} left the room`)
