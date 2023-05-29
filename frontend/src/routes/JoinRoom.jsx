@@ -7,7 +7,7 @@ import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
-import Loading from "../components/Loading";
+import {Loading, MiniLoad } from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
 import PermissionScreen from "../components/screens/PermissionScreen";
 import PermissionModal from "../components/PermissionModal";
@@ -55,19 +55,19 @@ const JoinRoom = () => {
               setUserRoomName={setUserRoomName}
               setCreatedUsername={setCreatedUsername}
             />
-          ) : <Room room={room} username={userRoomName || session} />
-
-          // : !permissionReceived && error === false ? (
-          //   // <Room room={room} username={userRoomName || session} />
-          //   <PermissionScreen
-          //     setPermissionReceived={setPermissionReceived}
-          //     setError={setError}
-          //   />
-          // ) : error ? (
-          //   <ErrorModal username={userRoomName || session} room={room} />
-          // ) : (
-          //   <PermissionModal username={userRoomName || session} room={room} />
-          // )
+          )
+          // : <Room room={room} username={userRoomName || session} />
+          : !permissionReceived && error === false ? (
+            // <Room room={room} username={userRoomName || session} />
+            <PermissionScreen
+              setPermissionReceived={setPermissionReceived}
+              setError={setError}
+            />
+          ) : error ? (
+            <ErrorModal username={userRoomName || session} room={room} />
+          ) : (
+            <PermissionModal username={userRoomName || session} room={room} />
+          )
           }
         </div>
       </HelmetProvider>

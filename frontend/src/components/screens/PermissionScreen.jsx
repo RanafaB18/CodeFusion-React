@@ -1,12 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaLock, FaMicrophone, FaMousePointer, FaVideo } from "react-icons/fa";
 import { RoomContext } from "../../context/RoomContext";
+import {MiniLoad} from "../Loading"
 
 const PermissionScreen = ({ setPermissionReceived, setError }) => {
   const mouseRef = useRef();
   const buttonRef = useRef();
   const allowButtonRef = useRef()
-  const { socket, setStream } = useContext(RoomContext);
+  const { setStream } = useContext(RoomContext);
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     const mouse = mouseRef.current;
     const button = buttonRef.current;
@@ -58,16 +61,20 @@ const PermissionScreen = ({ setPermissionReceived, setError }) => {
     };
   }, []);
   const handlePermissions = () => {
+    setLoading(true)
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setPermissionReceived(true);
-        setStream(stream);
-      })
-      .catch((err) => {
-        console.log("Error:", err);
-        setError(true)
-      });
+    .getUserMedia({ video: true, audio: true })
+    .then((stream) => {
+      setPermissionReceived(true);
+      setStream(stream);
+    })
+    .catch((err) => {
+      console.log("Error:", err);
+      setError(true)
+    });
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000);
   };
   return (
     <div className="w-screen h-screen">
@@ -143,7 +150,7 @@ const PermissionScreen = ({ setPermissionReceived, setError }) => {
           onClick={handlePermissions}
           className="bg-[#4299E1] hover:bg-blue-700 active:scale-x-95 text-lg text-white py-4 rounded-md mt-6"
         >
-          Request Permission
+          {loading ? <MiniLoad /> : "Request Permission"}
         </button>
       </div>
     </div>
