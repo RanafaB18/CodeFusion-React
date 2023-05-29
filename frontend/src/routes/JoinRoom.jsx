@@ -62,6 +62,7 @@ const JoinRoom = () => {
             <PermissionScreen
               setPermissionReceived={setPermissionReceived}
               setError={setError}
+              permissionReceived={permissionReceived}
             />
           ) : error ? (
             <ErrorModal username={userRoomName || session} room={room} />

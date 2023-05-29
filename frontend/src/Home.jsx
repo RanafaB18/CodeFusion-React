@@ -4,12 +4,12 @@ import Features from "./components/Features";
 import Layout from "./components/Layout";
 import axiosUtil from "./services";
 import Button from "./components/Button";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [room, setRoom] = useState("");
   const [error, setError] = useState(false)
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,9 +24,9 @@ export default function Home() {
     const data = await axiosUtil.getRoomID(room);
     setRoom("")
     // Open new tab
-    window.open(`/go/${data.roomLink}`, 'rel=noopener noreferrer')
+    // window.open(`/go/${data.roomLink}`, 'rel=noopener noreferrer')
     // Stays on the same page and replaces the previous link in history
-    // navigate(`/go/${data.roomLink}`, {replace: true});
+    navigate(`/go/${data.roomLink}`, {replace: true});
   };
   return (
     <HelmetProvider>

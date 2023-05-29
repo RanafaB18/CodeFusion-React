@@ -3,7 +3,7 @@ import { FaLock, FaMicrophone, FaMousePointer, FaVideo } from "react-icons/fa";
 import { RoomContext } from "../../context/RoomContext";
 import {MiniLoad} from "../Loading"
 
-const PermissionScreen = ({ setPermissionReceived, setError }) => {
+const PermissionScreen = ({ setPermissionReceived, setError, permissionReceived }) => {
   const mouseRef = useRef();
   const buttonRef = useRef();
   const allowButtonRef = useRef()
@@ -72,9 +72,9 @@ const PermissionScreen = ({ setPermissionReceived, setError }) => {
       console.log("Error:", err);
       setError(true)
     });
-    setTimeout(() => {
+    if (permissionReceived) {
       setLoading(false)
-    }, 3000);
+    }
   };
   return (
     <div className="w-screen h-screen">
