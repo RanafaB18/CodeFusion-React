@@ -16,6 +16,18 @@ app.use(express.json())
 app.use(cors())
 
 console.log("roomLinks", roomLinks)
+// Delete empty rooms every 10 mins
+setInterval(() => {
+    if (Rooms !== {}) {
+        for (let key in Rooms) {
+            if (Rooms[key].length === 0) {
+                console.log("Deleting", key);
+                delete Rooms[key]
+                delete Messages[key]
+            }
+        }
+    }
+}, 600000)
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
 
@@ -58,6 +70,7 @@ io.on('connection', (socket) => {
                 console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
+                socket.leave(room) //testing
             })
         }
     })
@@ -73,15 +86,6 @@ io.on('connection', (socket) => {
         // Might change
         socket.to(room).emit('user-disconnected', userId)
     })
-
-    socket.on('sending-signal', payload => {
-        console.log("Payload", payload)
-        io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload })
-    })
-
-    socket.on("returning signal", payload => {
-        io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
-    });
     // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
     socket.on("send_message", (messageData) => {
@@ -106,22 +110,11 @@ io.on('connection', (socket) => {
     })
 })
 
-// Delete empty rooms every 10 mins
-setInterval(() => {
-    if (Rooms !== {}) {
-        for (let key in Rooms) {
-            if (Rooms[key].length === 0) {
-                console.log("Deleting", key);
-                delete Rooms[key]
-                delete Messages[key]
-            }
-        }
-    }
-}, 600000)
+
 
 app.use('/room', roomRouter)
 
-
+// Sends the messages to the frontend
 app.get('/:room/messages', (req, res) => {
     const room = req.params.room
     return res.json({ messageData: Messages[room] })
