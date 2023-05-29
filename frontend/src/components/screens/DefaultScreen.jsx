@@ -23,6 +23,9 @@ const DefaultScreen = ({
   showClipBoardModal,
   showModal,
   setShowModal,
+  tabs,
+  setTabs,
+  addTab
 }) => {
   const closeSideModal = () => {
     setShowModal(false);
@@ -46,6 +49,8 @@ const DefaultScreen = ({
           showModal={showModal}
           invite={invite}
           username={username}
+          tabs={tabs}
+          setTabs={setTabs}
         />
       </div>
 
@@ -59,7 +64,7 @@ const DefaultScreen = ({
             font-semibold rounded-md px-4 py-2
             tracking-wide hover:bg-blue-500 m-2"
             onClick={handleLeave}
-          >
+            >
             Leave
           </Link>
           <div className="bg-white h-14 w-16 float-right bg-opacity-20 flex justify-center items-center">
@@ -70,7 +75,7 @@ const DefaultScreen = ({
 
       <div className="flex h-full">
         <div className="relative max-w-xs py-12 mx-auto">
-          <Options />
+          <Options addTab={addTab}/>
         </div>
         <div className="hidden md:block">
           {showModal && (

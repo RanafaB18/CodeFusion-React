@@ -14,6 +14,7 @@ import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
 import { redirect } from "react-router-dom";
 import MessageToast from "./MessageToast";
+import Tab from "./Tab";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -29,21 +30,33 @@ const Room = ({ room, username, showStream }) => {
   const [showMessageToast, setShowMessageToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [tabs, setTabs] = useState({allTabs: [], numOfDocuments: 0, numOfCodes: 0});
+  const addTab = ({icon, text, id}) => {
+    if (text.includes("Document")) {
+      text += tabs.numOfDocuments + 1
+    } else {
+      text += tabs.numOfCodes + 1
+    }
+    // If allTabs is empty then the first tab will be active
+    const newTab = {tab: <Tab icon={icon} text={text}/>, active: tabs.allTabs.length === 0 ? true : false, id}
+    setTabs((prevState) => ({
+      allTabs: prevState.allTabs.concat(newTab),
+      numOfDocuments: prevState.numOfDocuments + (text.includes("Document") ? 1 : 0),
+      numOfCodes: prevState.numOfCodes + (text.includes("Code") ? 1 : 0)
+    }))
+  }
   useEffect(() => {
     const resize = () => {
       setWindowWidth(window.innerWidth);
     };
-    const currentIndex = screenIndex;
     window.addEventListener("resize", resize);
 
     if (windowWidth >= 768) {
-      console.log("Resetting width");
       if (screenIndex === 0) {
         setScreenIndex(2);
         showScreen(2);
       }
     }
-    console.log(windowWidth);
     return () => {
       window.removeEventListener("resize", resize);
     };
@@ -142,8 +155,6 @@ const Room = ({ room, username, showStream }) => {
   const showScreen = (index) => {
     setScreenIndex(index);
   };
-  console.log("Screen Index", screenIndex);
-  console.log("Show modal", showModal);
   return (
     <div className="flex flex-col min-h-screen relative">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
@@ -173,6 +184,9 @@ const Room = ({ room, username, showStream }) => {
               visible={visible}
               showModal={showModal}
               setShowModal={setShowModal}
+              tabs={tabs}
+              setTabs={setTabs}
+              addTab={addTab}
             />
           </div>
         )}
@@ -205,6 +219,9 @@ const Room = ({ room, username, showStream }) => {
               visible={visible}
               showModal={showModal}
               setShowModal={setShowModal}
+              tabs={tabs}
+              setTabs={setTabs}
+              addTab={addTab}
             />
           )}
           <div className="md:hidden">
@@ -226,7 +243,11 @@ const Room = ({ room, username, showStream }) => {
         </div>
       </RoomContext.Provider>
       <div className="relative h-16 md:hidden">
-        <BottomNavigationBar showScreen={showScreen} screenIndex={screenIndex} setScreenIndex={setScreenIndex}/>
+        <BottomNavigationBar
+          showScreen={showScreen}
+          screenIndex={screenIndex}
+          setScreenIndex={setScreenIndex}
+        />
         {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
     </div>

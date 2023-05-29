@@ -2,26 +2,66 @@ import { FaBars, FaEllipsisV, FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import SideModal from "./SideModal";
 
-const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
-
+const Bar = ({
+  participants,
+  showModal,
+  setShowModal,
+  invite,
+  username,
+  tabs,
+  setTabs
+}) => {
   const handleClick = () => {
     setShowModal(!showModal);
   };
+  console.log("Tabs", tabs);
+  const handleActive = (id) => {
+    setTabs((prevState) => ({
+      ...prevState,
+      allTabs: prevState.allTabs.map((tab) => {
+        if (tab.id === id) {
+          if (tab.active) {
+            return tab
+          } else {
+            return {...tab, active: true}
+          }
+        }
+        return {...tab, active: false}
+      })
+    }))
+  }
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
         <div className="text-white flex">
-          <button className="px-4 py-2">
+          <button className="px-4 py-2 border-r opacity-25">
             <FaPlus className="opacity-80" />
           </button>
-          <div className="border-r border-l opacity-25 w-full"></div>
-          <button className="px-4">
+          <div
+            role="tabs"
+            className="flex items-center overflow-x-auto whitespace-nowrap w-full"
+          >
+            {tabs.allTabs.map((tab) => (
+              <div
+                key={tab.id}
+                onClick={() => {handleActive(tab.id)}}
+                className={`px-3 flex h-full gap-3 items-center
+                  ${tab.active ? "border-l-2 border-red-600 bg-blackhover" : "bg-blacklike"}`}
+              >
+                {tab.tab}
+              </div>
+            ))}
+          </div>
+          <button className="px-4 border-l opacity-25">
             <FaBars className="opacity-80" />
           </button>
         </div>
-        <div className="flex bg-blackhover p-2 min-w-screen ">
-          <div role="tabs" className="flex-1"></div>
-          <div className="flex w-52 justify-evenly">
+        <div className="flex h-16 bg-blackhover p-2">
+          <div
+            role="tools"
+            className="flex w-3/4 items-center gap-3 overflow-x-auto whitespace-nowrap"
+          ></div>
+          <div className="flex justify-around w-1/4">
             <button
               className="bg-bluish
                 text-white text-md

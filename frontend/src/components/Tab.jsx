@@ -1,15 +1,16 @@
 import { FaEllipsisV } from "react-icons/fa";
 import TabButtons from "./TabButtons";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Tab = ({ icon, text }) => {
   return (
-    <div className="flex items-center mx-4 p-4 hover:bg-blacklike justify-between rounded-md">
-      <button className="flex items-center">
+    <>
+      <button className="flex gap-2 items-center opacity-50">
         {icon}
-        <span className="ml-4 text-white text-lg">{text}</span>
+        <span className=" text-white">{text}</span>
       </button>
-      <FaEllipsisV className="text-white text-opacity-30 text-lg cursor-pointer" />
-    </div>
+      <AiOutlineClose className="text-white text-opacity-30 text-lg cursor-pointer" />
+    </>
   );
 };
 
