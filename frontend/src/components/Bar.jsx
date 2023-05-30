@@ -1,6 +1,7 @@
 import { FaBars, FaEllipsisV, FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import SideModal from "./SideModal";
+import Tab from "./Tab";
 
 const Bar = ({
   participants,
@@ -30,6 +31,13 @@ const Bar = ({
       })
     }))
   }
+  const closeTab = (id, text) => {
+    setTabs((prevState) => ({
+      allTabs: prevState.allTabs.filter((tab) => (tab.id !== id)),
+      numOfDocuments: prevState.numOfDocuments - (text.includes('Document') ? 1:0),
+      numOfCodes: prevState.numOfCodes - (text.includes('Code') ? 1:0),
+    }))
+  }
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
@@ -48,7 +56,7 @@ const Bar = ({
                 className={`px-3 flex h-full gap-3 items-center
                   ${tab.active ? "border-l-2 border-red-600 bg-blackhover" : "bg-blacklike"}`}
               >
-                {tab.tab}
+                <Tab icon={tab.icon} text={tab.text} closeTab={() => {closeTab(tab.id, tab.text)}}/>
               </div>
             ))}
           </div>
@@ -59,9 +67,9 @@ const Bar = ({
         <div className="flex h-16 bg-blackhover p-2">
           <div
             role="tools"
-            className="flex w-3/4 items-center gap-3 overflow-x-auto whitespace-nowrap"
+            className="flex w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"
           ></div>
-          <div className="flex justify-around w-1/4">
+          <div className="flex justify-around w-2/12">
             <button
               className="bg-bluish
                 text-white text-md

@@ -1,19 +1,28 @@
 import Editor from "@monaco-editor/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as Y from "yjs"
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
 
 
 const Editors = ({ room }) => {
+    let doc;
+    let provider;
+
     const editorRef = useRef(null)
+    useEffect(() => {
+      doc = new Y.Doc()
+      provider = new WebrtcProvider(room, doc);
+      return () => {
+        doc.destroy()
+        provider.disconnect()
+      }
+    }, [])
     const handleEditorDidMount = (editor, monaco) => {
         editorRef.current = editor
 
-        const doc = new Y.Doc()
 
         const type = doc.getText("monaco")
-        const provider = new WebrtcProvider(room, doc);
 
         const binding = new MonacoBinding(
             type, editorRef.current.getModel(),
@@ -23,10 +32,8 @@ const Editors = ({ room }) => {
         console.log(provider.awareness)
     }
   return (
-    <div>
+    <div className="w-full h-full">
       <Editor
-      height={"100vh"}
-      width={"100vw"}
       theme="vs-dark"
       onMount={handleEditorDidMount}
       language="javascript"

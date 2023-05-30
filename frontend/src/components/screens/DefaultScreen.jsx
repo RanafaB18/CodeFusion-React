@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
+import Editors from "../Editors";
 
 const DefaultScreen = ({
   username,
@@ -25,7 +26,7 @@ const DefaultScreen = ({
   setShowModal,
   tabs,
   setTabs,
-  addTab
+  addTab,
 }) => {
   const closeSideModal = () => {
     setShowModal(false);
@@ -64,7 +65,7 @@ const DefaultScreen = ({
             font-semibold rounded-md px-4 py-2
             tracking-wide hover:bg-blue-500 m-2"
             onClick={handleLeave}
-            >
+          >
             Leave
           </Link>
           <div className="bg-white h-14 w-16 float-right bg-opacity-20 flex justify-center items-center">
@@ -74,10 +75,17 @@ const DefaultScreen = ({
       </div>
 
       <div className="flex h-full">
-        <div className="relative max-w-xs py-12 mx-auto">
-          <Options addTab={addTab}/>
+        <div className="flex-1 overflow-auto">
+          {tabs.allTabs.length === 0 ? (
+            <div className="max-w-sm mx-auto py-12">
+              <Options addTab={addTab} />
+            </div>
+          ) : (
+            <Editors room={room} />
+          )}
         </div>
-        <div className="hidden md:block">
+
+        <div className={`hidden md:block`}>
           {showModal && (
             <SideModal
               participants={participants}
