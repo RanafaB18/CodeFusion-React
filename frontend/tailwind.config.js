@@ -26,7 +26,8 @@ export default {
         'colorTo': '#de3fe3',
         'colorVia': '#22dcbd',
         'brandBackground': '#02000f',
-        'iconColor': '#4a5568'
+        'iconColor': '#4a5568',
+        'blackBackground': '#16191d'
       },
       animation: {
         decrease: 'decrease 3s linear forwards',

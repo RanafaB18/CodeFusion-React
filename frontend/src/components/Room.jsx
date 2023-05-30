@@ -166,7 +166,7 @@ const Room = ({ room, username, showStream }) => {
     setScreenIndex(index);
   };
   return (
-    <div className="flex flex-col min-h-screen relative">
+    <div className="flex flex-col min-h-screen relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
       <Toast toast={toast} showToast={showToast} />
       {screenIndex !== 0 && !showModal && (

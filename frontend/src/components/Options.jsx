@@ -9,7 +9,7 @@ const Options = ({addTab}) => {
     addTab({icon, text, id})
   }
   return (
-    <div className="px-4 py-3 bg-blackhover rounded shadow-lg dark:bg-ui-900">
+    <div className="px-4 py-3 bg-[#22262a] rounded shadow-lg dark:bg-ui-900">
       <IconContext.Provider value={{color: 'gray', size:"20px"}}>
         <TabButtons onClick={handleClick} icon={<FaFileAlt />} text={"New Document Tab"}/>
         <TabButtons onClick={handleClick} icon={<FaCode />} text={"New Code Tab"}/>

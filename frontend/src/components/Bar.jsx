@@ -1,7 +1,8 @@
 import { FaBars, FaEllipsisV, FaPlus } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SideModal from "./SideModal";
 import Tab from "./Tab";
+import Options from "./Options";
 
 const Bar = ({
   participants,
@@ -10,41 +11,69 @@ const Bar = ({
   invite,
   username,
   tabs,
-  setTabs
+  setTabs,
+  addTab
 }) => {
+  const [showOptions, setShowOptions] = useState(false);
+  const optionRef = useRef()
   const handleClick = () => {
     setShowModal(!showModal);
   };
   console.log("Tabs", tabs);
+  useEffect(() => {
+    const closeOptions = (event) => {
+      if (!optionRef.current.contains(event.target)) {
+        setShowOptions(false)
+      }
+    }
+    document.addEventListener('click', closeOptions)
+    return () => {
+
+      document.removeEventListener('click', closeOptions)
+    }
+  }, [])
+
   const handleActive = (id) => {
     setTabs((prevState) => ({
       ...prevState,
       allTabs: prevState.allTabs.map((tab) => {
         if (tab.id === id) {
           if (tab.active) {
-            return tab
+            return tab;
           } else {
-            return {...tab, active: true}
+            return { ...tab, active: true };
           }
         }
-        return {...tab, active: false}
-      })
-    }))
-  }
+        return { ...tab, active: false };
+      }),
+    }));
+  };
   const closeTab = (id, text) => {
     setTabs((prevState) => ({
-      allTabs: prevState.allTabs.filter((tab) => (tab.id !== id)),
-      numOfDocuments: prevState.numOfDocuments - (text.includes('Document') ? 1:0),
-      numOfCodes: prevState.numOfCodes - (text.includes('Code') ? 1:0),
-    }))
-  }
+      allTabs: prevState.allTabs.filter((tab) => tab.id !== id),
+      numOfDocuments:
+        prevState.numOfDocuments - (text.includes("Document") ? 1 : 0),
+      numOfCodes: prevState.numOfCodes - (text.includes("Code") ? 1 : 0),
+    }));
+  };
+  const openOptions = () => {
+    console.log("Opens Options");
+    setShowOptions(!showOptions)
+  };
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
         <div className="text-white flex">
-          <button className="px-4 py-2 border-r opacity-25">
-            <FaPlus className="opacity-80" />
-          </button>
+          <div className="relative">
+            <button  ref={optionRef} onClick={openOptions} className="px-4 py-2 border-r opacity-75">
+              <FaPlus className="" />
+            </button>
+            {showOptions && (
+              <div className="absolute mt-1 left-1 w-80 z-20">
+                <Options addTab={addTab}/>
+              </div>
+            )}
+          </div>
           <div
             role="tabs"
             className="flex items-center overflow-x-auto whitespace-nowrap w-full"
@@ -52,19 +81,31 @@ const Bar = ({
             {tabs.allTabs.map((tab) => (
               <div
                 key={tab.id}
-                onClick={() => {handleActive(tab.id)}}
+                onClick={() => {
+                  handleActive(tab.id);
+                }}
                 className={`px-3 flex h-full gap-3 items-center
-                  ${tab.active ? "border-l-2 border-red-600 bg-blackhover" : "bg-blacklike"}`}
+                  ${
+                    tab.active
+                      ? "border-l-2 border-red-600 bg-blackhover"
+                      : "bg-blacklike"
+                  }`}
               >
-                <Tab icon={tab.icon} text={tab.text} closeTab={() => {closeTab(tab.id, tab.text)}}/>
+                <Tab
+                  icon={tab.icon}
+                  text={tab.text}
+                  closeTab={() => {
+                    closeTab(tab.id, tab.text);
+                  }}
+                />
               </div>
             ))}
           </div>
-          <button className="px-4 border-l opacity-25">
-            <FaBars className="opacity-80" />
+          <button className="px-4 border-l opacity-80">
+            <FaBars />
           </button>
         </div>
-        <div className="flex h-16 bg-blackhover p-2">
+        <div className="flex h-16 bg-[#353a41] p-2">
           <div
             role="tools"
             className="flex w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"

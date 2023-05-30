@@ -52,6 +52,7 @@ const DefaultScreen = ({
           username={username}
           tabs={tabs}
           setTabs={setTabs}
+          addTab={addTab}
         />
       </div>
 
