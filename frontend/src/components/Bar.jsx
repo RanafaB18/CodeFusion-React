@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import SideModal from "./SideModal";
 import Tab from "./Tab";
 import Options from "./Options";
+import * as Y from "yjs";
 
 const Bar = ({
   participants,
@@ -11,27 +12,50 @@ const Bar = ({
   invite,
   username,
   tabs,
-  setTabs,
-  addTab
+  docsDiv,
+  bindEditor,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const optionRef = useRef()
+  const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
   };
-  console.log("Tabs", tabs);
+  console.log("Tabsssss", tabs.length);
+  useEffect(() => {
+    docsDiv.current.addEventListener("click", (event) => {
+      console.log("Clicked");
+      const pressedButton = event.target;
+      const val = pressedButton.getAttribute("index");
+      if (val === "new") {
+        // create a new document
+        const newDoc = new Y.Text();
+        // Set initial content with the headline being the index of the documentList
+
+        newDoc.applyDelta([
+          { insert: `Document #${tabs.length}` },
+          { insert: "\n", attributes: { header: 1 } },
+          { insert: "\n" },
+        ]);
+        tabs.push([newDoc]);
+        bindEditor(newDoc);
+      } else {
+        // The index is a number, render the $i-th document
+        const index = Number.parseInt(val);
+        bindEditor(tabs.get(index));
+      }
+    });
+  }, []);
   useEffect(() => {
     const closeOptions = (event) => {
       if (!optionRef.current.contains(event.target)) {
-        setShowOptions(false)
+        setShowOptions(false);
       }
-    }
-    document.addEventListener('click', closeOptions)
+    };
+    document.addEventListener("click", closeOptions);
     return () => {
-
-      document.removeEventListener('click', closeOptions)
-    }
-  }, [])
+      document.removeEventListener("click", closeOptions);
+    };
+  }, []);
 
   const handleActive = (id) => {
     setTabs((prevState) => ({
@@ -58,27 +82,32 @@ const Bar = ({
   };
   const openOptions = () => {
     console.log("Opens Options");
-    setShowOptions(!showOptions)
+    setShowOptions(!showOptions);
   };
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
         <div className="text-white flex">
           <div className="relative">
-            <button  ref={optionRef} onClick={openOptions} className="px-4 py-2 border-r opacity-75">
+            <button
+              ref={optionRef}
+              onClick={openOptions}
+              className="px-4 py-2 border-r opacity-75"
+            >
               <FaPlus className="" />
             </button>
             {showOptions && (
               <div className="absolute mt-1 left-1 w-80 z-20">
-                <Options addTab={addTab}/>
+                <Options />
               </div>
             )}
           </div>
           <div
             role="tabs"
+            ref={docsDiv}
             className="flex items-center overflow-x-auto whitespace-nowrap w-full"
           >
-            {tabs.allTabs.map((tab) => (
+            {/* {tabs.toArray().map((tab) => (
               <div
                 key={tab.id}
                 onClick={() => {
@@ -99,7 +128,7 @@ const Bar = ({
                   }}
                 />
               </div>
-            ))}
+            ))} */}
           </div>
           <button className="px-4 border-l opacity-80">
             <FaBars />

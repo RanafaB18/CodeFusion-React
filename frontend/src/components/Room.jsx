@@ -15,6 +15,8 @@ import Toast from "./Toast";
 import { redirect } from "react-router-dom";
 import MessageToast from "./MessageToast";
 import Tab from "./Tab";
+import * as Y from "yjs"
+import { WebrtcProvider } from "y-webrtc";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -30,31 +32,7 @@ const Room = ({ room, username, showStream }) => {
   const [showMessageToast, setShowMessageToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [tabs, setTabs] = useState({
-    allTabs: [],
-    numOfDocuments: 0,
-    numOfCodes: 0,
-  });
-  const addTab = ({ icon, text, id }) => {
-    if (text.includes("Document")) {
-      text += tabs.numOfDocuments + 1;
-    } else {
-      text += tabs.numOfCodes + 1;
-    }
-    // If allTabs is empty then the first tab will be active
-    const newTab = {
-      icon,
-      text,
-      active: tabs.allTabs.length === 0 ? true : false,
-      id,
-    };
-    setTabs((prevState) => ({
-      allTabs: prevState.allTabs.concat(newTab),
-      numOfDocuments:
-        prevState.numOfDocuments + (text.includes("Document") ? 1 : 0),
-      numOfCodes: prevState.numOfCodes + (text.includes("Code") ? 1 : 0),
-    }));
-  };
+
   useEffect(() => {
     const resize = () => {
       setWindowWidth(window.innerWidth);
@@ -194,9 +172,6 @@ const Room = ({ room, username, showStream }) => {
               visible={visible}
               showModal={showModal}
               setShowModal={setShowModal}
-              tabs={tabs}
-              setTabs={setTabs}
-              addTab={addTab}
             />
           </div>
         )}
@@ -229,9 +204,6 @@ const Room = ({ room, username, showStream }) => {
               visible={visible}
               showModal={showModal}
               setShowModal={setShowModal}
-              tabs={tabs}
-              setTabs={setTabs}
-              addTab={addTab}
             />
           )}
           <div className="md:hidden">
