@@ -1,31 +1,33 @@
 import { FaBars, FaEllipsisV, FaPlus } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import SideModal from "./SideModal";
 import Tab from "./Tab";
 import Options from "./Options";
 import * as Y from "yjs";
+import { YjsContext } from "../context/YjsContext";
 
-const Bar = ({
-  participants,
-  showModal,
-  setShowModal,
-  invite,
-  username,
-  tabs,
-  docsDiv,
-  bindEditor,
-}) => {
+const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const { tabs, docsDiv, bindEditor, newTab, addTab } = useContext(YjsContext);
   const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
   };
   console.log("Tabsssss", tabs.length);
   useEffect(() => {
-    docsDiv.current.addEventListener("click", (event) => {
-      console.log("Clicked");
+    const switchTab = (event) => {
       const pressedButton = event.target;
       const val = pressedButton.getAttribute("index");
+      console.log("Val", val, pressedButton, newTab.current);
+      // The index is a number, render the $i-th document
+      const index = Number.parseInt(val);
+      bindEditor(tabs.get(index));
+    };
+    const createNewTab = () => {
+      console.log("Clicked");
+      const pressedButton = newTab.current;
+      const val = pressedButton.getAttribute("index");
+      console.log("Val", val, pressedButton, newTab.current);
       if (val === "new") {
         // create a new document
         const newDoc = new Y.Text();
@@ -38,13 +40,18 @@ const Bar = ({
         ]);
         tabs.push([newDoc]);
         bindEditor(newDoc);
-      } else {
-        // The index is a number, render the $i-th document
-        const index = Number.parseInt(val);
-        bindEditor(tabs.get(index));
       }
-    });
+      console.log("Bar Tabs", tabs);
+    };
+    newTab.current.addEventListener("click", createNewTab);
+    docsDiv.current.addEventListener("click", switchTab);
+    return () => {
+      newTab.current.removeEventListener("click", createNewTab);
+      docsDiv.current.removeEventListener("click", switchTab);
+    };
   }, []);
+
+
   useEffect(() => {
     const closeOptions = (event) => {
       if (!optionRef.current.contains(event.target)) {
@@ -73,12 +80,7 @@ const Bar = ({
     }));
   };
   const closeTab = (id, text) => {
-    setTabs((prevState) => ({
-      allTabs: prevState.allTabs.filter((tab) => tab.id !== id),
-      numOfDocuments:
-        prevState.numOfDocuments - (text.includes("Document") ? 1 : 0),
-      numOfCodes: prevState.numOfCodes - (text.includes("Code") ? 1 : 0),
-    }));
+
   };
   const openOptions = () => {
     console.log("Opens Options");
@@ -98,7 +100,7 @@ const Bar = ({
             </button>
             {showOptions && (
               <div className="absolute mt-1 left-1 w-80 z-20">
-                <Options />
+                <Options addTab={addTab}/>
               </div>
             )}
           </div>
