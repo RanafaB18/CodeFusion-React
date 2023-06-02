@@ -76,6 +76,7 @@ const DefaultScreen = ({
     binding = new QuillBinding(ytext, quill, awareness);
   };
   const renderDocs = () => {
+    console.log("Executed RenderDocs")
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     const docs = tabs
       .toArray()
