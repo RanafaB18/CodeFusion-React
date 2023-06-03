@@ -1,56 +1,67 @@
-import { FaBars, FaEllipsisV, FaPlus } from "react-icons/fa";
+import { FaBars, FaEllipsisV, FaFileAlt, FaPlus } from "react-icons/fa";
 import { useContext, useEffect, useRef, useState } from "react";
 import SideModal from "./SideModal";
 import Tab from "./Tab";
 import Options from "./Options";
 import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
+import { v4 as uuid } from "uuid";
 
 const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const { tabs, docsDiv, bindEditor, newTab, addTab } = useContext(YjsContext);
+  const { tabs, docsDiv, bindEditor, newDocTab, addTab } =
+    useContext(YjsContext);
   const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
   };
-  console.log("Tabsssss", tabs.length);
+  console.log("doscdiv bar", docsDiv);
   useEffect(() => {
     const switchTab = (event) => {
       const pressedButton = event.target;
       const val = pressedButton.getAttribute("index");
-      console.log("Val", val, pressedButton, newTab.current);
+      console.log("Val", val, pressedButton, newDocTab.current);
       // The index is a number, render the $i-th document
       const index = Number.parseInt(val);
       bindEditor(tabs.get(index));
     };
-    const createNewTab = () => {
-      console.log("Clicked");
-      const pressedButton = newTab.current;
-      const val = pressedButton.getAttribute("index");
-      console.log("Val", val, pressedButton, newTab.current);
-      if (val === "new") {
-        // create a new document
-        const newDoc = new Y.Text();
-        // Set initial content with the headline being the index of the documentList
+    const createNewTab = (event) => {
+      event.stopPropagation();
+      if (newDocTab.current) {
+        if (newDocTab.current.contains(event.target)) {
+          const id = uuid();
 
-        newDoc.applyDelta([
-          { insert: `Document #${tabs.length}` },
-          { insert: "\n", attributes: { header: 1 } },
-          { insert: "\n" },
-        ]);
-        tabs.push([newDoc]);
-        bindEditor(newDoc);
+          console.log("Clicked");
+          const pressedButton = newDocTab.current;
+          const val = pressedButton.getAttribute("index");
+          console.log("Val", val, pressedButton, newDocTab.current);
+          if (val === "new") {
+            // create a new document
+            const newDoc = new Y.Text();
+            // Set initial content with the headline being the index of the documentList
+
+            newDoc.applyDelta([
+              { insert: `Document #${tabs.length}` },
+              { insert: "\n", attributes: { header: 1 } },
+              { insert: "\n" },
+            ]);
+            console.log("New Doc", newDoc);
+            tabs.push([
+              {text: `Document ${tabs.length + 1}`, id },
+            ]);
+            bindEditor(newDoc);
+          }
+          console.log("Bar Tabs", tabs);
+        }
       }
-      console.log("Bar Tabs", tabs);
     };
-    newTab.current.addEventListener("click", createNewTab);
-    docsDiv.current.addEventListener("click", switchTab);
+    document.addEventListener("click", createNewTab);
+    // docsDiv.current.addEventListener("click", switchTab);
     return () => {
-      newTab.current.removeEventListener("click", createNewTab);
-      docsDiv.current.removeEventListener("click", switchTab);
+      document.removeEventListener("click", createNewTab);
+      // docsDiv.current.removeEventListener("click", switchTab);
     };
   }, []);
-
 
   useEffect(() => {
     const closeOptions = (event) => {
@@ -79,9 +90,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
       }),
     }));
   };
-  const closeTab = (id, text) => {
-
-  };
+  const closeTab = (id, text) => {};
   const openOptions = () => {
     console.log("Opens Options");
     setShowOptions(!showOptions);
@@ -100,37 +109,17 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             </button>
             {showOptions && (
               <div className="absolute mt-1 left-1 w-80 z-20">
-                <Options addTab={addTab}/>
+                <Options />
               </div>
             )}
           </div>
           <div
             role="tabs"
-            ref={docsDiv}
-            className="flex items-center overflow-x-auto whitespace-nowrap w-full"
+            className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full"
           >
-            {/* {tabs.toArray().map((tab) => (
-              <div
-                key={tab.id}
-                onClick={() => {
-                  handleActive(tab.id);
-                }}
-                className={`px-3 flex h-full gap-3 items-center
-                  ${
-                    tab.active
-                      ? "border-l-2 border-red-600 bg-blackhover"
-                      : "bg-blacklike"
-                  }`}
-              >
-                <Tab
-                  icon={tab.icon}
-                  text={tab.text}
-                  closeTab={() => {
-                    closeTab(tab.id, tab.text);
-                  }}
-                />
-              </div>
-            ))} */}
+            {docsDiv.map((tab) => (
+              <Tab key={tab.id} text={tab.text} />
+            ))}
           </div>
           <button className="px-4 border-l opacity-80">
             <FaBars />
@@ -139,9 +128,9 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
         <div className="flex h-16 bg-[#353a41] p-2">
           <div
             role="tools"
-            className="flex w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"
+            className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"
           ></div>
-          <div className="flex justify-around w-2/12">
+          <div className="flex justify-around w-1/4 lg:w-2/12">
             <button
               className="bg-bluish
                 text-white text-md

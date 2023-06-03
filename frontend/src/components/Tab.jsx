@@ -1,15 +1,17 @@
-import { FaEllipsisV } from "react-icons/fa";
-import TabButtons from "./TabButtons";
+import { FaFileAlt } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 
-const Tab = ({ icon, text, closeTab }) => {
+const Tab = ({ text, closeTab }) => {
   return (
     <>
-      <button className="flex gap-2 items-center opacity-50">
-        {icon}
-        <span className=" text-white">{text}</span>
-      </button>
-      <AiOutlineClose onClick={closeTab} className="text-white text-opacity-30 text-lg cursor-pointer" />
+      <div className="flex gap-2 items-center cursor-pointer px-3 bg-[#353a41] h-full">
+        <span className="opacity-50">{text.includes("Document") ? <FaFileAlt /> : <FaCode />}</span>
+        <span className=" text-white pr-3">{text}</span>
+        <AiOutlineClose
+          onClick={closeTab}
+          className="text-white hover:bg-red-500 hover:bg-opacity-30 rounded hover:text-red-600 text-opacity-40 text-lg cursor-pointer"
+        />
+      </div>
     </>
   );
 };

@@ -33,11 +33,11 @@ const DefaultScreen = ({
 }) => {
   Quill.register("modules/cursors", QuillCursors);
 
-  const ydoc = new Y.Doc()
+  const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
-  const docsDiv = useRef();
-  const newTab = useRef()
+  const [docsDiv, setDocsDiv] = useState([]);
+  const newDocTab = useRef();
   const tabs = ydoc.getArray("tabs");
   let quill = null;
   let binding = null;
@@ -76,16 +76,10 @@ const DefaultScreen = ({
     binding = new QuillBinding(ytext, quill, awareness);
   };
   const renderDocs = () => {
-    console.log("Executed RenderDocs")
+    console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
-    const docs = tabs
-      .toArray()
-      .map(
-        (ytext, i) => `<input type="button" index=${i} value="Document ${i}" />`
-      )
-      .join("");
     // insert the list of all docs. But the first one is a "create new document" button
-    docsDiv.current.innerHTML = docs;
+    setDocsDiv(tabs.toArray());
     if (tabs.length === 0) {
       // A user deleted all documents. Clear the editor content & binding.
       if (binding) {
@@ -108,16 +102,6 @@ const DefaultScreen = ({
     }
   }, [chatOpen]);
 
-  const addTab = ({ icon, text, id }) => {
-    console.log("Option clicked", text, id);
-    // If allTabs is empty then the first tab will be active
-    const newTab = {
-      icon,
-      text: text + tabs.toArray().length + 1,
-      active: (tabs.toArray().length = 0 == 0 ? true : false),
-      id,
-    };
-  };
   const closeSideModal = () => {
     setShowModal(false);
   };
@@ -127,7 +111,9 @@ const DefaultScreen = ({
     return redirect("/");
   };
   return (
-    <YjsContext.Provider value={{tabs, docsDiv, bindEditor, Y, newTab, addTab}}>
+    <YjsContext.Provider
+      value={{ tabs, docsDiv, bindEditor, Y, newDocTab }}
+    >
       <main className="flex flex-col md:h-screen">
         <div className="h-90">
           <Bar
@@ -162,7 +148,7 @@ const DefaultScreen = ({
           <div id="editor" className="flex-1 overflow-auto">
             {tabs.length === 0 ? (
               <div className="max-w-sm mx-auto py-12">
-                <Options addTab={addTab} />
+                <Options />
               </div>
             ) : (
               <div></div>
