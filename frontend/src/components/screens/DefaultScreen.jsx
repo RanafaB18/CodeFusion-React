@@ -73,6 +73,7 @@ const DefaultScreen = ({
     }
     // "Bind" the quill editor to a Yjs text type.
     // The QuillBinding uses the awareness instance to propagate your cursor location.
+    console.log("binder ytext", ytext);
     binding = new QuillBinding(ytext, quill, awareness);
   };
   const renderDocs = () => {
