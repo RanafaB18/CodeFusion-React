@@ -11,6 +11,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { tabs, docsDiv, bindEditor, newDocTab, addTab } =
     useContext(YjsContext);
+    const [copyTabs, setCopyTabs] = useState(tabs)
   const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
@@ -90,7 +91,9 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
       }),
     }));
   };
-  const closeTab = (id, text) => {};
+  const closeTab = (index) => {
+    copyTabs.delete(index, 1)
+  };
   const openOptions = () => {
     console.log("Opens Options");
     setShowOptions(!showOptions);
@@ -117,8 +120,8 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             role="tabs"
             className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full"
           >
-            {docsDiv.map((tab) => (
-              <Tab key={tab.id} text={tab.text} />
+            {docsDiv.map((tab, i) => (
+              <Tab key={tab.id} text={tab.text} closeTab={() => closeTab(i)}/>
             ))}
           </div>
           <button className="px-4 border-l opacity-80">
