@@ -14,7 +14,8 @@ import { QuillBinding } from "y-quill";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import { YjsContext } from "../../context/YjsContext";
-
+import Tab from "../Tab";
+import { v4 as uuid } from "uuid"
 const DefaultScreen = ({
   username,
   room,
@@ -36,9 +37,10 @@ const DefaultScreen = ({
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
-  const [docsDiv, setDocsDiv] = useState([]);
+  const docsDiv = useRef();
   const newDocTab = useRef();
   const tabs = ydoc.getArray("tabs");
+  const [docs, setDocs] = useState([])
   let quill = null;
   let binding = null;
   const bindEditor = (ytext) => {
@@ -80,7 +82,18 @@ const DefaultScreen = ({
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
-    setDocsDiv(tabs.toArray());
+    setDocs(tabs
+      .toArray()
+      .map(
+        (ytext, i) => {
+          const id = uuid()
+          console.log("Ytext id", ytext)
+          return ({id, index: i, text: `Document ${i}`})
+        }
+    ))
+
+    // insert the list of all docs. But the first one is a "create new document" button
+    // docsDiv.current.innerHTML = docs;
     if (tabs.length === 0) {
       // A user deleted all documents. Clear the editor content & binding.
       if (binding) {
@@ -112,9 +125,7 @@ const DefaultScreen = ({
     return redirect("/");
   };
   return (
-    <YjsContext.Provider
-      value={{ tabs, docsDiv, bindEditor, Y, newDocTab }}
-    >
+    <YjsContext.Provider value={{ tabs, docsDiv, bindEditor, Y, newDocTab, docs, setDocs}}>
       <main className="flex flex-col md:h-screen">
         <div className="h-90">
           <Bar

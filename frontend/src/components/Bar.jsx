@@ -9,53 +9,24 @@ import { v4 as uuid } from "uuid";
 
 const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const { tabs, docsDiv, bindEditor, newDocTab, addTab } =
-    useContext(YjsContext);
-    const [copyTabs, setCopyTabs] = useState(tabs)
+  const { tabs, docsDiv, bindEditor, newDocTab, docs, setDocs } = useContext(YjsContext);
+  const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
   };
   console.log("doscdiv bar", docsDiv);
   useEffect(() => {
-    const switchTab = (event) => {
-      const pressedButton = event.target;
-      const val = pressedButton.getAttribute("index");
-      console.log("Val", val, pressedButton, newDocTab.current);
-      // The index is a number, render the $i-th document
-      const index = Number.parseInt(val);
-      bindEditor(tabs.get(index));
-    };
-    const createNewTab = (event) => {
-      event.stopPropagation();
-      if (newDocTab.current) {
-        if (newDocTab.current.contains(event.target)) {
-          const id = uuid();
+    // const switchTab = (event) => {
+    //   const pressedButton = event.target;
+    //   const val = pressedButton.getAttribute("index");
+    //   console.log("Val", val, pressedButton, newDocTab.current);
+    //   // The index is a number, render the $i-th document
+    //   const index = Number.parseInt(val);
+    //   console.log("Index", index)
+    //   // bindEditor(tabs.get(index));
+    // };
 
-          console.log("Clicked");
-          const pressedButton = newDocTab.current;
-          const val = pressedButton.getAttribute("index");
-          console.log("Val", val, pressedButton, newDocTab.current);
-          if (val === "new") {
-            // create a new document
-            const newDoc = new Y.Text();
-            // Set initial content with the headline being the index of the documentList
-
-            newDoc.applyDelta([
-              { insert: `Document #${tabs.length}` },
-              { insert: "\n", attributes: { header: 1 } },
-              { insert: "\n" },
-            ]);
-            console.log("New Doc", newDoc);
-            tabs.push([
-              {text: `Document ${tabs.length + 1}`, id },
-            ]);
-            bindEditor(newDoc);
-          }
-          console.log("Bar Tabs", tabs);
-        }
-      }
-    };
     document.addEventListener("click", createNewTab);
     // docsDiv.current.addEventListener("click", switchTab);
     return () => {
@@ -63,7 +34,36 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
       // docsDiv.current.removeEventListener("click", switchTab);
     };
   }, []);
+  const createNewTab = (event) => {
+    event.stopPropagation();
+    if (newDocTab.current) {
+      if (newDocTab.current.contains(event.target)) {
+        const id = uuid();
 
+        console.log("Clicked");
+        const pressedButton = newDocTab.current;
+        const val = pressedButton.getAttribute("index");
+        console.log("Val", val, pressedButton, newDocTab.current);
+        if (val === "new") {
+          // create a new document
+          const newDoc = new Y.Text();
+          // Set initial content with the headline being the index of the documentList
+
+          newDoc.applyDelta([
+            { insert: `Document #${tabs.length}` },
+            { insert: "\n", attributes: { header: 1 } },
+            { insert: "\n" },
+          ]);
+          console.log("JSON", newDoc.toJSON());
+          console.log("New Doc", newDoc);
+          tabs.push([newDoc]);
+          console.log("Tabs getarray", tabs.toJSON(), newDoc)
+          bindEditor(newDoc);
+        }
+        console.log("Bar Tabs", tabs);
+      }
+    }
+  };
   useEffect(() => {
     const closeOptions = (event) => {
       if (!optionRef.current.contains(event.target)) {
@@ -92,12 +92,23 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     }));
   };
   const closeTab = (index) => {
-    copyTabs.delete(index, 1)
+    console.log(index, "removed")
+    copyTabs.delete(index, 1);
   };
   const openOptions = () => {
     console.log("Opens Options");
     setShowOptions(!showOptions);
   };
+  const switchTab = (index, id) => {
+    console.log("My id", id, "index", index);
+    setDocs((prevState) => {
+      const currentTab = prevState[index]
+      if (currentTab.id === id) {
+        bindEditor(copyTabs.get(index))
+      }
+      return (prevState)
+    })
+  }
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
@@ -117,12 +128,24 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             )}
           </div>
           <div
+            ref={docsDiv}
             role="tabs"
             className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full"
           >
-            {docsDiv.map((tab, i) => (
+            {/* {docsDiv.map((tab, i) => (
               <Tab key={tab.id} text={tab.text} closeTab={() => closeTab(i)}/>
-            ))}
+            ))} */}
+            {docs.map((tab) => {
+              return (
+                <Tab
+                  key={tab.id}
+                  index={tab.index}
+                  text={tab.text}
+                  closeTab={closeTab}
+                  switchTab={() => switchTab(tab.index, tab.id)}
+                />
+              );
+            })}
           </div>
           <button className="px-4 border-l opacity-80">
             <FaBars />
