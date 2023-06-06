@@ -6,8 +6,10 @@ import Options from "./Options";
 import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
+import QuillToolbar from "./QuillToolbar";
 
 const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
+  const toolBarId = uuid()
   const [showOptions, setShowOptions] = useState(false);
   const { tabs, docsDiv, bindEditor, newDocTab, docs, setDocs } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
@@ -153,9 +155,10 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
         </div>
         <div className="flex h-16 bg-[#353a41] p-2">
           <div
-            role="tools"
             className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"
-          ></div>
+          >
+           <QuillToolbar id={toolBarId}/>
+          </div>
           <div className="flex justify-around w-1/4 lg:w-2/12">
             <button
               className="bg-bluish

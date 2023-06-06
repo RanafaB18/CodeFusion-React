@@ -15,7 +15,7 @@ import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import { YjsContext } from "../../context/YjsContext";
 import Tab from "../Tab";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 const DefaultScreen = ({
   username,
   room,
@@ -32,6 +32,22 @@ const DefaultScreen = ({
   showModal,
   setShowModal,
 }) => {
+  // Add sizes to whitelist and register them
+  const Size = Quill.import("formats/size");
+  Size.whitelist = ["extra-small", "small", "medium", "large"];
+  Quill.register(Size, true);
+
+  // Add fonts to whitelist and register them
+  const Font = Quill.import("formats/font");
+  Font.whitelist = [
+    "arial",
+    "comic-sans",
+    "courier-new",
+    "georgia",
+    "helvetica",
+    "lucida",
+  ];
+  Quill.register(Font, true);
   Quill.register("modules/cursors", QuillCursors);
 
   const ydoc = new Y.Doc();
@@ -40,9 +56,10 @@ const DefaultScreen = ({
   const docsDiv = useRef();
   const newDocTab = useRef();
   const tabs = ydoc.getArray("tabs");
-  const [docs, setDocs] = useState([])
+  const [docs, setDocs] = useState([]);
   let quill = null;
   let binding = null;
+
   const bindEditor = (ytext) => {
     if (binding) {
       // We can reuse the existing editor. But we need to remove all event handlers
@@ -56,12 +73,7 @@ const DefaultScreen = ({
       quill = new Quill(document.querySelector("#editor"), {
         modules: {
           cursors: true,
-          toolbar: [
-            // adding some basic Quill content features
-            [{ header: [1, 2, false] }],
-            ["bold", "italic", "underline"],
-            ["image", "code-block"],
-          ],
+          toolbar: "#toolbar",
           history: {
             // Local undo shouldn't undo changes
             // from remote users
@@ -69,7 +81,6 @@ const DefaultScreen = ({
           },
         },
         placeholder: "Start collaborating...",
-        theme: "snow",
         // 'bubble' is also great,
       });
     }
@@ -82,15 +93,13 @@ const DefaultScreen = ({
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
-    setDocs(tabs
-      .toArray()
-      .map(
-        (ytext, i) => {
-          const id = uuid()
-          console.log("Ytext id", ytext)
-          return ({id, index: i, text: `Document ${i}`})
-        }
-    ))
+    setDocs(
+      tabs.toArray().map((ytext, i) => {
+        const id = uuid();
+        console.log("Ytext id", ytext);
+        return { id, index: i, text: `Document ${i}` };
+      })
+    );
 
     // insert the list of all docs. But the first one is a "create new document" button
     // docsDiv.current.innerHTML = docs;
@@ -125,7 +134,9 @@ const DefaultScreen = ({
     return redirect("/");
   };
   return (
-    <YjsContext.Provider value={{ tabs, docsDiv, bindEditor, Y, newDocTab, docs, setDocs}}>
+    <YjsContext.Provider
+      value={{ tabs, docsDiv, bindEditor, Y, newDocTab, docs, setDocs }}
+    >
       <main className="flex flex-col md:h-screen">
         <div className="h-90">
           <Bar
@@ -157,14 +168,16 @@ const DefaultScreen = ({
         </div>
 
         <div className="flex h-full">
-          <div id="editor" className="flex-1 overflow-auto">
-            {tabs.length === 0 ? (
-              <div className="max-w-sm mx-auto py-12">
-                <Options />
-              </div>
-            ) : (
-              <div></div>
-            )}
+          <div className="flex flex-col flex-1 overflow-auto">
+            <div id="editor" className="">
+              {tabs.length === 0 ? (
+                <div className="max-w-sm mx-auto py-12">
+                  <Options />
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
           </div>
 
           <div className={`hidden md:block`}>
