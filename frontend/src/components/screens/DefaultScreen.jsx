@@ -15,6 +15,9 @@ import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import { YjsContext } from "../../context/YjsContext";
 import Tab from "../Tab";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
+
 import { v4 as uuid } from "uuid";
 const DefaultScreen = ({
   username,
@@ -33,22 +36,22 @@ const DefaultScreen = ({
   setShowModal,
 }) => {
   // Add sizes to whitelist and register them
-  const Size = Quill.import("formats/size");
-  Size.whitelist = ["extra-small", "small", "medium", "large"];
-  Quill.register(Size, true);
+  // const Size = Quill.import("formats/size");
+  // Size.whitelist = ["extra-small", "small", "medium", "large"];
+  // Quill.register(Size, true);
 
   // Add fonts to whitelist and register them
-  const Font = Quill.import("formats/font");
-  Font.whitelist = [
-    "arial",
-    "comic-sans",
-    "courier-new",
-    "georgia",
-    "helvetica",
-    "lucida",
-  ];
-  Quill.register(Font, true);
-  Quill.register("modules/cursors", QuillCursors);
+  // const Font = Quill.import("formats/font");
+  // Font.whitelist = [
+  //   "arial",
+  //   "comic-sans",
+  //   "courier-new",
+  //   "georgia",
+  //   "helvetica",
+  //   "lucida",
+  // ];
+  // Quill.register(Font, true);
+  // Quill.register("modules/cursors", QuillCursors);
 
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
@@ -59,8 +62,26 @@ const DefaultScreen = ({
   const [docs, setDocs] = useState([]);
   let quill = null;
   let binding = null;
+  let quillRef = useRef()
+  const [editors, setEditors] = useState([])
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  }
 
-  const bindEditor = (ytext) => {
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ]
+  const bindEditor = (ymap) => {
+    const ytext = ymap.get('newDoc')
     if (binding) {
       // We can reuse the existing editor. But we need to remove all event handlers
       // that we registered for collaborative editing before binding to a new editor binding
@@ -70,34 +91,30 @@ const DefaultScreen = ({
       // This is the first time a user opens a document.
       // The editor has not been initialized yet.
       // Create an editor instance.
-      quill = new Quill(document.querySelector("#editor"), {
-        modules: {
-          cursors: true,
-          toolbar: "#toolbar",
-          history: {
-            // Local undo shouldn't undo changes
-            // from remote users
-            userOnly: true,
-          },
-        },
-        placeholder: "Start collaborating...",
-        // 'bubble' is also great,
-      });
+      // quill = new Quill(document.querySelector("#editor"), {
+      //   placeholder: "Start collaborating...",
+      //   // 'bubble' is also great,
+      // });
+      quill = quillRef.current.getEditor()
+      // console.log("Quill editor", quillRef.current.getEditor())
     }
     // "Bind" the quill editor to a Yjs text type.
     // The QuillBinding uses the awareness instance to propagate your cursor location.
-    console.log("binder ytext", ytext);
     binding = new QuillBinding(ytext, quill, awareness);
   };
+
   const renderDocs = () => {
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
     setDocs(
-      tabs.toArray().map((ytext, i) => {
-        const id = uuid();
-        console.log("Ytext id", ytext);
-        return { id, index: i, text: `Document ${i}` };
+      tabs.toArray().map((ymap, index) => {
+        const id = ymap.get('docId')
+        let tabName = ymap.get('tabName')
+
+        console.log("Tab list", tabs.toJSON())
+        // console.log("TabIndex",ymap.get('tabName'))
+        return { id, index, text: tabName };
       })
     );
 
@@ -113,11 +130,12 @@ const DefaultScreen = ({
       }
     }
   };
+
   useEffect(() => {
-    renderDocs();
+    // renderDocs();
+    tabs.observe(renderDocs);
   }, []);
 
-  tabs.observe(renderDocs);
 
   useEffect(() => {
     if (chatOpen) {
@@ -170,13 +188,14 @@ const DefaultScreen = ({
         <div className="flex h-full">
           <div className="flex flex-col flex-1 overflow-auto">
             <div id="editor" className="">
-              {tabs.length === 0 ? (
+              {/* (
                 <div className="max-w-sm mx-auto py-12">
                   <Options />
                 </div>
-              ) : (
-                <div></div>
-              )}
+              )  */}
+
+                <ReactQuill ref={quillRef} theme="snow" formats={formats} modules={modules}/>
+
             </div>
           </div>
 

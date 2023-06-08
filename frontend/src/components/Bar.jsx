@@ -9,15 +9,15 @@ import { v4 as uuid } from "uuid";
 import QuillToolbar from "./QuillToolbar";
 
 const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
-  const toolBarId = uuid()
+  // const toolBarId = uuid()
   const [showOptions, setShowOptions] = useState(false);
-  const { tabs, docsDiv, bindEditor, newDocTab, docs, setDocs } = useContext(YjsContext);
+  const { tabs, docsDiv, bindEditor, newDocTab, docs, setDocs } =
+    useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
   const handleClick = () => {
     setShowModal(!showModal);
   };
-  console.log("doscdiv bar", docsDiv);
   useEffect(() => {
     // const switchTab = (event) => {
     //   const pressedButton = event.target;
@@ -45,38 +45,33 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
         console.log("Clicked");
         const pressedButton = newDocTab.current;
         const val = pressedButton.getAttribute("index");
-        console.log("Val", val, pressedButton, newDocTab.current);
         if (val === "new") {
+          // Create Y.Map
+          const newMap = new Y.Map();
+          // Put newDoc in Y.Map
+
           // create a new document
           const newDoc = new Y.Text();
+          const number = new Y.Array();
+          let name = `Document ${id.substring(0,2)}`;
+          number.push([name]);
+
+          newMap.set("newDoc", newDoc);
           // Set initial content with the headline being the index of the documentList
+          newMap.set("docId", id);
+          newMap.set("tabName", name);
+          console.log("All tabs", number);
 
           newDoc.applyDelta([
-            { insert: `Document #${tabs.length}` },
-            { insert: "\n", attributes: { header: 1 } },
-            { insert: "\n" },
+            { insert: `Document ${tabs.length}` },
           ]);
-          console.log("JSON", newDoc.toJSON());
-          console.log("New Doc", newDoc);
-          tabs.push([newDoc]);
-          console.log("Tabs getarray", tabs.toJSON(), newDoc)
-          bindEditor(newDoc);
+          tabs.push([newMap]);
+          bindEditor(newMap);
         }
-        console.log("Bar Tabs", tabs);
+        setShowOptions(false);
       }
     }
   };
-  useEffect(() => {
-    const closeOptions = (event) => {
-      if (!optionRef.current.contains(event.target)) {
-        setShowOptions(false);
-      }
-    };
-    document.addEventListener("click", closeOptions);
-    return () => {
-      document.removeEventListener("click", closeOptions);
-    };
-  }, []);
 
   const handleActive = (id) => {
     setTabs((prevState) => ({
@@ -93,24 +88,30 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
       }),
     }));
   };
-  const closeTab = (index) => {
-    console.log(index, "removed")
+  const closeTab = (id, index) => {
+    // setDocs((prevTabs) => {
+    //   if (prevTabs)
+    // })
+    // console.log(index, "removed")
+    // copyTabs.delete(index, 1);
+    console.log("Close", id, "at index", index);
+    console.log(docs);
     copyTabs.delete(index, 1);
   };
   const openOptions = () => {
-    console.log("Opens Options");
     setShowOptions(!showOptions);
   };
   const switchTab = (index, id) => {
-    console.log("My id", id, "index", index);
+    console.log("My id", id, "index", index, copyTabs.toJSON());
     setDocs((prevState) => {
-      const currentTab = prevState[index]
+      const currentTab = prevState[index];
       if (currentTab.id === id) {
-        bindEditor(copyTabs.get(index))
+        console.log("Switching", copyTabs.toJSON());
+        bindEditor(copyTabs.get(index));
       }
-      return (prevState)
-    })
-  }
+      return prevState;
+    });
+  };
   return (
     <>
       <div className="md:flex hidden flex-col relative w-full">
@@ -137,14 +138,15 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             {/* {docsDiv.map((tab, i) => (
               <Tab key={tab.id} text={tab.text} closeTab={() => closeTab(i)}/>
             ))} */}
-            {docs.map((tab) => {
+            {docs.map((tab, i) => {
+              console.log("Tab", tab);
               return (
                 <Tab
                   key={tab.id}
                   index={tab.index}
                   text={tab.text}
-                  closeTab={closeTab}
-                  switchTab={() => switchTab(tab.index, tab.id)}
+                  closeTab={() => closeTab(tab.id, tab.index)}
+                  switchTab={() => switchTab(i, tab.id)}
                 />
               );
             })}
@@ -154,10 +156,8 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
           </button>
         </div>
         <div className="flex h-16 bg-[#353a41] p-2">
-          <div
-            className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap"
-          >
-           <QuillToolbar id={toolBarId}/>
+          <div className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap">
+            {/* <QuillToolbar id={toolBarId}/> */}
           </div>
           <div className="flex justify-around w-1/4 lg:w-2/12">
             <button
