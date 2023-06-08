@@ -64,7 +64,7 @@ const DefaultScreen = ({
   let binding = null;
   let quillRef = useRef()
   const [editors, setEditors] = useState([])
-  
+
   const bindEditor = (ymap) => {
     const ytext = ymap.get('newDoc')
     if (binding) {
@@ -179,7 +179,7 @@ const DefaultScreen = ({
                 </div>
               )  */}
 
-                <ReactQuill ref={quillRef} theme="snow" formats={formats} modules={modules}/>
+                <Editors ref={quillRef}/>
 
             </div>
           </div>

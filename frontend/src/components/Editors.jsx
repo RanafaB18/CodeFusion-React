@@ -17,7 +17,7 @@ const formats = [
   'list', 'bullet', 'indent',
   'link', 'image'
 ]
-const Editors = forwardRef((ref) => {
+const Editors = forwardRef(({}, ref) => {
   return (
     <>
       <ReactQuill theme="snow" ref={ref} formats={formats} modules={modules}/>
