@@ -20,7 +20,7 @@ const formats = [
 const Editors = forwardRef((ref) => {
   return (
     <>
-      <ReactQuill ref={ref} formats={formats} modules={modules}/>
+      <ReactQuill theme="snow" ref={ref} formats={formats} modules={modules}/>
     </>
   )
 });
