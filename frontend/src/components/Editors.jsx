@@ -1,45 +1,28 @@
-import Editor from "@monaco-editor/react";
-import { useEffect, useRef } from "react";
-import * as Y from "yjs"
-import { WebrtcProvider } from "y-webrtc";
-import { MonacoBinding } from "y-monaco";
+import { forwardRef } from "react";
+import ReactQuill from "react-quill";
 
+const modules = {
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline','strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image'],
+    ['clean']
+  ],
+}
 
-const Editors = ({ room }) => {
-    let doc;
-    let provider;
-
-    const editorRef = useRef(null)
-    useEffect(() => {
-      doc = new Y.Doc()
-      provider = new WebrtcProvider(room, doc);
-      return () => {
-        doc.destroy()
-        provider.disconnect()
-      }
-    }, [])
-    const handleEditorDidMount = (editor, monaco) => {
-        editorRef.current = editor
-
-
-        const type = doc.getText("monaco")
-
-        const binding = new MonacoBinding(
-            type, editorRef.current.getModel(),
-            new Set([editorRef.current]),
-            provider.awareness
-        )
-        console.log(provider.awareness)
-    }
+const formats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image'
+]
+const Editors = forwardRef((ref) => {
   return (
-    <div className="w-full h-full">
-      <Editor
-      theme="vs-dark"
-      onMount={handleEditorDidMount}
-      language="javascript"
-      />
-    </div>
-  );
-};
+    <>
+      <ReactQuill ref={ref} formats={formats} modules={modules}/>
+    </>
+  )
+});
 
 export default Editors;
