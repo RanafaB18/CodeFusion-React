@@ -147,9 +147,6 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  const addToRefs = (el) => {
-    console.log("El", el);
-  };
   console.log(
     "CurrentIndex",
     currentIndex,
