@@ -9,12 +9,8 @@ import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { QuillBinding } from "y-quill";
-import Quill from "quill";
-import QuillCursors from "quill-cursors";
 import { YjsContext } from "../../context/YjsContext";
 import Tab from "../Tab";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
 import { v4 as uuid } from "uuid";
@@ -62,34 +58,31 @@ const DefaultScreen = ({
   const [docs, setDocs] = useState([]);
   let quill = null;
   let binding = null;
-  let quillRef = useRef();
-  const editorRefs = useRef([]);
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
-  const [color, setColor] = useState("bg-red-400");
   const [currentIndex, setCurrentIndex] = useState(0);
   // const bindEditor = (ymap) => {
   //   const ytext = ymap.get("newDoc");
-    // if (binding) {
-    //   // We can reuse the existing editor. But we need to remove all event handlers
-    //   // that we registered for collaborative editing before binding to a new editor binding
-    //   binding.destroy();
-    // }
-    // console.log("Quill ref", quillRef.current)
-    // if (quill === null) {
-    //   // This is the first time a user opens a document.
-    //   // The editor has not been initialized yet.
-    //   // Create an editor instance.
-    //   // quill = new Quill(document.querySelector("#editor"), {
-    //   //   placeholder: "Start collaborating...",
-    //   //   // 'bubble' is also great,
-    //   // });
-    //   quill = quillRef.current.getEditor()
-    //   // console.log("Quill editor", quillRef.current.getEditor())
-    // }
-    // // "Bind" the quill editor to a Yjs text type.
-    // // The QuillBinding uses the awareness instance to propagate your cursor location.
-    // binding = new QuillBinding(ytext, quill, awareness);
+  // if (binding) {
+  //   // We can reuse the existing editor. But we need to remove all event handlers
+  //   // that we registered for collaborative editing before binding to a new editor binding
+  //   binding.destroy();
+  // }
+  // console.log("Quill ref", quillRef.current)
+  // if (quill === null) {
+  //   // This is the first time a user opens a document.
+  //   // The editor has not been initialized yet.
+  //   // Create an editor instance.
+  //   // quill = new Quill(document.querySelector("#editor"), {
+  //   //   placeholder: "Start collaborating...",
+  //   //   // 'bubble' is also great,
+  //   // });
+  //   quill = quillRef.current.getEditor()
+  //   // console.log("Quill editor", quillRef.current.getEditor())
+  // }
+  // // "Bind" the quill editor to a Yjs text type.
+  // // The QuillBinding uses the awareness instance to propagate your cursor location.
+  // binding = new QuillBinding(ytext, quill, awareness);
   // };
 
   const renderDocs = () => {
@@ -101,7 +94,6 @@ const DefaultScreen = ({
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
         setEditorYtext(editorYtext.concat(ymap.get("newDoc")));
-        editorRefs.current.push(React.createRef())
         console.log("Tab list", tabs.toJSON());
         // console.log("TabIndex",ymap.get('tabName'))
         return { id, index, text: tabName };
@@ -126,10 +118,18 @@ const DefaultScreen = ({
   }, []);
   useEffect(() => {
     console.log("Editor ytext", editorYtext);
-    const newRef = React.createRef()
     if (editorYtext.length > 0) {
-      console.log("Editor refs", editorRefs)
-      setEditors([...editors, { tag: <QuillEditor ref={editorRefs.current[currentIndex]} ytext={editorYtext[currentIndex]} index={currentIndex}/> }]);
+      setEditors([
+        ...editors,
+        {
+          tag: (
+            <QuillEditor
+              ytext={editorYtext[currentIndex]}
+            />
+          ),
+          id: docs[docs.length - 1]?.id
+        },
+      ]);
     }
   }, [editorYtext]);
 
@@ -152,7 +152,6 @@ const DefaultScreen = ({
     currentIndex,
     editors,
     editors[currentIndex],
-    editorRefs
   );
   return (
     <YjsContext.Provider
@@ -163,6 +162,7 @@ const DefaultScreen = ({
         Y,
         newDocTab,
         docs,
+        awareness,
         setDocs,
         setEditorYtext,
         setCurrentIndex,
@@ -170,6 +170,9 @@ const DefaultScreen = ({
     >
       <main className="flex flex-col md:h-screen">
         <div className="h-90">
+          <span className="text-white">
+            Current Index: {currentIndex} id: {docs[currentIndex]?.id}
+          </span>
           <Bar
             participants={participants}
             setShowModal={setShowModal}
@@ -211,8 +214,12 @@ const DefaultScreen = ({
                   <Options />
                 </div>
               ) : (
-                editors[currentIndex].tag
-                )}
+                editors.map((editor) => {
+                  if (editor.id === docs[currentIndex].id) {
+                    return editor.tag;
+                  }
+                })
+              )}
             </div>
           </div>
 

@@ -21,7 +21,6 @@ const formats = [
 ]
 const QuillEditor = forwardRef(({ytext, index}, ref) => {
   const quillRef = useRef()
-  console.log("Quill Ref", ref.current)
   console.log("Ytext", ytext)
   let binding
   const { awareness } = useContext(YjsContext)
