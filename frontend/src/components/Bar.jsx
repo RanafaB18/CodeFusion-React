@@ -11,8 +11,15 @@ import QuillToolbar from "./QuillToolbar";
 const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   // const toolBarId = uuid()
   const [showOptions, setShowOptions] = useState(false);
-  const { tabs, docsDiv, bindEditor, newDocTab, docs, setDocs } =
-    useContext(YjsContext);
+  const {
+    tabs,
+    docsDiv,
+    // bindEditor,
+    newDocTab,
+    docs,
+    setDocs,
+    setCurrentIndex,
+  } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
   const handleClick = () => {
@@ -53,20 +60,18 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
           // create a new document
           const newDoc = new Y.Text();
           const number = new Y.Array();
-          let name = `Document ${id.substring(0,2)}`;
+          let name = `Document ${id.substring(0, 2)}`;
           number.push([name]);
 
+          newDoc.applyDelta([{ insert: `Document ${tabs.length}` }]);
           newMap.set("newDoc", newDoc);
           // Set initial content with the headline being the index of the documentList
           newMap.set("docId", id);
           newMap.set("tabName", name);
           console.log("All tabs", number);
 
-          newDoc.applyDelta([
-            { insert: `Document ${tabs.length}` },
-          ]);
           tabs.push([newMap]);
-          bindEditor(newMap);
+          // bindEditor(newMap);
         }
         setShowOptions(false);
       }
@@ -106,8 +111,10 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.id === id) {
-        console.log("Switching", copyTabs.toJSON());
-        bindEditor(copyTabs.get(index));
+        console.log("Switching", copyTabs.get(index));
+        // setEditorYtext(copyTabs.get(index).get('newDoc'))
+        // bindEditor(copyTabs.get(index));
+        setCurrentIndex(index);
       }
       return prevState;
     });

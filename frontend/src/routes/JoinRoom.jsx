@@ -3,7 +3,6 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Outlet, useLoaderData } from "react-router-dom";
 import Home from "../Home";
 import axiosUtil from "../services";
-import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
