@@ -19,6 +19,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     docs,
     setDocs,
     setCurrentIndex,
+    setEditorYtext
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
@@ -69,7 +70,12 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
           newMap.set("docId", id);
           newMap.set("tabName", name);
           console.log("All tabs", number);
-
+          setEditorYtext((prevText) => {
+            return [
+              ...prevText,
+              newDoc
+            ]
+          });
           tabs.push([newMap]);
           // bindEditor(newMap);
         }
