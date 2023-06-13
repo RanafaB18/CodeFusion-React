@@ -1,4 +1,4 @@
-import { forwardRef, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
 import { YjsContext } from "../context/YjsContext";
@@ -19,7 +19,7 @@ const formats = [
   'list', 'bullet', 'indent',
   'link', 'image'
 ]
-const QuillEditor = forwardRef(({ytext, index}, ref) => {
+const QuillEditor = ({ytext, index}) => {
   const quillRef = useRef()
   console.log("Ytext", ytext)
   let binding
@@ -31,10 +31,10 @@ const QuillEditor = forwardRef(({ytext, index}, ref) => {
     binding = new QuillBinding(ytext, quillRef.current.getEditor(), awareness)
   }, [ytext])
   return (
-    <div my_quill="yes">
+    <div className="h-screen overflow-hidden" my_quill="yes">
       <ReactQuill theme="snow" ref={quillRef} formats={formats} modules={modules}/>
     </div>
   )
-});
+};
 
 export default QuillEditor;

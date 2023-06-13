@@ -15,7 +15,10 @@ body {
   max-width: 48rem;
   margin: 0 auto;
   background-color: white;
-  padding: 4rem;
+  padding: 4rem !important;
+}
+.quill {
+  height: 100%;
 }
 
 @tailwind base;

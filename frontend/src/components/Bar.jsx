@@ -19,7 +19,8 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     docs,
     setDocs,
     setCurrentIndex,
-    setEditorYtext
+    setEditorYtext,
+    setEditors,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
@@ -71,10 +72,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
           newMap.set("tabName", name);
           console.log("All tabs", number);
           setEditorYtext((prevText) => {
-            return [
-              ...prevText,
-              newDoc
-            ]
+            return [...prevText, newDoc];
           });
           tabs.push([newMap]);
           // bindEditor(newMap);
@@ -100,14 +98,26 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     }));
   };
   const closeTab = (id, index) => {
-    // setDocs((prevTabs) => {
-    //   if (prevTabs)
-    // })
-    // console.log(index, "removed")
-    // copyTabs.delete(index, 1);
-    console.log("Close", id, "at index", index);
-    console.log(docs);
+    console.log("Deleting ", id);
     copyTabs.delete(index, 1);
+
+    setDocs(docs.filter((prevDoc) => prevDoc.id !== id));
+    setEditors((prevEditors) => {
+      console.log("Prev editors", prevEditors);
+      return prevEditors.filter((editor) => editor.id !== id);
+    });
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex === index) {
+        if (copyTabs.length === 0) {
+          return 0;
+        } else if (index === 0) {
+          return prevIndex + 1;
+        }
+      } else {
+        return prevIndex
+      }
+    });
+
   };
   const openOptions = () => {
     setShowOptions(!showOptions);
@@ -117,7 +127,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.id === id) {
-        console.log("Switching", copyTabs.get(index));
+        console.log("Switching");
         // setEditorYtext(copyTabs.get(index).get('newDoc'))
         // bindEditor(copyTabs.get(index));
         setCurrentIndex(index);

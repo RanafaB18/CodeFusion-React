@@ -118,18 +118,21 @@ const DefaultScreen = ({
   }, []);
   useEffect(() => {
     console.log("Editor ytext", editorYtext);
+    // if (docs.length > 0) {
+    //   console.log("Oh yh its here")
+    // }
+    console.log("Docs here", docs)
     if (editorYtext.length > 0) {
-      setEditors([
-        ...editors,
-        {
-          tag: (
-            <QuillEditor
-              ytext={editorYtext[currentIndex]}
-            />
-          ),
-          id: docs[docs.length - 1]?.id
-        },
-      ]);
+      docs.map((doc) => {
+        setEditors([
+          ...editors,
+          {
+            tag: <QuillEditor ytext={editorYtext[currentIndex]} />,
+            id: doc.id
+          },
+        ]);
+
+      })
     }
   }, [editorYtext]);
 
@@ -138,7 +141,6 @@ const DefaultScreen = ({
       setShowModal(true);
     }
   }, [chatOpen]);
-  console.log("Array", editorYtext);
   const closeSideModal = () => {
     setShowModal(false);
   };
@@ -147,12 +149,7 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log(
-    "CurrentIndex",
-    currentIndex,
-    editors,
-    editors[currentIndex],
-  );
+  console.log("CurrentIndex", currentIndex, "Editors", editors, editors[currentIndex]);
   return (
     <YjsContext.Provider
       value={{
@@ -166,6 +163,7 @@ const DefaultScreen = ({
         setDocs,
         setEditorYtext,
         setCurrentIndex,
+        setEditors,
       }}
     >
       <main className="flex flex-col md:h-screen">
@@ -209,14 +207,14 @@ const DefaultScreen = ({
               ) */}
 
               {/* <Editors ref={quillRef} /> */}
-              {editors.length === 0 ? (
+              {docs.length === 0 ? (
                 <div className="max-w-sm mx-auto py-12">
                   <Options />
                 </div>
               ) : (
                 editors.map((editor) => {
-                  if (editor.id === docs[currentIndex].id) {
-                    return editor.tag;
+                  if (editor.id === docs[currentIndex]?.id) {
+                    return (<div key={editor.id}>{editor.tag}</div>)
                   }
                 })
               )}
