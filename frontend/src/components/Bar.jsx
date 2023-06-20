@@ -98,24 +98,18 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     }));
   };
   const closeTab = (id, index) => {
-    console.log("Deleting ", id);
+    console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
 
-    setDocs(docs.filter((prevDoc) => prevDoc.id !== id));
-    setEditors((prevEditors) => {
-      console.log("Prev editors", prevEditors);
-      return prevEditors.filter((editor) => editor.id !== id);
-    });
+    // setDocs(docs.filter((prevDoc) => prevDoc.id !== id));
+    // setEditors((prevEditors) => {
+    //   console.log("Prev editors", prevEditors);
+    //   return prevEditors.filter((editor) => editor.id !== id);
+    // });
     setCurrentIndex((prevIndex) => {
-      if (prevIndex === index) {
-        if (copyTabs.length === 0) {
-          return 0;
-        } else if (index === 0) {
-          return prevIndex + 1;
-        }
-      } else {
-        return prevIndex
-      }
+      console.log("Copy tabs after delete", copyTabs.length)
+      console.log("Previndex", prevIndex)
+      return prevIndex - 1;
     });
 
   };

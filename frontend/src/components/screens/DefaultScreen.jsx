@@ -89,16 +89,19 @@ const DefaultScreen = ({
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
+    const editorTextArray = []
     setDocs(
       tabs.toArray().map((ymap, index) => {
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
-        setEditorYtext(editorYtext.concat(ymap.get("newDoc")));
+        editorTextArray.push(ymap.get("newDoc"))
+        // setEditorYtext(editorYtext.concat(ymap.get("newDoc")));
         console.log("Tab list", tabs.toJSON());
         // console.log("TabIndex",ymap.get('tabName'))
         return { id, index, text: tabName };
       })
     );
+    setEditorYtext(editorTextArray)
     // insert the list of all docs. But the first one is a "create new document" button
     // docsDiv.current.innerHTML = docs;
     if (tabs.length === 0) {
@@ -123,16 +126,26 @@ const DefaultScreen = ({
     // }
     console.log("Docs here", docs)
     if (editorYtext.length > 0) {
-      docs.map((doc) => {
-        setEditors([
-          ...editors,
-          {
-            tag: <QuillEditor ytext={editorYtext[currentIndex]} />,
-            id: doc.id
-          },
-        ]);
+      // docs.map((doc) => {
+      //   setEditors([
+      //     ...editors,
+      //     {
+      //       tag: <QuillEditor ytext={editorYtext[currentIndex]} />,
+      //       id: doc.id
+      //     },
+      //   ]);
 
+      // })
+      const quillEditors = docs.map((doc) => {
+        return (
+          {
+            tag: <QuillEditor ytext={editorYtext[doc.index]} />,
+            id: doc.id,
+            index: doc.index
+          }
+        )
       })
+      setEditors(quillEditors)
     }
   }, [editorYtext]);
 
@@ -160,6 +173,8 @@ const DefaultScreen = ({
         newDocTab,
         docs,
         awareness,
+        editorYtext,
+        currentIndex,
         setDocs,
         setEditorYtext,
         setCurrentIndex,
@@ -213,11 +228,13 @@ const DefaultScreen = ({
                 </div>
               ) : (
                 editors.map((editor) => {
+                  console.log("Editor", editor)
                   if (editor.id === docs[currentIndex]?.id) {
                     return (<div key={editor.id}>{editor.tag}</div>)
                   }
                 })
-              )}
+              )
+              }
             </div>
           </div>
 

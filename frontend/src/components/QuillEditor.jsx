@@ -19,7 +19,7 @@ const formats = [
   'list', 'bullet', 'indent',
   'link', 'image'
 ]
-const QuillEditor = ({ytext, index}) => {
+const QuillEditor = ({ytext}) => {
   const quillRef = useRef()
   console.log("Ytext", ytext)
   let binding
