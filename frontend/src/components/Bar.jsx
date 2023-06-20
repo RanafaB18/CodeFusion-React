@@ -106,11 +106,11 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     //   console.log("Prev editors", prevEditors);
     //   return prevEditors.filter((editor) => editor.id !== id);
     // });
-    setCurrentIndex((prevIndex) => {
-      console.log("Copy tabs after delete", copyTabs.length)
-      console.log("Previndex", prevIndex)
-      return prevIndex - 1;
-    });
+    // setCurrentIndex((prevIndex) => {
+    //   console.log("Copy tabs after delete", copyTabs.length)
+    //   console.log("Previndex", prevIndex)
+    //   return prevIndex - 1;
+    // });
 
   };
   const openOptions = () => {
