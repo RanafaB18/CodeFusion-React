@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const { roomRouter, roomLinks, Rooms, Messages } = require('./routes/room')
+const { roomRouter, roomLinks, Rooms, Messages, Tabs } = require('./routes/room')
 const http = require('http')
 const server = http.createServer(app)
 const cors = require('cors')
@@ -27,6 +27,7 @@ setInterval(() => {
                         console.log("Deleting", key);
                         delete Rooms[key]
                         delete Messages[key]
+                        delete Tabs[key]
                     }
                 }
             }
@@ -126,6 +127,16 @@ app.get('/:room/messages', (req, res) => {
     return res.json({ messageData: Messages[room] })
 })
 
+app.get('/:room/tabs', (req, res) => {
+    const room = req.params.room
+    if (Tabs[room] === undefined){
+        Tabs[room] = 1
+    } else {
+        Tabs[room]++
+    }
+    return res.json({tabs: Tabs})
+})
+
 app.post('/:room/users', (req, res) => {
     const name = req.body.name
     const room = req.body.room
@@ -136,8 +147,10 @@ app.post('/:room/users', (req, res) => {
         if (Rooms[room].length === 0) {
             delete Rooms[room]
             delete Messages[room]
+            delete Tabs[room]
             console.log("New Rooms after deletion", Rooms)
             console.log("New Messages after deletion", Messages)
+            console.log("Tabs", Tabs)
             io.local.socketsLeave(room)
         }
         io.to(room).emit("all_users", { rooms: Rooms })
