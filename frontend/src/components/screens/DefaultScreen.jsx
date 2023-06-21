@@ -10,11 +10,11 @@ import AnimatedModal from "../AnimatedModal";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { YjsContext } from "../../context/YjsContext";
-import Tab from "../Tab";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
-import { v4 as uuid } from "uuid";
 import QuillEditor from "../QuillEditor";
+import { Quill } from "react-quill";
+import QuillCursors from "quill-cursors";
 const DefaultScreen = ({
   username,
   room,
@@ -47,7 +47,7 @@ const DefaultScreen = ({
   //   "lucida",
   // ];
   // Quill.register(Font, true);
-  // Quill.register("modules/cursors", QuillCursors);
+  Quill.register("modules/cursors", QuillCursors);
 
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
@@ -61,29 +61,6 @@ const DefaultScreen = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  // const bindEditor = (ymap) => {
-  //   const ytext = ymap.get("newDoc");
-  // if (binding) {
-  //   // We can reuse the existing editor. But we need to remove all event handlers
-  //   // that we registered for collaborative editing before binding to a new editor binding
-  //   binding.destroy();
-  // }
-  // console.log("Quill ref", quillRef.current)
-  // if (quill === null) {
-  //   // This is the first time a user opens a document.
-  //   // The editor has not been initialized yet.
-  //   // Create an editor instance.
-  //   // quill = new Quill(document.querySelector("#editor"), {
-  //   //   placeholder: "Start collaborating...",
-  //   //   // 'bubble' is also great,
-  //   // });
-  //   quill = quillRef.current.getEditor()
-  //   // console.log("Quill editor", quillRef.current.getEditor())
-  // }
-  // // "Bind" the quill editor to a Yjs text type.
-  // // The QuillBinding uses the awareness instance to propagate your cursor location.
-  // binding = new QuillBinding(ytext, quill, awareness);
-  // };
 
   const renderDocs = () => {
     console.log("Executed RenderDocs");
@@ -95,9 +72,7 @@ const DefaultScreen = ({
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
         editorTextArray.push(ymap.get("newDoc"))
-        // setEditorYtext(editorYtext.concat(ymap.get("newDoc")));
         console.log("Tab list", tabs.toJSON());
-        // console.log("TabIndex",ymap.get('tabName'))
         return { id, index, text: tabName };
       })
     );
@@ -126,16 +101,6 @@ const DefaultScreen = ({
     // }
     console.log("Docs here", docs)
     if (editorYtext.length > 0) {
-      // docs.map((doc) => {
-      //   setEditors([
-      //     ...editors,
-      //     {
-      //       tag: <QuillEditor ytext={editorYtext[currentIndex]} />,
-      //       id: doc.id
-      //     },
-      //   ]);
-
-      // })
       const quillEditors = docs.map((doc) => {
         return (
           {
@@ -168,17 +133,12 @@ const DefaultScreen = ({
       value={{
         tabs,
         docsDiv,
-        // bindEditor,
-        Y,
         newDocTab,
         docs,
         awareness,
-        editorYtext,
-        currentIndex,
         setDocs,
         setEditorYtext,
         setCurrentIndex,
-        setEditors,
       }}
     >
       <main className="flex flex-col md:h-screen">
@@ -187,11 +147,11 @@ const DefaultScreen = ({
             Current Index: {currentIndex} id: {docs[currentIndex]?.id}
           </span>
           <Bar
-            participants={participants}
             setShowModal={setShowModal}
             showModal={showModal}
             invite={invite}
             username={username}
+            room={room}
           />
         </div>
 

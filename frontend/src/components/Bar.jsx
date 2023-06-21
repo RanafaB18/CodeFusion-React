@@ -6,21 +6,17 @@ import Options from "./Options";
 import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
-import QuillToolbar from "./QuillToolbar";
-
-const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
-  // const toolBarId = uuid()
+import axiosUtil from "../services"
+const Bar = ({ showModal, setShowModal, invite, username, room }) => {
   const [showOptions, setShowOptions] = useState(false);
   const {
     tabs,
     docsDiv,
-    // bindEditor,
     newDocTab,
     docs,
     setDocs,
     setCurrentIndex,
     setEditorYtext,
-    setEditors,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const optionRef = useRef();
@@ -28,21 +24,10 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     setShowModal(!showModal);
   };
   useEffect(() => {
-    // const switchTab = (event) => {
-    //   const pressedButton = event.target;
-    //   const val = pressedButton.getAttribute("index");
-    //   console.log("Val", val, pressedButton, newDocTab.current);
-    //   // The index is a number, render the $i-th document
-    //   const index = Number.parseInt(val);
-    //   console.log("Index", index)
-    //   // bindEditor(tabs.get(index));
-    // };
 
     document.addEventListener("click", createNewTab);
-    // docsDiv.current.addEventListener("click", switchTab);
     return () => {
       document.removeEventListener("click", createNewTab);
-      // docsDiv.current.removeEventListener("click", switchTab);
     };
   }, []);
   const createNewTab = (event) => {
@@ -50,32 +35,35 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
     if (newDocTab.current) {
       if (newDocTab.current.contains(event.target)) {
         const id = uuid();
-
-        console.log("Clicked");
         const pressedButton = newDocTab.current;
         const val = pressedButton.getAttribute("index");
         if (val === "new") {
+          const getTab = async () => {
+            const response = await axiosUtil.getTabName(room)
+            return response
+          }
+
+
           // Create Y.Map
           const newMap = new Y.Map();
           // Put newDoc in Y.Map
 
           // create a new document
           const newDoc = new Y.Text();
-          const number = new Y.Array();
-          let name = `Document ${id.substring(0, 2)}`;
-          number.push([name]);
-
-          newDoc.applyDelta([{ insert: `Document ${tabs.length}` }]);
-          newMap.set("newDoc", newDoc);
-          // Set initial content with the headline being the index of the documentList
-          newMap.set("docId", id);
-          newMap.set("tabName", name);
-          console.log("All tabs", number);
-          setEditorYtext((prevText) => {
-            return [...prevText, newDoc];
-          });
-          tabs.push([newMap]);
-          // bindEditor(newMap);
+          let tabValue
+          getTab().then((data) => {
+            tabValue = data.tabs[room]
+            let name = `Document ${tabValue}`;
+            newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
+            newMap.set("newDoc", newDoc);
+            // Set initial content with the headline being the index of the documentList
+            newMap.set("docId", id);
+            newMap.set("tabName", name);
+            setEditorYtext((prevText) => {
+              return [...prevText, newDoc];
+            });
+            tabs.push([newMap]);
+          })
         }
         setShowOptions(false);
       }
@@ -100,30 +88,15 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
   const closeTab = (id, index) => {
     console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
-
-    // setDocs(docs.filter((prevDoc) => prevDoc.id !== id));
-    // setEditors((prevEditors) => {
-    //   console.log("Prev editors", prevEditors);
-    //   return prevEditors.filter((editor) => editor.id !== id);
-    // });
-    // setCurrentIndex((prevIndex) => {
-    //   console.log("Copy tabs after delete", copyTabs.length)
-    //   console.log("Previndex", prevIndex)
-    //   return prevIndex - 1;
-    // });
-
   };
+
   const openOptions = () => {
     setShowOptions(!showOptions);
   };
   const switchTab = (index, id) => {
-    console.log("My id", id, "index", index, copyTabs.toJSON());
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.id === id) {
-        console.log("Switching");
-        // setEditorYtext(copyTabs.get(index).get('newDoc'))
-        // bindEditor(copyTabs.get(index));
         setCurrentIndex(index);
       }
       return prevState;
@@ -152,11 +125,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             role="tabs"
             className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full"
           >
-            {/* {docsDiv.map((tab, i) => (
-              <Tab key={tab.id} text={tab.text} closeTab={() => closeTab(i)}/>
-            ))} */}
             {docs.map((tab, i) => {
-              console.log("Tab", tab);
               return (
                 <Tab
                   key={tab.id}
@@ -174,7 +143,6 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
         </div>
         <div className="flex h-16 bg-[#353a41] p-2">
           <div className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap">
-            {/* <QuillToolbar id={toolBarId}/> */}
           </div>
           <div className="flex justify-around w-1/4 lg:w-2/12">
             <button
@@ -198,23 +166,7 @@ const Bar = ({ participants, showModal, setShowModal, invite, username }) => {
             </button>
           </div>
         </div>
-        {/* <Editors room={room} /> */}
-        {/* {showModal && (
-          <SideModal
-            participants={participants}
-            closeSideModal={closeSideModal}
-          />
-        )} */}
       </div>
-      {/* <div className="md:flex hidden flex-col relative w-full  md:visible">
-      <div className="h-14 bg-blackhover">
-        <div className="
-        bg-white h-14 w-16 float-right
-        bg-opacity-20 flex justify-center items-center">
-          <FaEllipsisV className="text-white text-lg cursor-pointer"/>
-        </div>
-      </div>
-    </div> */}
     </>
   );
 };
