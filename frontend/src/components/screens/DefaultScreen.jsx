@@ -47,7 +47,6 @@ const DefaultScreen = ({
   //   "lucida",
   // ];
   // Quill.register(Font, true);
-  Quill.register("modules/cursors", QuillCursors);
 
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
@@ -136,6 +135,7 @@ const DefaultScreen = ({
         newDocTab,
         docs,
         awareness,
+        currentIndex,
         setDocs,
         setEditorYtext,
         setCurrentIndex,
@@ -144,7 +144,7 @@ const DefaultScreen = ({
       <main className="flex flex-col md:h-screen">
         <div className="h-90">
           <span className="text-white">
-            Current Index: {currentIndex} id: {docs[currentIndex]?.id}
+            Current Index: {currentIndex} id: {docs[currentIndex]?.id} name: {username}
           </span>
           <Bar
             setShowModal={setShowModal}

@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef } from "react";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import { YjsContext } from "../context/YjsContext";
+import QuillCursors from "quill-cursors";
 
 const modules = {
   toolbar: [
@@ -20,10 +21,11 @@ const formats = [
   'link', 'image'
 ]
 const QuillEditor = ({ytext}) => {
+  Quill.register("modules/cursors", QuillCursors);
   const quillRef = useRef()
-  console.log("Ytext", ytext)
   let binding
   const { awareness } = useContext(YjsContext)
+  console.log("Ytext", ytext, awareness)
   useEffect(() => {
     if (binding) {
       binding.destroy()

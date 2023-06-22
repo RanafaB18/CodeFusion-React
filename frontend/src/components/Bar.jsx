@@ -7,6 +7,8 @@ import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
 import axiosUtil from "../services"
+import { Socket } from "socket.io-client";
+import { RoomContext } from "../context/RoomContext";
 const Bar = ({ showModal, setShowModal, invite, username, room }) => {
   const [showOptions, setShowOptions] = useState(false);
   const {
@@ -14,12 +16,18 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
     docsDiv,
     newDocTab,
     docs,
+    awareness,
+    currentIndex,
     setDocs,
     setCurrentIndex,
     setEditorYtext,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
+  const {socket} = useContext(RoomContext)
+  const [once, setOnce] = useState(false)
+  const [awarenessTabs, setAwarenessTabs] = useState({})
   const optionRef = useRef();
+  const color = getNameColorCode(username)
   const handleClick = () => {
     setShowModal(!showModal);
   };
@@ -30,6 +38,17 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
       document.removeEventListener("click", createNewTab);
     };
   }, []);
+  useEffect(() => {
+    socket.on('get-active-tabs', ({activeTabs}) => {
+      console.log("Active tabs",activeTabs);
+      setAwarenessTabs(activeTabs)
+    })
+
+    socket.on('removal', ({username, color}) => {
+      console.log("Remove this color of ", username, color)
+      socket.emit('remove-color', { username, color, room})
+    })
+  }, [])
   const createNewTab = (event) => {
     event.stopPropagation();
     if (newDocTab.current) {
@@ -42,8 +61,6 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
             const response = await axiosUtil.getTabName(room)
             return response
           }
-
-
           // Create Y.Map
           const newMap = new Y.Map();
           // Put newDoc in Y.Map
@@ -52,7 +69,7 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
           const newDoc = new Y.Text();
           let tabValue
           getTab().then((data) => {
-            tabValue = data.tabs[room]
+            tabValue = data.tabs[room].numOfTabs
             let name = `Document ${tabValue}`;
             newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
@@ -63,6 +80,13 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
               return [...prevText, newDoc];
             });
             tabs.push([newMap]);
+            if (once === false) {
+              socket.emit("tab-change", {id, room, color})
+            } else {
+              socket.emit("tab-change", {id, room})
+
+            }
+            setOnce(true)
           })
         }
         setShowOptions(false);
@@ -88,12 +112,23 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
   const closeTab = (id, index) => {
     console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
+    socket.emit('delete-tab', {room, id, color})
   };
 
   const openOptions = () => {
     setShowOptions(!showOptions);
   };
+  function getNameColorCode(name) {
+    let hashCode = 0;
+    for (let i = 0; i < name.length; i++) {
+      hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
+    }
+
+    const colorCode = '#' + ((hashCode & 0x00FFFFFF) << 0).toString(16).padStart(6, '0');
+    return colorCode;
+  }
   const switchTab = (index, id) => {
+    socket.emit("tab-change", {id, room, color, username})
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.id === id) {
@@ -133,6 +168,10 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
                   text={tab.text}
                   closeTab={() => closeTab(tab.id, tab.index)}
                   switchTab={() => switchTab(i, tab.id)}
+                  active={currentIndex === tab.index}
+                  name={username}
+                  id={tab.id}
+                  awarenessBars={awarenessTabs}
                 />
               );
             })}
