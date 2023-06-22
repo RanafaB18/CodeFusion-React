@@ -75,11 +75,12 @@ io.on('connection', (socket) => {
             if (!Tabs[room].numOfUsers.includes(username)){
                 Tabs[room].numOfUsers.push(username)
             }
-            // const firstID = Object.keys(Tabs[room].tabs)[0]
-            // const userColor = getNameColorCode(username)
-            // if (Tabs[room].numOfTabs > 0 && !Tabs[room].tabs[firstID].includes(userColor)) {
-            //     Tabs[room].tabs[firstID].push(userColor)
-            // }
+            const firstID = Object.keys(Tabs[room].tabs)[0]
+            const userColor = getNameColorCode(username)
+            if (Tabs[room].numOfTabs > 0 && !Tabs[room].tabs[firstID].includes(userColor)) {
+                Tabs[room].tabs[firstID].push(userColor)
+                io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
+            }
 
             socket.join(room)
             console.log("View stream ?", viewStream)
