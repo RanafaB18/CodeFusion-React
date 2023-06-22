@@ -22,12 +22,12 @@ setInterval(() => {
     deleteInterval = deleteInterval + 1000
     if (deleteInterval === 600000) {
         if (Rooms !== {}) {
-            for (let key in Rooms) {
-                if (Rooms[key].length === 0) {
-                    console.log("Deleting", key);
-                    delete Rooms[key]
-                    delete Messages[key]
-                    delete Tabs[key]
+            for (let room in Rooms) {
+                if (Rooms[room].length === 0) {
+                    console.log("Deleting", room);
+                    delete Rooms[room]
+                    delete Messages[room]
+                    delete Tabs[room]
                 }
             }
         }
