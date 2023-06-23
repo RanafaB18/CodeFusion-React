@@ -17,7 +17,7 @@ const Modal = ({
       onClick={closeInvite}
       className="absolute h-screen w-screen top-0 pt-12 backdrop-blur-sm"
     >
-      <div className="z-10 top-0 max-w-sm mx-auto p-4 bg-white rounded">
+      <div className="z-10 top-0 max-w-sm mx-auto p-4 bg-white rounded drop-shadow-lg">
         <div className="flex justify-between items-center pb-6">
           <p className="text-lg">Invite People To Join</p>
           <button className="hover:bg-gray-200 rounded-lg" ref={closeButtonRef} onClick={closeInvite}>

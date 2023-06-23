@@ -14,7 +14,7 @@ const Toast = ({ toast, showToast }) => {
           <FaUser className="text-5xl text-gray-400" />
         </div>
         <p className="text-white">
-          <span className="text-green-600 font-semibold">{toast.name}</span>{" "}
+          <span className="text-blue-600 font-semibold">{toast.name}</span>{" "}
           {toast.text}
         </p>
       </div>
