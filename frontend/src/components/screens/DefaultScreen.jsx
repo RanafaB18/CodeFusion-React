@@ -54,7 +54,7 @@ const DefaultScreen = ({
   const awareness = provider.awareness;
   const docsDiv = useRef();
   const newDocTab = useRef();
-  const newCodeTab = useRef()
+  const newCodeTab = useRef();
   const tabs = ydoc.getArray("tabs");
   const [docs, setDocs] = useState([]);
   let quill = null;
@@ -67,18 +67,18 @@ const DefaultScreen = ({
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
-    const editorTextArray = []
+    const editorTextArray = [];
     setDocs(
       tabs.toArray().map((ymap, index) => {
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
-        const typeOfTab = ymap.get("typeOftab")
-        editorTextArray.push(ymap.get("newDoc"))
+        const typeOfTab = ymap.get("typeOftab");
+        editorTextArray.push(ymap.get("newDoc"));
         console.log("Tab list", tabs.toJSON());
         return { id, index, text: tabName, typeOfTab };
       })
     );
-    setEditorYtext(editorTextArray)
+    setEditorYtext(editorTextArray);
     // insert the list of all docs. But the first one is a "create new document" button
     // docsDiv.current.innerHTML = docs;
     if (tabs.length === 0) {
@@ -101,18 +101,21 @@ const DefaultScreen = ({
     // if (docs.length > 0) {
     //   console.log("Oh yh its here")
     // }
-    console.log("Docs here", docs)
+    console.log("Docs here", docs);
     if (editorYtext.length > 0) {
       const quillEditors = docs.map((doc) => {
-        return (
-          {
-            tag: doc.typeOfTab === "document" ? <QuillEditor ytext={editorYtext[doc.index]} /> : <CodeEditor  ytext={editorYtext[doc.index]} />,
-            id: doc.id,
-            index: doc.index
-          }
-        )
-      })
-      setEditors(quillEditors)
+        return {
+          tag:
+            doc.typeOfTab === "document" ? (
+              <QuillEditor ytext={editorYtext[doc.index]} />
+            ) : (
+              <CodeEditor ytext={editorYtext[doc.index]} />
+            ),
+          id: doc.id,
+          index: doc.index,
+        };
+      });
+      setEditors(quillEditors);
     }
   }, [editorYtext]);
 
@@ -129,7 +132,13 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log("CurrentIndex", currentIndex, "Editors", editors, editors[currentIndex]);
+  console.log(
+    "CurrentIndex",
+    currentIndex,
+    "Editors",
+    editors,
+    editors[currentIndex]
+  );
   return (
     <YjsContext.Provider
       value={{
@@ -145,10 +154,11 @@ const DefaultScreen = ({
         setCurrentIndex,
       }}
     >
-      <main className="flex flex-col md:h-screen">
+      <main className="flex flex-col md:h-screen overflow-x-clip">
         <div className="h-90">
           <span className="text-white">
-            Current Index: {currentIndex} id: {docs[currentIndex]?.id} name: {username}
+            Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
+            {username}
           </span>
           <Bar
             setShowModal={setShowModal}
@@ -192,24 +202,27 @@ const DefaultScreen = ({
                 </div>
               ) : (
                 editors.map((editor) => {
-                  console.log("Editor", editor)
+                  console.log("Editor", editor);
                   if (editor.id === docs[currentIndex]?.id) {
-                    return (<div key={editor.id}>{editor.tag}</div>)
+                    return <div key={editor.id}>{editor.tag}</div>;
                   }
                 })
-              )
-              }
+              )}
             </div>
           </div>
 
-          <div className={`hidden md:block`}>
-            {showModal && (
+          <div className={`hidden md:block relative`}>
+            <div
+              className={`transition-all ease-in h-full ${
+                showModal ? "mr-0" : "-mr-[355px]"
+              }`}
+            >
               <SideModal
                 participants={participants}
                 closeSideModal={closeSideModal}
                 username={username}
               />
-            )}
+            </div>
           </div>
           <SideBar setShowModal={setShowModal} showModal={showModal} />
         </div>
