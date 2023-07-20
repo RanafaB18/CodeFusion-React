@@ -5,6 +5,22 @@ body {
   box-sizing: border-box;
   font-family: 'Lato', 'sans-serif'
 }
+
+.ql-container {
+  height: 100%;
+  background-color: #eaedf0;
+}
+.ql-editor {
+  height: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  background-color: white;
+  padding: 4rem !important;
+}
+.quill {
+  height: 100%;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

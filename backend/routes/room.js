@@ -3,6 +3,7 @@ const shortUUID = require('short-uuid')
 const roomRouter = require('express').Router()
 const roomLinks = []
 const Rooms = {}
+const Tabs = {}
 
 // Messages = {'room-name': {messages:[{message, username, time, id}], }}
 // Deleted = {'room-name': [ids]}
@@ -22,4 +23,4 @@ roomRouter.post('/', async (request, response) => {
 
 
 
-module.exports = { roomRouter, roomLinks, Rooms, Messages }
+module.exports = { roomRouter, roomLinks, Rooms, Messages, Tabs }

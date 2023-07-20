@@ -3,11 +3,10 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Outlet, useLoaderData } from "react-router-dom";
 import Home from "../Home";
 import axiosUtil from "../services";
-import Editors from "../components/Editors";
 import JoinForm from "../components/JoinForm";
 import Room from "../components/Room";
 import ErrorPage from "../components/ErrorPage";
-import Loading from "../components/Loading";
+import {Loading, MiniLoad } from "../components/Loading";
 import { RoomContext } from "../context/RoomContext";
 import PermissionScreen from "../components/screens/PermissionScreen";
 import PermissionModal from "../components/PermissionModal";
@@ -33,7 +32,7 @@ const JoinRoom = () => {
       }, 800);
     });
   }, []);
-  console.log("Error:", error);
+  // console.log("Error:", error);
 
   if (isLoading) {
     return <Loading />;
@@ -55,13 +54,14 @@ const JoinRoom = () => {
               setUserRoomName={setUserRoomName}
               setCreatedUsername={setCreatedUsername}
             />
-          ) : <Room room={room} username={userRoomName || session} />
-
+          )
+          : <Room room={room} username={userRoomName || session} />
           // : !permissionReceived && error === false ? (
           //   // <Room room={room} username={userRoomName || session} />
           //   <PermissionScreen
           //     setPermissionReceived={setPermissionReceived}
           //     setError={setError}
+          //     permissionReceived={permissionReceived}
           //   />
           // ) : error ? (
           //   <ErrorModal username={userRoomName || session} room={room} />

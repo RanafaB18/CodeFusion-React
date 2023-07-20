@@ -14,6 +14,9 @@ import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
 import { redirect } from "react-router-dom";
 import MessageToast from "./MessageToast";
+import Tab from "./Tab";
+import * as Y from "yjs"
+import { WebrtcProvider } from "y-webrtc";
 
 const Room = ({ room, username, showStream }) => {
   // let roomLink;
@@ -29,21 +32,19 @@ const Room = ({ room, username, showStream }) => {
   const [showMessageToast, setShowMessageToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
     const resize = () => {
       setWindowWidth(window.innerWidth);
     };
-    const currentIndex = screenIndex;
     window.addEventListener("resize", resize);
 
     if (windowWidth >= 768) {
-      console.log("Resetting width");
       if (screenIndex === 0) {
         setScreenIndex(2);
         showScreen(2);
       }
     }
-    console.log(windowWidth);
     return () => {
       window.removeEventListener("resize", resize);
     };
@@ -126,31 +127,24 @@ const Room = ({ room, username, showStream }) => {
     }
   };
   const copyLink = async () => {
-    const permission = await navigator.permissions.query({
-      name: "clipboard-write",
-    });
-    if (permission.state === "granted" || permission.state === "prompt") {
-      navigator.clipboard.writeText(roomLink).then(
-        () => {
-          setShowClipBoardModal(true);
-          setTimeout(() => {
-            setShowClipBoardModal(false);
-            setVisible(false);
-          }, 3000);
-        },
-        () => {
-          console.log("Permission errors, Mozilla");
-        }
-      );
-    }
+    navigator.clipboard.writeText(roomLink).then(
+      () => {
+        setShowClipBoardModal(true);
+        setTimeout(() => {
+          setShowClipBoardModal(false);
+          setVisible(false);
+        }, 3000);
+      },
+      () => {
+        console.log("Error copying to clipboard");
+      }
+    );
   };
   const showScreen = (index) => {
     setScreenIndex(index);
   };
-  console.log("Screen Index", screenIndex);
-  console.log("Show modal", showModal);
   return (
-    <div className="flex flex-col min-h-screen relative">
+    <div className="flex flex-col min-h-screen relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
       <Toast toast={toast} showToast={showToast} />
       {screenIndex !== 0 && !showModal && (
@@ -231,7 +225,11 @@ const Room = ({ room, username, showStream }) => {
         </div>
       </RoomContext.Provider>
       <div className="relative h-16 md:hidden">
-        <BottomNavigationBar showScreen={showScreen} screenIndex={screenIndex} setScreenIndex={setScreenIndex}/>
+        <BottomNavigationBar
+          showScreen={showScreen}
+          screenIndex={screenIndex}
+          setScreenIndex={setScreenIndex}
+        />
         {/* {showUserJoined && (<UserJoinedModal newUser={newUser} />)} */}
       </div>
     </div>

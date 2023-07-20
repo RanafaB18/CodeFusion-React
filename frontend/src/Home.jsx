@@ -1,20 +1,33 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Form, redirect } from "react-router-dom";
 import Features from "./components/Features";
 import Layout from "./components/Layout";
 import axiosUtil from "./services";
 import Button from "./components/Button";
-
-
-export async function action({ request, params }) {
-  console.log("Params  id", params.id)
-  const data = await axiosUtil.getRoomID(params.id);
-  return redirect(`/go/${data.roomLink}`);
-}
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [room, setRoom] = useState("");
+  const [error, setError] = useState(false)
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const specialCharsPattern = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+    if (specialCharsPattern.test(room)) {
+      setError(true)
+      setTimeout(() => {
+        setError(false)
+      }, 3000)
+      return
+    }
+    const data = await axiosUtil.getRoomID(room);
+    setRoom("")
+    // Open new tab
+    // window.open(`/go/${data.roomLink}`, 'rel=noopener noreferrer')
+    // Stays on the same page and replaces the previous link in history
+    navigate(`/go/${data.roomLink}`, {replace: true});
+  };
   return (
     <HelmetProvider>
       <Layout>
@@ -54,9 +67,8 @@ export default function Home() {
                   </h2>
                 </div>
                 <div className="w-full">
-                  <Form
-                    method="post"
-                    action={`/go/${room}`}
+                  <form
+                    onSubmit={handleSubmit}
                     className="max-w-xs mx-auto flex flex-col mt-4 lg:mx-0"
                   >
                     <input
@@ -65,12 +77,18 @@ export default function Home() {
                       type="text"
                       placeholder="Enter a name for your room"
                       value={room}
+                      name="room"
                       required
                       onChange={(event) => setRoom(event.target.value)}
                     />
+                    {error && (
+                      <span className="text-red-500 text-lg">
+                        Special Characters are not allowed
+                      </span>
+                    )}
 
                     <Button text={"Get A Room →"} />
-                  </Form>
+                  </form>
                 </div>
               </div>
               <div

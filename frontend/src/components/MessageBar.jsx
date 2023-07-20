@@ -109,7 +109,7 @@ const MessageBar = ({ username, addMessages }) => {
           >
             <FaPaperPlane
               className={`${
-                message === "" ? "text-opacity-10" : ""
+                message === "" && "text-opacity-10"
               } bottom-nav-icon text-xl`}
             />
           </button>

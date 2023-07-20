@@ -28,7 +28,7 @@ const SideBar = ({ showModal, setShowModal }) => {
   return (
     <aside
       className="hidden relative border border-white border-opacity-25 p-3
-    bg-blackish md:flex md:flex-col md:justify-end"
+    bg-[#16191d] md:flex md:flex-col md:justify-end"
     >
       <div
         before={`${off.microphone ? "Unmute Microphone" : "Mute Microphone"}`}
