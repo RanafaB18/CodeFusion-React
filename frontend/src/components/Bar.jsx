@@ -15,6 +15,7 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
     tabs,
     docsDiv,
     newDocTab,
+    newCodeTab,
     docs,
     awareness,
     currentIndex,
@@ -49,14 +50,57 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
       socket.emit('remove-color', { username, color, room})
     })
   }, [])
+
   const createNewTab = (event) => {
     event.stopPropagation();
+    if (newCodeTab.current.contains(event.target)) {
+      const id = uuid();
+      const pressedButton = newCodeTab.current;
+      const val = pressedButton.getAttribute("index");
+      if (val === "code") {
+        console.log("Code")
+        const getTab = async () => {
+          const response = await axiosUtil.getTabName(room)
+          return response
+        }
+        // Create Y.Map
+        const newMap = new Y.Map();
+        // Put newDoc in Y.Map
+
+        // create a new document
+        const newDoc = new Y.Text();
+        let tabValue
+        getTab().then((data) => {
+          tabValue = data.tabs[room].numOfTabs
+          let name = `Code ${tabValue}`;
+          newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
+          newMap.set("newDoc", newDoc);
+          // Set initial content with the headline being the index of the documentList
+          newMap.set("docId", id);
+          newMap.set("tabName", name);
+          newMap.set("typeOftab", "code")
+          setEditorYtext((prevText) => {
+            return [...prevText, newDoc];
+          });
+          tabs.push([newMap]);
+          if (once === false) {
+            socket.emit("tab-change", {id, room, color})
+          } else {
+            socket.emit("tab-change", {id, room})
+
+          }
+          setOnce(true)
+        })
+      }
+      setShowOptions(false);
+    }
     if (newDocTab.current) {
       if (newDocTab.current.contains(event.target)) {
         const id = uuid();
         const pressedButton = newDocTab.current;
         const val = pressedButton.getAttribute("index");
-        if (val === "new") {
+        console.log("Val", val)
+        if (val === "document") {
           const getTab = async () => {
             const response = await axiosUtil.getTabName(room)
             return response
@@ -76,6 +120,7 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
             // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);
             newMap.set("tabName", name);
+            newMap.set("typeOftab", "document")
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });

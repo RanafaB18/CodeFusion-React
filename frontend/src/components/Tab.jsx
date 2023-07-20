@@ -1,4 +1,4 @@
-import { FaFileAlt } from "react-icons/fa";
+import { FaCode, FaFileAlt } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 
@@ -16,7 +16,6 @@ const Tab = ({
     event.stopPropagation();
     closeTab(index);
   };
-  console.log("Active awareness", awarenessBars);
   return (
     <>
       <div
@@ -25,9 +24,10 @@ const Tab = ({
         className={`flex items-center cursor-pointer pr-3 bg-[#353a41] h-full`}
       >
           {awarenessBars[id]?.map((color) => {
-            console.log("Active Id in tab", id);
+            console.log("Active Id in tab", id, color);
             return (
               <div
+                key={id}
                 style={{ backgroundColor: color }}
                 className="h-full w-1"
               ></div>

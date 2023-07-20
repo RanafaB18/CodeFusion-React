@@ -15,6 +15,7 @@ import React from "react";
 import QuillEditor from "../QuillEditor";
 import { Quill } from "react-quill";
 import QuillCursors from "quill-cursors";
+import CodeEditor from "../CodeEditor";
 const DefaultScreen = ({
   username,
   room,
@@ -53,6 +54,7 @@ const DefaultScreen = ({
   const awareness = provider.awareness;
   const docsDiv = useRef();
   const newDocTab = useRef();
+  const newCodeTab = useRef()
   const tabs = ydoc.getArray("tabs");
   const [docs, setDocs] = useState([]);
   let quill = null;
@@ -70,9 +72,10 @@ const DefaultScreen = ({
       tabs.toArray().map((ymap, index) => {
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
+        const typeOfTab = ymap.get("typeOftab")
         editorTextArray.push(ymap.get("newDoc"))
         console.log("Tab list", tabs.toJSON());
-        return { id, index, text: tabName };
+        return { id, index, text: tabName, typeOfTab };
       })
     );
     setEditorYtext(editorTextArray)
@@ -103,7 +106,7 @@ const DefaultScreen = ({
       const quillEditors = docs.map((doc) => {
         return (
           {
-            tag: <QuillEditor ytext={editorYtext[doc.index]} />,
+            tag: doc.typeOfTab === "document" ? <QuillEditor ytext={editorYtext[doc.index]} /> : <CodeEditor  ytext={editorYtext[doc.index]} />,
             id: doc.id,
             index: doc.index
           }
@@ -133,6 +136,7 @@ const DefaultScreen = ({
         tabs,
         docsDiv,
         newDocTab,
+        newCodeTab,
         docs,
         awareness,
         currentIndex,
