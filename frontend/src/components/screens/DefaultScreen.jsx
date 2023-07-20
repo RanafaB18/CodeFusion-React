@@ -154,7 +154,7 @@ const DefaultScreen = ({
         setCurrentIndex,
       }}
     >
-      <main className="flex flex-col md:h-screen overflow-x-clip">
+      <main className="flex flex-col md:h-screen overflow-clip">
         <div className="h-90">
           <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
@@ -188,14 +188,9 @@ const DefaultScreen = ({
           </div>
         </div>
 
-        <div className="flex h-full">
+        <div className="flex h-full overflow-clip">
           <div className="flex flex-col flex-1 overflow-auto">
-            <div>
-              {/* (
-
-              ) */}
-
-              {/* <Editors ref={quillRef} /> */}
+            <div className="h-full">
               {docs.length === 0 ? (
                 <div className="max-w-sm mx-auto py-12">
                   <Options />
@@ -204,7 +199,7 @@ const DefaultScreen = ({
                 editors.map((editor) => {
                   console.log("Editor", editor);
                   if (editor.id === docs[currentIndex]?.id) {
-                    return <div key={editor.id}>{editor.tag}</div>;
+                    return <div key={editor.id} className="h-full">{editor.tag}</div>;
                   }
                 })
               )}
@@ -214,7 +209,7 @@ const DefaultScreen = ({
           <div className={`hidden md:block relative`}>
             <div
               className={`transition-all ease-in h-full ${
-                showModal ? "mr-0" : "-mr-[355px]"
+                showModal ? "mr-0" : "-mr-96"
               }`}
             >
               <SideModal

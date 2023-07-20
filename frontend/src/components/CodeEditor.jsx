@@ -13,10 +13,9 @@ const CodeEditor = ({ytext}) => {
   }
   return (
     <Editor
-      height={"90vh"}
-      width="100%"
       theme="vs-dark"
       onMount={handleEditorDidMount}
+      className="h-full"
     />
   )
 }

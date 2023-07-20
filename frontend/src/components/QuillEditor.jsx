@@ -33,9 +33,7 @@ const QuillEditor = ({ytext}) => {
     binding = new QuillBinding(ytext, quillRef.current.getEditor(), awareness)
   }, [ytext])
   return (
-    <div className="h-screen overflow-hidden" my_quill="yes">
-      <ReactQuill theme="snow" ref={quillRef} formats={formats} modules={modules}/>
-    </div>
+      <ReactQuill theme="snow" ref={quillRef} formats={formats} modules={modules} className="h-full"/>
   )
 };
 
