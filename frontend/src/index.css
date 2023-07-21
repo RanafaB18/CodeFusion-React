@@ -20,7 +20,49 @@ body {
 .quill {
   height: 100%;
 }
+.ql-toolbar {
+  border: 0 !important;
+}
+.ql-snow .ql-picker {
+  color: white !important;
+}
+.ql-toolbar .ql-stroke {
+  fill: none !important;
+  stroke: #fff !important;
+}
 
+.ql-toolbar .ql-fill {
+  fill: #fff !important;
+  stroke: none !important;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  top: 120% !important;
+  border: 0 !important;
+  width: 110%;
+  padding: 5px;
+}
+
+.ql-snow .ql-picker-options .ql-picker-item {
+  padding-left: .5em;
+  margin: 2px;
+  border-radius: 5px;
+}
+.ql-snow .ql-picker-options .ql-picker-item:hover {
+  background-color: #2d3748;
+  margin: 2px;
+  border-radius: 5px;
+}
+
+.ql-toolbar .ql-picker {
+  color: #fff !important;
+}
+.ql-snow .ql-picker-options {
+  background-color: #1a202c !important;
+}
+.ql-toolbar.ql-snow .ql-picker-options {
+  border: 0;
+  border-radius: 10px;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

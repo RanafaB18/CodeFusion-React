@@ -8,7 +8,7 @@ import { useContext } from "react";
 const Options = () => {
   const { newDocTab, newCodeTab } = useContext(YjsContext)
   return (
-    <div className="px-4 py-3 bg-[#22262a] rounded shadow-lg dark:bg-ui-900">
+    <div className="px-4 py-3 bg-[#22262a] rounded shadow-lg">
       <IconContext.Provider value={{color: 'gray', size:"20px"}}>
         <TabButtons index={"document"} ref={newDocTab} icon={<FaFileAlt />} text={"New Document Tab"}/>
         <TabButtons index={"code"} ref={newCodeTab} icon={<FaCode />} text={"New Code Tab"}/>

@@ -3,7 +3,7 @@ import Options from "../Options";
 import { Link, redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
@@ -16,11 +16,10 @@ import QuillEditor from "../QuillEditor";
 import { Quill } from "react-quill";
 import QuillCursors from "quill-cursors";
 import CodeEditor from "../CodeEditor";
+import { RoomContext } from "../../context/RoomContext";
+import TextEditor from "../TextEditor";
 const DefaultScreen = ({
-  username,
-  room,
   participants,
-  invite,
   chatOpen,
   visible,
   roomLink,
@@ -29,8 +28,6 @@ const DefaultScreen = ({
   closeButtonRef,
   copyLink,
   showClipBoardModal,
-  showModal,
-  setShowModal,
 }) => {
   // Add sizes to whitelist and register them
   // const Size = Quill.import("formats/size");
@@ -49,6 +46,7 @@ const DefaultScreen = ({
   // ];
   // Quill.register(Font, true);
 
+  const {invite, room, username, showModal, setShowModal } = useContext(RoomContext)
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
@@ -107,7 +105,7 @@ const DefaultScreen = ({
         return {
           tag:
             doc.typeOfTab === "document" ? (
-              <QuillEditor ytext={editorYtext[doc.index]} />
+              <TextEditor ytext={editorYtext[doc.index]} />
             ) : (
               <CodeEditor ytext={editorYtext[doc.index]} />
             ),
@@ -149,6 +147,8 @@ const DefaultScreen = ({
         docs,
         awareness,
         currentIndex,
+        invite,
+
         setDocs,
         setEditorYtext,
         setCurrentIndex,
@@ -163,9 +163,6 @@ const DefaultScreen = ({
           <Bar
             setShowModal={setShowModal}
             showModal={showModal}
-            invite={invite}
-            username={username}
-            room={room}
           />
         </div>
 
