@@ -3,23 +3,8 @@ import ReactQuill, { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import { YjsContext } from "../context/YjsContext";
 import QuillCursors from "quill-cursors";
+import { formats, modules } from "./CustomToolbar";
 
-const modules = {
-  toolbar: [
-    [{ 'header': [1, 2, false] }],
-    ['bold', 'italic', 'underline','strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-    ['link', 'image'],
-    ['clean']
-  ],
-}
-
-const formats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image'
-]
 const QuillEditor = ({ytext}) => {
   Quill.register("modules/cursors", QuillCursors);
   const quillRef = useRef()
