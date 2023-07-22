@@ -39,7 +39,7 @@ const Tab = ({
         <span className="opacity-50 mx-2">
           {text.includes("Document") ? <FaFileAlt /> : <FaCode />}
         </span>
-        <span className=" text-white pr-3">{text}</span>
+        <span className="select-none text-white pr-3">{text}</span>
         <AiOutlineClose
           onClick={handleCloseTab}
           className="text-white hover:bg-red-500 hover:bg-opacity-30 rounded hover:text-red-600 text-opacity-40 text-lg cursor-pointer"

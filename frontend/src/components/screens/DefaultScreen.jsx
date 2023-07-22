@@ -3,7 +3,7 @@ import Options from "../Options";
 import { Link, redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
@@ -16,11 +16,10 @@ import QuillEditor from "../QuillEditor";
 import { Quill } from "react-quill";
 import QuillCursors from "quill-cursors";
 import CodeEditor from "../CodeEditor";
+import { RoomContext } from "../../context/RoomContext";
+import TextEditor from "../TextEditor";
 const DefaultScreen = ({
-  username,
-  room,
   participants,
-  invite,
   chatOpen,
   visible,
   roomLink,
@@ -29,8 +28,6 @@ const DefaultScreen = ({
   closeButtonRef,
   copyLink,
   showClipBoardModal,
-  showModal,
-  setShowModal,
 }) => {
   // Add sizes to whitelist and register them
   // const Size = Quill.import("formats/size");
@@ -49,12 +46,13 @@ const DefaultScreen = ({
   // ];
   // Quill.register(Font, true);
 
+  const {invite, room, username, showModal, setShowModal } = useContext(RoomContext)
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
   const docsDiv = useRef();
   const newDocTab = useRef();
-  const newCodeTab = useRef()
+  const newCodeTab = useRef();
   const tabs = ydoc.getArray("tabs");
   const [docs, setDocs] = useState([]);
   let quill = null;
@@ -67,18 +65,18 @@ const DefaultScreen = ({
     console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
-    const editorTextArray = []
+    const editorTextArray = [];
     setDocs(
       tabs.toArray().map((ymap, index) => {
         const id = ymap.get("docId");
         let tabName = ymap.get("tabName");
-        const typeOfTab = ymap.get("typeOftab")
-        editorTextArray.push(ymap.get("newDoc"))
+        const typeOfTab = ymap.get("typeOftab");
+        editorTextArray.push(ymap.get("newDoc"));
         console.log("Tab list", tabs.toJSON());
         return { id, index, text: tabName, typeOfTab };
       })
     );
-    setEditorYtext(editorTextArray)
+    setEditorYtext(editorTextArray);
     // insert the list of all docs. But the first one is a "create new document" button
     // docsDiv.current.innerHTML = docs;
     if (tabs.length === 0) {
@@ -101,18 +99,21 @@ const DefaultScreen = ({
     // if (docs.length > 0) {
     //   console.log("Oh yh its here")
     // }
-    console.log("Docs here", docs)
+    console.log("Docs here", docs);
     if (editorYtext.length > 0) {
       const quillEditors = docs.map((doc) => {
-        return (
-          {
-            tag: doc.typeOfTab === "document" ? <QuillEditor ytext={editorYtext[doc.index]} /> : <CodeEditor  ytext={editorYtext[doc.index]} />,
-            id: doc.id,
-            index: doc.index
-          }
-        )
-      })
-      setEditors(quillEditors)
+        return {
+          tag:
+            doc.typeOfTab === "document" ? (
+              <TextEditor ytext={editorYtext[doc.index]} />
+            ) : (
+              <CodeEditor ytext={editorYtext[doc.index]} />
+            ),
+          id: doc.id,
+          index: doc.index,
+        };
+      });
+      setEditors(quillEditors);
     }
   }, [editorYtext]);
 
@@ -129,7 +130,13 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log("CurrentIndex", currentIndex, "Editors", editors, editors[currentIndex]);
+  console.log(
+    "CurrentIndex",
+    currentIndex,
+    "Editors",
+    editors,
+    editors[currentIndex]
+  );
   return (
     <YjsContext.Provider
       value={{
@@ -140,22 +147,22 @@ const DefaultScreen = ({
         docs,
         awareness,
         currentIndex,
+        invite,
+
         setDocs,
         setEditorYtext,
         setCurrentIndex,
       }}
     >
-      <main className="flex flex-col md:h-screen">
+      <main className="flex flex-col md:h-screen overflow-clip">
         <div className="h-90">
           <span className="text-white">
-            Current Index: {currentIndex} id: {docs[currentIndex]?.id} name: {username}
+            Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
+            {username}
           </span>
           <Bar
             setShowModal={setShowModal}
             showModal={showModal}
-            invite={invite}
-            username={username}
-            room={room}
           />
         </div>
 
@@ -178,38 +185,36 @@ const DefaultScreen = ({
           </div>
         </div>
 
-        <div className="flex h-full">
+        <div className="flex h-full overflow-clip">
           <div className="flex flex-col flex-1 overflow-auto">
-            <div>
-              {/* (
-
-              ) */}
-
-              {/* <Editors ref={quillRef} /> */}
+            <div className="h-full">
               {docs.length === 0 ? (
                 <div className="max-w-sm mx-auto py-12">
                   <Options />
                 </div>
               ) : (
                 editors.map((editor) => {
-                  console.log("Editor", editor)
+                  console.log("Editor", editor);
                   if (editor.id === docs[currentIndex]?.id) {
-                    return (<div key={editor.id}>{editor.tag}</div>)
+                    return <div key={editor.id} className="h-full">{editor.tag}</div>;
                   }
                 })
-              )
-              }
+              )}
             </div>
           </div>
 
-          <div className={`hidden md:block`}>
-            {showModal && (
+          <div className={`hidden md:block relative`}>
+            <div
+              className={`transition-all ease-in h-full ${
+                showModal ? "mr-0" : "-mr-96"
+              }`}
+            >
               <SideModal
                 participants={participants}
                 closeSideModal={closeSideModal}
                 username={username}
               />
-            )}
+            </div>
           </div>
           <SideBar setShowModal={setShowModal} showModal={showModal} />
         </div>

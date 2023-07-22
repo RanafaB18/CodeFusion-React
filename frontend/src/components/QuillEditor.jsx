@@ -3,24 +3,33 @@ import ReactQuill, { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import { YjsContext } from "../context/YjsContext";
 import QuillCursors from "quill-cursors";
+import CustomToolbar from "./CustomToolbar";
 
-const modules = {
-  toolbar: [
-    [{ 'header': [1, 2, false] }],
-    ['bold', 'italic', 'underline','strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-    ['link', 'image'],
-    ['clean']
-  ],
-}
-
-const formats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image'
-]
+// Modules object for setting up the Quill editor
 const QuillEditor = ({ytext}) => {
+  const modules = {
+    toolbar: "#toolbar",
+  };
+// Formats objects for setting up the Quill editor
+const formats = [
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "align",
+  "strike",
+  "script",
+  "blockquote",
+  "background",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+  "color",
+  "code-block",
+];
   Quill.register("modules/cursors", QuillCursors);
   const quillRef = useRef()
   let binding
@@ -30,12 +39,14 @@ const QuillEditor = ({ytext}) => {
     if (binding) {
       binding.destroy()
     }
+    console.log("QuillRef", quillRef)
     binding = new QuillBinding(ytext, quillRef.current.getEditor(), awareness)
   }, [ytext])
   return (
-    <div className="h-screen overflow-hidden" my_quill="yes">
-      <ReactQuill theme="snow" ref={quillRef} formats={formats} modules={modules}/>
-    </div>
+      <>
+      <CustomToolbar />
+      <ReactQuill theme="snow" ref={quillRef} formats={formats} modules={modules} className="h-full"/>
+      </>
   )
 };
 

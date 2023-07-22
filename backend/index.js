@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
             const firstID = Object.keys(Tabs[room].tabs)[0]
             const userColor = getNameColorCode(username)
             if (Tabs[room].numOfTabs > 0 && !Tabs[room].tabs[firstID]?.includes(userColor)) {
-                Tabs[room].tabs[firstID].push(userColor)
+                Tabs[room].tabs[firstID]?.push(userColor)
                 io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
             }
 
@@ -226,7 +226,7 @@ app.post('/:room/users', (req, res) => {
     return res.end()
 })
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000
 server.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 })

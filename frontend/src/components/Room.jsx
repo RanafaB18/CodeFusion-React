@@ -15,7 +15,7 @@ import Toast from "./Toast";
 import { redirect } from "react-router-dom";
 import MessageToast from "./MessageToast";
 import Tab from "./Tab";
-import * as Y from "yjs"
+import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
 const Room = ({ room, username, showStream }) => {
@@ -154,14 +154,21 @@ const Room = ({ room, username, showStream }) => {
           setScreenIndex={setScreenIndex}
         />
       )}
-      <RoomContext.Provider value={{ room, socket, peers }}>
+      <RoomContext.Provider
+        value={{
+          room,
+          socket,
+          peers,
+          invite,
+          username,
+          showModal,
+          setShowModal,
+        }}
+      >
         {screenIndex !== 2 && (
           <div className="hidden md:block">
             <DefaultScreen
               participants={participants}
-              invite={invite}
-              username={username}
-              room={room}
               chatOpen={screenIndex === 0}
               closeButtonRef={closeButtonRef}
               closeInvite={closeInvite}
@@ -170,8 +177,6 @@ const Room = ({ room, username, showStream }) => {
               roomLink={roomLink}
               showClipBoardModal={showClipBoardModal}
               visible={visible}
-              showModal={showModal}
-              setShowModal={setShowModal}
             />
           </div>
         )}

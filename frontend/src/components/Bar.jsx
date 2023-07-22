@@ -6,10 +6,12 @@ import Options from "./Options";
 import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
-import axiosUtil from "../services"
+import axiosUtil from "../services";
 import { Socket } from "socket.io-client";
 import { RoomContext } from "../context/RoomContext";
-const Bar = ({ showModal, setShowModal, invite, username, room }) => {
+import CustomToolbar from "./CustomToolbar";
+import LowerBar from "./LowerBar";
+const Bar = () => {
   const [showOptions, setShowOptions] = useState(false);
   const {
     tabs,
@@ -24,115 +26,112 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
     setEditorYtext,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
-  const {socket} = useContext(RoomContext)
-  const [once, setOnce] = useState(false)
-  const [awarenessTabs, setAwarenessTabs] = useState({})
+  const { socket, room, username } = useContext(RoomContext);
+  const [once, setOnce] = useState(false);
+  const [awarenessTabs, setAwarenessTabs] = useState({});
   const optionRef = useRef();
-  const color = getNameColorCode(username)
-  const handleClick = () => {
-    setShowModal(!showModal);
-  };
-  useEffect(() => {
+  const color = getNameColorCode(username);
 
+  useEffect(() => {
     document.addEventListener("click", createNewTab);
     return () => {
       document.removeEventListener("click", createNewTab);
     };
   }, []);
   useEffect(() => {
-    socket.on('get-active-tabs', ({activeTabs}) => {
-      console.log("Active tabs",activeTabs);
-      setAwarenessTabs(activeTabs)
-    })
+    socket.on("get-active-tabs", ({ activeTabs }) => {
+      console.log("Active tabs", activeTabs);
+      setAwarenessTabs(activeTabs);
+    });
 
-    socket.on('removal', ({username, color}) => {
-      console.log("Remove this color of ", username, color)
-      socket.emit('remove-color', { username, color, room})
-    })
-  }, [])
+    socket.on("removal", ({ username, color }) => {
+      console.log("Remove this color of ", username, color);
+      socket.emit("remove-color", { username, color, room });
+    });
+  }, []);
 
   const createNewTab = (event) => {
     event.stopPropagation();
-    if (newCodeTab.current.contains(event.target)) {
-      const id = uuid();
-      const pressedButton = newCodeTab.current;
-      const val = pressedButton.getAttribute("index");
-      if (val === "code") {
-        console.log("Code")
-        const getTab = async () => {
-          const response = await axiosUtil.getTabName(room)
-          return response
-        }
-        // Create Y.Map
-        const newMap = new Y.Map();
-        // Put newDoc in Y.Map
-
-        // create a new document
-        const newDoc = new Y.Text();
-        let tabValue
-        getTab().then((data) => {
-          tabValue = data.tabs[room].numOfTabs
-          let name = `Code ${tabValue}`;
-          newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
-          newMap.set("newDoc", newDoc);
-          // Set initial content with the headline being the index of the documentList
-          newMap.set("docId", id);
-          newMap.set("tabName", name);
-          newMap.set("typeOftab", "code")
-          setEditorYtext((prevText) => {
-            return [...prevText, newDoc];
-          });
-          tabs.push([newMap]);
-          if (once === false) {
-            socket.emit("tab-change", {id, room, color})
-          } else {
-            socket.emit("tab-change", {id, room})
-
-          }
-          setOnce(true)
-        })
-      }
-      setShowOptions(false);
-    }
-    if (newDocTab.current) {
-      if (newDocTab.current.contains(event.target)) {
+    if (newCodeTab.current) {
+      if (newCodeTab.current.contains(event.target)) {
         const id = uuid();
-        const pressedButton = newDocTab.current;
+        const pressedButton = newCodeTab.current;
         const val = pressedButton.getAttribute("index");
-        console.log("Val", val)
-        if (val === "document") {
+        if (val === "code") {
+          console.log("Code");
           const getTab = async () => {
-            const response = await axiosUtil.getTabName(room)
-            return response
-          }
+            const response = await axiosUtil.getTabName(room);
+            return response;
+          };
           // Create Y.Map
           const newMap = new Y.Map();
           // Put newDoc in Y.Map
 
           // create a new document
           const newDoc = new Y.Text();
-          let tabValue
+          let tabValue;
           getTab().then((data) => {
-            tabValue = data.tabs[room].numOfTabs
+            tabValue = data.tabs[room].numOfTabs;
+            let name = `Code ${tabValue}`;
+            newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
+            newMap.set("newDoc", newDoc);
+            // Set initial content with the headline being the index of the documentList
+            newMap.set("docId", id);
+            newMap.set("tabName", name);
+            newMap.set("typeOftab", "code");
+            setEditorYtext((prevText) => {
+              return [...prevText, newDoc];
+            });
+            tabs.push([newMap]);
+            if (once === false) {
+              socket.emit("tab-change", { id, room, color });
+            } else {
+              socket.emit("tab-change", { id, room });
+            }
+            setOnce(true);
+          });
+        }
+        setShowOptions(false);
+      }
+    }
+    if (newDocTab.current) {
+      if (newDocTab.current.contains(event.target)) {
+        const id = uuid();
+        const pressedButton = newDocTab.current;
+        const val = pressedButton.getAttribute("index");
+        console.log("Val", val);
+        if (val === "document") {
+          const getTab = async () => {
+            const response = await axiosUtil.getTabName(room);
+            return response;
+          };
+          // Create Y.Map
+          const newMap = new Y.Map();
+          // Put newDoc in Y.Map
+
+          // create a new document
+          const newDoc = new Y.Text();
+          let tabValue;
+          getTab().then((data) => {
+            tabValue = data.tabs[room].numOfTabs;
             let name = `Document ${tabValue}`;
             newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
             // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);
             newMap.set("tabName", name);
-            newMap.set("typeOftab", "document")
+            newMap.set("typeOftab", "document");
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
             tabs.push([newMap]);
             if (once === false) {
-              socket.emit("tab-change", {id, room, color})
+              socket.emit("tab-change", { id, room, color });
             } else {
-              socket.emit("tab-change", {id, room})
-
+              socket.emit("tab-change", { id, room });
             }
-            setOnce(true)
-          })
+            setOnce(true);
+          });
         }
         setShowOptions(false);
       }
@@ -157,7 +156,7 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
   const closeTab = (id, index) => {
     console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
-    socket.emit('delete-tab', {room, id, color})
+    socket.emit("delete-tab", { room, id, color });
   };
 
   const openOptions = () => {
@@ -169,11 +168,12 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
       hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
     }
 
-    const colorCode = '#' + ((hashCode & 0x00FFFFFF) << 0).toString(16).padStart(6, '0');
+    const colorCode =
+      "#" + ((hashCode & 0x00ffffff) << 0).toString(16).padStart(6, "0");
     return colorCode;
   }
   const switchTab = (index, id) => {
-    socket.emit("tab-change", {id, room, color, username})
+    socket.emit("tab-change", { id, room, color, username });
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.id === id) {
@@ -225,31 +225,7 @@ const Bar = ({ showModal, setShowModal, invite, username, room }) => {
             <FaBars />
           </button>
         </div>
-        <div className="flex h-16 bg-[#353a41] p-2">
-          <div className="flex w-3/4 lg:w-10/12 items-center gap-3 overflow-x-auto whitespace-nowrap">
-          </div>
-          <div className="flex justify-around w-1/4 lg:w-2/12">
-            <button
-              className="bg-bluish
-                text-white text-md
-            font-semibold rounded-md px-4
-            tracking-wide hover:bg-blue-500"
-              onClick={invite}
-            >
-              Invite Others
-            </button>
-            <button
-              className="
-                bg-blacklike
-                border-2 border-red-600
-                text-white rounded-full
-                py-2 px-4 hover:bg-blackhover"
-              onClick={handleClick}
-            >
-              {username[0].toUpperCase()}
-            </button>
-          </div>
-        </div>
+        {docs[currentIndex]?.typeOfTab !== "document" && <LowerBar />}
       </div>
     </>
   );
