@@ -3,7 +3,6 @@ import LowerBar from "./LowerBar";
 import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
 
-
 const CustomToolbar = () => {
   const { invite, username, showModal, setShowModal } = useContext(RoomContext);
   const handleClick = () => {
@@ -19,11 +18,11 @@ const CustomToolbar = () => {
   Font.whitelist = ["sans", "monospace", "serif"];
   Quill.register(Font, true);
   return (
-    <div className="flex h-16 bg-[#353a41] p-2">
+    <div className="flex relative h-16 bg-[#353a41] p-2">
       <div className="flex w-3/4 lg:w-10/12 items-center gap-3 whitespace-wrap">
         <div id="toolbar">
           <span className="ql-formats">
-            <select className="ql-font" defaultValue="arial">
+            <select className="ql-font !m-0 !p-0" defaultValue="arial">
               <option value="arial">Sans</option>
               <option value="monospace">Monospace</option>
               <option value="serif">Serif</option>
@@ -34,37 +33,45 @@ const CustomToolbar = () => {
               <option value="huge">Huge</option>
             </select>
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
           <span className="ql-formats">
             <button className="ql-bold" />
             <button className="ql-italic" />
             <button className="ql-underline" />
             <button className="ql-strike" />
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
+
           <span className="ql-formats">
             <button className="ql-list" value="ordered" />
             <button className="ql-list" value="bullet" />
-            <button className="ql-indent" value="-1" />
-            <button className="ql-indent" value="+1" />
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
+
           <span className="ql-formats">
             <button className="ql-script" value="super" />
             <button className="ql-script" value="sub" />
             <button className="ql-blockquote" />
-            <button className="ql-direction" />
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
+
           <span className="ql-formats">
             <select className="ql-align" />
             <select className="ql-color" />
             <select className="ql-background" />
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
+
           <span className="ql-formats">
             <button className="ql-link" />
             <button className="ql-image" />
             <button className="ql-video" />
           </span>
+          <span className="border border-white border-opacity-30 h-full absolute top-0"></span>
+
           <span className="ql-formats">
             <button className="ql-formula" />
-            <button className="ql-code-block" />
+            <button className="ql-code-block p-3 w-10 h-10" />
             <button className="ql-clean" />
           </span>
         </div>

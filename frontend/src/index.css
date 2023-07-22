@@ -63,6 +63,18 @@ body {
   border: 0;
   border-radius: 10px;
 }
+.ql-active {
+  background-color: #4A5567 !important;
+  border-radius: 5px;
+}
+
+.ql-formats * {
+  margin-right: 2px !important;
+}
+.ql-formats:not(:first-child) {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
