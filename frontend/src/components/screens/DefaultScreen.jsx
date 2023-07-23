@@ -18,6 +18,8 @@ import QuillCursors from "quill-cursors";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
 import TextEditor from "../TextEditor";
+import Video from "../Video";
+import VideoScreen from "./VideoScreen";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -46,7 +48,17 @@ const DefaultScreen = ({
   // ];
   // Quill.register(Font, true);
 
-  const {invite, room, username, showModal, setShowModal } = useContext(RoomContext)
+  const {
+    invite,
+    room,
+    username,
+    showModal,
+    setShowModal,
+    showStream,
+    stream,
+    peers,
+  } = useContext(RoomContext);
+  console.log("Show stream", showStream, stream);
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
@@ -160,10 +172,7 @@ const DefaultScreen = ({
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username}
           </span>
-          <Bar
-            setShowModal={setShowModal}
-            showModal={showModal}
-          />
+          <Bar setShowModal={setShowModal} showModal={showModal} />
         </div>
 
         {/* Hidden */}
@@ -186,7 +195,7 @@ const DefaultScreen = ({
         </div>
 
         <div className="flex h-full overflow-clip">
-          <div className="flex flex-col flex-1 overflow-auto">
+          <div className="flex flex-col flex-1">
             <div className="h-full">
               {docs.length === 0 ? (
                 <div className="max-w-sm mx-auto py-12">
@@ -196,10 +205,26 @@ const DefaultScreen = ({
                 editors.map((editor) => {
                   console.log("Editor", editor);
                   if (editor.id === docs[currentIndex]?.id) {
-                    return <div key={editor.id} className="h-full">{editor.tag}</div>;
+                    return (
+                      <div key={editor.id} className="h-full">
+                        {editor.tag}
+                      </div>
+                    );
                   }
                 })
               )}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded inline-block absolute right-0">
+              <VideoScreen
+                peers={peers}
+                showStream={showStream}
+                stream={stream}
+                username={username}
+                location={"default"}
+              />
             </div>
           </div>
 

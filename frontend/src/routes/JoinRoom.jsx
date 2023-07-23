@@ -55,19 +55,19 @@ const JoinRoom = () => {
               setCreatedUsername={setCreatedUsername}
             />
           )
-          : <Room room={room} username={userRoomName || session} />
-          // : !permissionReceived && error === false ? (
-          //   // <Room room={room} username={userRoomName || session} />
-          //   <PermissionScreen
-          //     setPermissionReceived={setPermissionReceived}
-          //     setError={setError}
-          //     permissionReceived={permissionReceived}
-          //   />
-          // ) : error ? (
-          //   <ErrorModal username={userRoomName || session} room={room} />
-          // ) : (
-          //   <PermissionModal username={userRoomName || session} room={room} />
-          // )
+          // : <Room room={room} username={userRoomName || session} />
+          : !permissionReceived && error === false ? (
+            // <Room room={room} username={userRoomName || session} />
+            <PermissionScreen
+              setPermissionReceived={setPermissionReceived}
+              setError={setError}
+              permissionReceived={permissionReceived}
+            />
+          ) : error ? (
+            <ErrorModal username={userRoomName || session} room={room} />
+          ) : (
+            <PermissionModal username={userRoomName || session} room={room} />
+          )
           }
         </div>
       </HelmetProvider>

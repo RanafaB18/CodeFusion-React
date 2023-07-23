@@ -163,6 +163,9 @@ const Room = ({ room, username, showStream }) => {
           username,
           showModal,
           setShowModal,
+          showStream,
+          stream,
+          peers,
         }}
       >
         {screenIndex !== 2 && (

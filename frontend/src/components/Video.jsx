@@ -1,9 +1,11 @@
 import { useRef, useEffect } from "react";
 import Person from "./Person";
 
-const Video = ({ stream, showStream, username }) => {
+const Video = ({ stream, showStream, username, location }) => {
   const videoRef = useRef(null);
-
+  /*
+    locatio could be [default, permission]
+  */
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -11,17 +13,17 @@ const Video = ({ stream, showStream, username }) => {
   }, [showStream]);
 
   return (
-    <div className="relative">
+    <div className={`inline-block ${location === "permission" ? "w-full" : "w-64"}`}>
       {showStream ? (
         <div className="relative">
           <video
             muted
             autoPlay
             ref={videoRef}
-            className="object-cover h-64 w-full rounded-lg"
+            className={`object-cover ${location === "default" ? "h-36" : "h-64" } w-full rounded-lg`}
           />
           <div className="video-text">
-            <span className="text-lg text-white">
+            <span className={`${location === "default" ? "text-md" : "text-lg"} text-white`}>
               {username === undefined ? "Unknown" : username}
             </span>
           </div>
