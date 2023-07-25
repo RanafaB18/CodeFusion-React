@@ -12,14 +12,13 @@ import { WebrtcProvider } from "y-webrtc";
 import { YjsContext } from "../../context/YjsContext";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
-import QuillEditor from "../QuillEditor";
-import { Quill } from "react-quill";
-import QuillCursors from "quill-cursors";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
 import TextEditor from "../TextEditor";
-import Video from "../Video";
 import VideoScreen from "./VideoScreen";
+import VideoSideBar from "../VideoSideBar";
+import VideoGrid from "../VideoGrid";
+import FloatingVideos from "../FloatingVideos";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -31,23 +30,6 @@ const DefaultScreen = ({
   copyLink,
   showClipBoardModal,
 }) => {
-  // Add sizes to whitelist and register them
-  // const Size = Quill.import("formats/size");
-  // Size.whitelist = ["extra-small", "small", "medium", "large"];
-  // Quill.register(Size, true);
-
-  // Add fonts to whitelist and register them
-  // const Font = Quill.import("formats/font");
-  // Font.whitelist = [
-  //   "arial",
-  //   "comic-sans",
-  //   "courier-new",
-  //   "georgia",
-  //   "helvetica",
-  //   "lucida",
-  // ];
-  // Quill.register(Font, true);
-
   const {
     invite,
     room,
@@ -72,6 +54,7 @@ const DefaultScreen = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [videoStructure, setVideoStructure] = useState(2);
 
   const renderDocs = () => {
     console.log("Executed RenderDocs");
@@ -103,14 +86,10 @@ const DefaultScreen = ({
   };
 
   useEffect(() => {
-    // renderDocs();
     tabs.observe(renderDocs);
   }, []);
   useEffect(() => {
     console.log("Editor ytext", editorYtext);
-    // if (docs.length > 0) {
-    //   console.log("Oh yh its here")
-    // }
     console.log("Docs here", docs);
     if (editorYtext.length > 0) {
       const quillEditors = docs.map((doc) => {
@@ -160,13 +139,13 @@ const DefaultScreen = ({
         awareness,
         currentIndex,
         invite,
-
         setDocs,
         setEditorYtext,
         setCurrentIndex,
+        setVideoStructure,
       }}
     >
-      <main className="flex flex-col md:h-screen overflow-clip">
+      <main className="flex flex-col md:h-screen overflow-clip select-none">
         <div className="h-90">
           <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
@@ -196,35 +175,63 @@ const DefaultScreen = ({
 
         <div className="flex h-full overflow-clip">
           <div className="flex flex-col flex-1">
-            <div className="h-full">
-              {docs.length === 0 ? (
-                <div className="max-w-sm mx-auto py-12">
-                  <Options />
-                </div>
-              ) : (
-                editors.map((editor) => {
-                  console.log("Editor", editor);
-                  if (editor.id === docs[currentIndex]?.id) {
-                    return (
-                      <div key={editor.id} className="h-full">
-                        {editor.tag}
-                      </div>
-                    );
-                  }
-                })
-              )}
-            </div>
+            {videoStructure !== 0 && (
+              <div id="screen" className="h-full">
+                {docs.length === 0 ? (
+                  <div className="max-w-sm mx-auto py-12">
+                    <Options />
+                  </div>
+                ) : (
+                  editors.map((editor) => {
+                    console.log("Editor", editor);
+                    if (editor.id === docs[currentIndex]?.id) {
+                      return (
+                        <div key={editor.id} className="h-full">
+                          {editor.tag}
+                        </div>
+                      );
+                    }
+                  })
+                )}
+              </div>
+            )}
+            {videoStructure === 0 && (
+              <div className="overflow-auto m-2">
+                <VideoGrid
+                  peers={peers}
+                  showStream={showStream}
+                  stream={stream}
+                  username={username}
+                  location={"default"}
+                />
+              </div>
+            )}
           </div>
-
           <div className="relative">
-            <div className="rounded inline-block absolute right-0">
-              <VideoScreen
-                peers={peers}
-                showStream={showStream}
-                stream={stream}
-                username={username}
-                location={"default"}
-              />
+            <div className="rounded inline-block">
+              {
+                /* 1 === video sidebar */
+                videoStructure === 1 && (
+                  <VideoSideBar
+                    peers={peers}
+                    showStream={showStream}
+                    stream={stream}
+                    username={username}
+                    location={"default"}
+                  />
+                )
+              }
+              {videoStructure === 2 && (
+                <div className="absolute top-0 right-0">
+                  <FloatingVideos
+                    peers={peers}
+                    showStream={showStream}
+                    stream={stream}
+                    username={username}
+                    location={"default"}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
