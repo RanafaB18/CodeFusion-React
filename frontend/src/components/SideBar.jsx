@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import floatingVideo from "/floating-video.svg";
 import {
   FaComment,
   FaMicrophone,
@@ -13,10 +12,10 @@ import { RoomContext } from "../context/RoomContext";
 import { updatePeerAction } from "../context/peerActions";
 
 const SideBar = ({ showModal, setShowModal }) => {
-  const { setShowStream, socket, room, me, peers, stream, username } = useContext(RoomContext)
+  const { setShowStream, setIsMuted, showStream, isMuted, socket, room, me, peers, stream, username } = useContext(RoomContext)
   const [off, setOff] = useState({
-    microphone: false,
-    video: false,
+    microphone: isMuted,
+    video: !showStream,
     videoGrid: false,
     videoSidebar: false,
     videoFloat: true,
@@ -30,6 +29,11 @@ const SideBar = ({ showModal, setShowModal }) => {
       ...prevState,
       microphone: !prevState.microphone,
     }));
+    setIsMuted(prevState => !prevState)
+    socket.emit('toggle-video-audio', ({room, id: me.id, viewStream: showStream, isMuted: !isMuted}))
+    console.log("Turning off user with id: ", me.id, "in room", room);
+    console.log("Give my Peers", peers)
+    console.log("This", {id: me.id, stream, username, viewStream: showStream, isMuted: !isMuted})
   };
   const toggleVideo = () => {
     setOff((prevState) => ({
@@ -37,10 +41,10 @@ const SideBar = ({ showModal, setShowModal }) => {
       video: !prevState.video,
     }));
     setShowStream(prevState => !prevState)
-    socket.emit('turn-off-video', ({room, id: me.id, stream, username, viewStream: off.video}))
+    socket.emit('toggle-video-audio', ({room, id: me.id, viewStream: off.video, isMuted: isMuted}))
     console.log("Turning off user with id: ", me.id, "in room", room);
     console.log("Give my Peers", peers)
-    console.log("This", {id: me.id, stream, username, viewStream: off.video})
+    console.log("This", {id: me.id, stream, username, viewStream: off.video, isMuted})
   };
 
   const toggleSidebar = () => {

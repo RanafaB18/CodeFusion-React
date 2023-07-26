@@ -1,8 +1,6 @@
 import { ACTIONS } from "./peerActions";
 
 export const peerReducer = (state, action) => {
-  console.log("State", state);
-  console.log(Object.keys(state));
   switch (action.type) {
     case ACTIONS.ADD_PEER:
       return {
@@ -11,6 +9,7 @@ export const peerReducer = (state, action) => {
           stream: action.payload.stream,
           username: action.payload.username,
           viewStream: action.payload.viewStream,
+          isMuted: action.payload.isMuted,
         },
       };
     case ACTIONS.REMOVE_PEER:
@@ -25,9 +24,8 @@ export const peerReducer = (state, action) => {
       }
       const updatedPeer = {
         ...state[updatedPeerId],
-        stream: state[updatedPeerId].stream,
-        username: action.payload.username,
         viewStream: action.payload.viewStream,
+        isMuted: action.payload.isMuted
       };
       return {
         ...state,

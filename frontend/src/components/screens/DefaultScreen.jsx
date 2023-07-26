@@ -41,7 +41,6 @@ const DefaultScreen = ({
     peers,
     me
   } = useContext(RoomContext);
-  console.log("Show stream", showStream, stream);
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
@@ -58,7 +57,6 @@ const DefaultScreen = ({
   const [videoStructure, setVideoStructure] = useState(2);
 
   const renderDocs = () => {
-    console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
     const editorTextArray = [];
@@ -68,7 +66,6 @@ const DefaultScreen = ({
         let tabName = ymap.get("tabName");
         const typeOfTab = ymap.get("typeOftab");
         editorTextArray.push(ymap.get("newDoc"));
-        console.log("Tab list", tabs.toJSON());
         return { id, index, text: tabName, typeOfTab };
       })
     );
@@ -90,8 +87,6 @@ const DefaultScreen = ({
     tabs.observe(renderDocs);
   }, []);
   useEffect(() => {
-    console.log("Editor ytext", editorYtext);
-    console.log("Docs here", docs);
     if (editorYtext.length > 0) {
       const quillEditors = docs.map((doc) => {
         return {
@@ -122,13 +117,6 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log(
-    "CurrentIndex",
-    currentIndex,
-    "Editors",
-    editors,
-    editors[currentIndex]
-  );
   return (
     <YjsContext.Provider
       value={{
@@ -184,7 +172,6 @@ const DefaultScreen = ({
                   </div>
                 ) : (
                   editors.map((editor) => {
-                    console.log("Editor", editor);
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
                         <div key={editor.id} className="h-full">

@@ -18,7 +18,7 @@ import Tab from "./Tab";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
-const Room = ({ room, username, showStream, setShowStream }) => {
+const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
@@ -59,6 +59,7 @@ const Room = ({ room, username, showStream, setShowStream }) => {
       room,
       peerId: me._id,
       viewStream: showStream,
+      isMuted: isMuted
     });
     socket.on("show-message-toast", handleMessageToast);
     socket.on("get-users", handleUsers);
@@ -81,7 +82,6 @@ const Room = ({ room, username, showStream, setShowStream }) => {
     }, 4000);
   };
   const leaveRoomViaBackButton = (event) => {
-    console.log("Back button was clicked");
     socket.emit("leave-room", {
       username: username,
       room: room,
@@ -92,8 +92,7 @@ const Room = ({ room, username, showStream, setShowStream }) => {
     const roomName = roomString.replace(/-(?:[^-]*)$/, "");
     return roomName;
   };
-  const handleUsers = ({ room, participants }) => {
-    console.log("Participants", participants);
+  const handleUsers = ({ participants }) => {
     setParticipants(participants);
   };
   const notifyUsers = ({ username, participants, joinedStatus }) => {
@@ -102,7 +101,6 @@ const Room = ({ room, username, showStream, setShowStream }) => {
     } else {
       setToast({ name: username.toUpperCase(), text: "has left" });
     }
-    console.log(`${username} has joined the chat`);
     setShowToast(true);
     setTimeout(() => {
       setShowToast(false);
@@ -163,9 +161,11 @@ const Room = ({ room, username, showStream, setShowStream }) => {
           username,
           showModal,
           showStream,
+          isMuted,
           stream,
           setShowModal,
           setShowStream,
+          setIsMuted,
           invite,
         }}
       >

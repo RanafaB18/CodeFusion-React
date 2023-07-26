@@ -2,8 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import Person from "./Person";
 import Draggable, { DraggableCore } from "react-draggable";
 import { data } from "autoprefixer";
+import CircleAvatar from "./CircleAvatar";
 
-const Video = ({ stream, showStream, username, location }) => {
+const Video = ({ stream, showStream, username, isMuted, location }) => {
   const videoRef = useRef(null);
   const [position, setPosition] = useState({
     node: "",
@@ -25,6 +26,8 @@ const Video = ({ stream, showStream, username, location }) => {
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
     }
+    handleVideo(stream, showStream);
+    // handleAudio(stream, isMuted)
     const resetPosition = () => {
       setTransition(true);
       setPosition({ ...data, x: 0, y: 0 });
@@ -37,6 +40,21 @@ const Video = ({ stream, showStream, username, location }) => {
       window.removeEventListener("resize", resetPosition);
     };
   }, [showStream]);
+  const handleVideo = (stream, showStream) => {
+    if (showStream === false) {
+      stream.getTracks().forEach(function (track) {
+        if (track.readyState === "live" && track.kind === "video") {
+          track.enabled = false;
+        }
+      });
+    } else {
+      stream.getTracks().forEach(function (track) {
+        if (track.readyState === "live" && track.kind === "video") {
+          track.enabled = true;
+        }
+      });
+    }
+  };
   const trackPosition = (data) => {
     setPosition({
       ...data,
@@ -70,7 +88,6 @@ const Video = ({ stream, showStream, username, location }) => {
     ) {
       setPosition({ ...data, x: 0, y: 0 });
     } else if (nodePosition.top < screenPosition.top) {
-      console.log("Y", screenPosition.top, screenPosition.left);
       setPosition({ ...data, y: 0, x: position.x });
     } else if (nodePosition.right > screenPosition.right) {
       setPosition({ ...data, x: 0, y: position.y });
@@ -81,10 +98,6 @@ const Video = ({ stream, showStream, username, location }) => {
         y: position.y,
       });
     } else if (nodePosition.bottom > screenPosition.bottom) {
-      console.log(
-        screenPosition.bottom,
-        screenPosition.bottom - nodePosition.height
-      );
       setPosition({ ...data, x: 0, y: 0 });
     }
     setTimeout(() => {
@@ -120,7 +133,7 @@ const Video = ({ stream, showStream, username, location }) => {
           >
             <div className="relative">
               <video
-                muted
+                muted={isMuted}
                 autoPlay
                 ref={videoRef}
                 className={`object-cover ${
@@ -140,23 +153,36 @@ const Video = ({ stream, showStream, username, location }) => {
           </div>
         ) : (
           <div
-          style={
-            location === "permission"
-              ? {}
-              : {
-                  transition: transition === true ? "all 0.5s" : "",
-                  position: "absolute",
-                  top: position.y,
-                  left: position.x,
-                }
-          }
-          ref={nodeRef}
-          className={`relative  bg-[#22262a] p-3 ${
-            location === "default" ? "h-36" : "h-64"
-          } w-full flex flex-col items-center justify-center rounded-lg`}>
-            <Person name={username} showOnlyCircle />
+            style={
+              location === "permission"
+                ? {}
+                : {
+                    transition: transition === true ? "all 0.5s" : "",
+                    position: "absolute",
+                    top: position.y,
+                    left: position.x,
+                  }
+            }
+            ref={nodeRef}
+            className={`relative  bg-black ${
+              location === "default" ? "h-36" : "h-64"
+            } w-full rounded-lg`}
+          >
+            <video
+              muted={isMuted}
+              autoPlay
+              ref={videoRef}
+              className="h-32 w-full"
+            />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <CircleAvatar name={username} />
+            </div>
             <div className="video-text">
-              <span className="text-lg text-white">
+              <span
+                className={`${
+                  location === "default" ? "text-md" : "text-lg"
+                } text-white`}
+              >
                 {username === undefined ? "Unknown" : username}
               </span>
             </div>

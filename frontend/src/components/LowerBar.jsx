@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
+import CircleAvatar from "./CircleAvatar";
 
 const LowerBar = () => {
   const { invite, username, showModal, setShowModal } = useContext(RoomContext);
@@ -7,11 +8,11 @@ const LowerBar = () => {
     setShowModal(!showModal);
   };
   return (
-    <div className="flex h-16 bg-[#353a41] p-2">
+    <div className="flex items-center h-16 bg-[#353a41] p-2">
       <div className="flex w-3/4 lg:w-10/12 items-center gap-3 whitespace-wrap">
         {/* {docs[currentIndex]?.typeOfTab === "document" && <CustomToolbar />} */}
       </div>
-      <div className="flex justify-around w-1/4 lg:w-2/12">
+      <div className="flex  justify-around w-1/4 lg:w-2/12">
         <button
           className="bg-bluish
           text-white text-md
@@ -21,16 +22,9 @@ const LowerBar = () => {
         >
           Invite Others
         </button>
-        <button
-          className="
-          bg-blacklike
-          border-2 border-red-600
-          text-white rounded-full
-          py-2 px-4 hover:bg-blackhover"
-          onClick={handleClick}
-        >
-          {username[0].toUpperCase()}
-        </button>
+        <div className="cursor-pointer" onClick={handleClick}>
+          <CircleAvatar name={username[0].toUpperCase()} />
+        </div>
       </div>
     </div>
   );
