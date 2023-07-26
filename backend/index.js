@@ -63,6 +63,21 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
+    socket.on("turn-off-video", ({room, id, stream, username, viewStream }) => {
+        // let updatedPeer;
+        // Rooms[room] = Rooms[room].map((user) => {
+        //     if (user.userId === id) {
+        //         updatedPeer = {...user, viewStream: !user.viewStream }
+        //         return updatedPeer
+        //     }
+        //     return user
+        // })
+        // console.log("Before", peers)
+        // peers[id] = {updatedPeer}
+        // console.log("Peers After", peers)
+        console.log("Object", {id, stream, username, viewStream});
+        io.to(room).emit('updated-peers', {id, stream, username, viewStream})
+    })
     socket.on('request-permissions', () => {
         socket.emit('get-permissions')
     })
