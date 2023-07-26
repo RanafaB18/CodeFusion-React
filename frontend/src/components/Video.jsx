@@ -139,7 +139,21 @@ const Video = ({ stream, showStream, username, location }) => {
             </div>
           </div>
         ) : (
-          <div className="relative  bg-[#22262a] p-3 h-64 flex flex-col items-center justify-center rounded-lg">
+          <div
+          style={
+            location === "permission"
+              ? {}
+              : {
+                  transition: transition === true ? "all 0.5s" : "",
+                  position: "absolute",
+                  top: position.y,
+                  left: position.x,
+                }
+          }
+          ref={nodeRef}
+          className={`relative  bg-[#22262a] p-3 ${
+            location === "default" ? "h-36" : "h-64"
+          } w-full flex flex-col items-center justify-center rounded-lg`}>
             <Person name={username} showOnlyCircle />
             <div className="video-text">
               <span className="text-lg text-white">

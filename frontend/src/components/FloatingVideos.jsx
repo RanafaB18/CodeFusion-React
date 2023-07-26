@@ -1,6 +1,7 @@
 import Video from "./Video"
 
 const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
+  console.log("Rerendering peers", peers)
   return (
     <div className="min-h-screen">
       <Video showStream={showStream} stream={stream} username={username} location={location}/>

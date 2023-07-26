@@ -41,7 +41,7 @@ const PermissionModal = ({ username, room, viewStream=true }) => {
       </div>
     );
   }
-  return <Room room={room} username={username} showStream={showStream}/>;
+  return <Room room={room} username={username} showStream={showStream} setShowStream={setShowStream}/>;
 };
 
 export default PermissionModal;

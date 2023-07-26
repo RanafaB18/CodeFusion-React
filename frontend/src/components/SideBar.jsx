@@ -9,8 +9,11 @@ import {
   FaVideoSlash,
 } from "react-icons/fa";
 import { YjsContext } from "../context/YjsContext";
+import { RoomContext } from "../context/RoomContext";
+import { updatePeerAction } from "../context/peerActions";
 
 const SideBar = ({ showModal, setShowModal }) => {
+  const { setShowStream, socket, room, me, peers, stream, username } = useContext(RoomContext)
   const [off, setOff] = useState({
     microphone: false,
     video: false,
@@ -33,6 +36,11 @@ const SideBar = ({ showModal, setShowModal }) => {
       ...prevState,
       video: !prevState.video,
     }));
+    setShowStream(prevState => !prevState)
+    socket.emit('turn-off-video', ({room, id: me.id, stream, username, viewStream: off.video}))
+    console.log("Turning off user with id: ", me.id, "in room", room);
+    console.log("Give my Peers", peers)
+    console.log("This", {id: me.id, stream, username, viewStream: off.video})
   };
 
   const toggleSidebar = () => {

@@ -39,6 +39,7 @@ const DefaultScreen = ({
     showStream,
     stream,
     peers,
+    me
   } = useContext(RoomContext);
   console.log("Show stream", showStream, stream);
   const ydoc = new Y.Doc();
@@ -149,7 +150,7 @@ const DefaultScreen = ({
         <div className="h-90">
           <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
-            {username}
+            {username} myID: {me.id}
           </span>
           <Bar setShowModal={setShowModal} showModal={showModal} />
         </div>

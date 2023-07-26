@@ -3,7 +3,7 @@ import Peer from "peerjs";
 import { createContext, useEffect, useState, useReducer } from "react";
 import { io } from "socket.io-client";
 import { peerReducer } from "./peerReducer";
-import { addPeerAction, removePeerAction } from "./peerActions";
+import { addPeerAction, removePeerAction, updatePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
 const socket = io("http://localhost:3004");
@@ -24,6 +24,9 @@ export const RoomProvider = ({ children }) => {
 
 
     socket.on("user-disconnected", removePeer)
+    socket.on("updated-peers", ({id, stream, username, viewStream}) => {
+      dispatch(updatePeerAction(id, stream, username, viewStream))
+    })
   }, []);
 
   useEffect(() => {
@@ -41,6 +44,10 @@ export const RoomProvider = ({ children }) => {
         dispatch(addPeerAction(peerId, peerStream, username, viewStream));
       });
     });
+
+    socket.on("updated-peers", () => {
+
+    })
 
     me.on("call", (call) => {
       call.answer(stream);

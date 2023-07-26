@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import Person from "./Person";
 
 const FixedVideo = ({ stream, showStream, username, location, videoType }) => {
   const videoRef = useRef(null);
@@ -34,7 +35,9 @@ const FixedVideo = ({ stream, showStream, username, location, videoType }) => {
           </div>
         </div>
       ) : (
-        <div className="relative  bg-[#22262a] p-3 h-64 flex flex-col items-center justify-center rounded-lg">
+        <div className={`relative  bg-[#22262a] p-3 ${
+          location === "default" ? "h-full" : "h-64"
+        } w-full flex flex-col items-center justify-center rounded-lg`}>
           <Person name={username} showOnlyCircle />
           <div className="video-text">
             <span className="text-lg text-white">

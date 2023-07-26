@@ -18,7 +18,7 @@ import Tab from "./Tab";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
-const Room = ({ room, username, showStream }) => {
+const Room = ({ room, username, showStream, setShowStream }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
@@ -55,8 +55,8 @@ const Room = ({ room, username, showStream }) => {
 
     socket.on("message", notifyUsers);
     socket.emit("user_joined", {
-      username: username,
-      room: room,
+      username,
+      room,
       peerId: me._id,
       viewStream: showStream,
     });
@@ -156,15 +156,17 @@ const Room = ({ room, username, showStream }) => {
       )}
       <RoomContext.Provider
         value={{
+          me,
           room,
           socket,
           peers,
-          invite,
           username,
           showModal,
-          setShowModal,
           showStream,
           stream,
+          setShowModal,
+          setShowStream,
+          invite,
         }}
       >
         {screenIndex !== 2 && (
