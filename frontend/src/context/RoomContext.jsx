@@ -3,7 +3,7 @@ import Peer from "peerjs";
 import { createContext, useEffect, useState, useReducer } from "react";
 import { io } from "socket.io-client";
 import { peerReducer } from "./peerReducer";
-import { addPeerAction, removePeerAction } from "./peerActions";
+import { addPeerAction, removePeerAction, updatePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
 const socket = io("http://localhost:3004");
@@ -24,6 +24,9 @@ export const RoomProvider = ({ children }) => {
 
 
     socket.on("user-disconnected", removePeer)
+    socket.on("updated-peers", ({id, stream, username, viewStream, isMuted}) => {
+      dispatch(updatePeerAction(id, stream, username, viewStream, isMuted))
+    })
   }, []);
 
   useEffect(() => {
@@ -34,13 +37,17 @@ export const RoomProvider = ({ children }) => {
       setAllUsers(participants)
     })
 
-    socket.on("user-joined", ({ peerId, username, viewStream }) => {
-      setAllUsers(allUsers.concat({userId: peerId, username: username, viewStream: viewStream}))
+    socket.on("user-joined", ({ peerId, username, viewStream, isMuted }) => {
+      setAllUsers(allUsers.concat({userId: peerId, username, viewStream, isMuted}))
       const call = me.call(peerId, stream, {metadata: username});
       call.on("stream", (peerStream) => {
-        dispatch(addPeerAction(peerId, peerStream, username, viewStream));
+        dispatch(addPeerAction(peerId, peerStream, username, viewStream, isMuted));
       });
     });
+
+    socket.on("updated-peers", () => {
+
+    })
 
     me.on("call", (call) => {
       call.answer(stream);
@@ -48,7 +55,8 @@ export const RoomProvider = ({ children }) => {
         const user = allUsers.find((user) => user.userId === call.peer)
         const username = user ? user.username : "unknown"
         const viewStream = user ? user.viewStream : null
-        dispatch(addPeerAction(call.peer, peerStream, username, viewStream));
+        const isMuted = user ? user.isMuted : null
+        dispatch(addPeerAction(call.peer, peerStream, username, viewStream, isMuted));
       });
     });
   });

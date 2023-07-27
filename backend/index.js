@@ -63,12 +63,16 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
+    socket.on("toggle-video-audio", ({room, id, viewStream, isMuted }) => {
+        console.log("Peer", {id, viewStream, isMuted })
+        io.to(room).emit('updated-peers', {id, viewStream, isMuted})
+    })
     socket.on('request-permissions', () => {
         socket.emit('get-permissions')
     })
-    socket.on("user_joined", ({ username, room, peerId, viewStream }) => {
+    socket.on("user_joined", ({ username, room, peerId, viewStream, isMuted }) => {
         if (Rooms[room]) {
-            Rooms[room].push({ username: username, userId: peerId, viewStream: viewStream })
+            Rooms[room].push({ username: username, userId: peerId, viewStream: viewStream, isMuted })
             if (Tabs[room] === undefined) {
                 Tabs[room] = { numOfTabs: 0, tabs: {}, numOfUsers: [username]}
             }
@@ -84,7 +88,7 @@ io.on('connection', (socket) => {
 
             socket.join(room)
             console.log("View stream ?", viewStream)
-            socket.to(room).emit("user-joined", { peerId, username, viewStream })
+            socket.to(room).emit("user-joined", { peerId, username, viewStream, isMuted })
             console.log("New user: ", username, peerId)
             socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.emit('get-users', { room: room, participants: Rooms[room] })

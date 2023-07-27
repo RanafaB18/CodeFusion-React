@@ -110,9 +110,9 @@ body {
     @apply
     before:absolute text-lg whitespace-nowrap before:mr-3 before:text-white
     before:right-full
-    my-2 mx-auto hover:bg-blackhover rounded p-3 cursor-pointer
+    my-2 mx-auto hover:bg-blackhover rounded p-3 cursor-pointer hover:before:bg-blackBackground hover:before:py-1 hover:before:px-2 hover:before:rounded
   }
   .video-text {
-    @apply absolute bottom-0 left-0 px-2 m-2 bg-[#15181a] border-l-4 border-l-red-500 rounded-lg
+    @apply absolute bottom-0 left-0 px-2 m-2 bg-[#15181a] bg-opacity-40 border-l-4 border-l-red-500 rounded
   }
 }

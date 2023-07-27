@@ -12,12 +12,13 @@ import { WebrtcProvider } from "y-webrtc";
 import { YjsContext } from "../../context/YjsContext";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
-import QuillEditor from "../QuillEditor";
-import { Quill } from "react-quill";
-import QuillCursors from "quill-cursors";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
 import TextEditor from "../TextEditor";
+import VideoScreen from "./VideoScreen";
+import VideoSideBar from "../VideoSideBar";
+import VideoGrid from "../VideoGrid";
+import FloatingVideos from "../FloatingVideos";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -29,24 +30,17 @@ const DefaultScreen = ({
   copyLink,
   showClipBoardModal,
 }) => {
-  // Add sizes to whitelist and register them
-  // const Size = Quill.import("formats/size");
-  // Size.whitelist = ["extra-small", "small", "medium", "large"];
-  // Quill.register(Size, true);
-
-  // Add fonts to whitelist and register them
-  // const Font = Quill.import("formats/font");
-  // Font.whitelist = [
-  //   "arial",
-  //   "comic-sans",
-  //   "courier-new",
-  //   "georgia",
-  //   "helvetica",
-  //   "lucida",
-  // ];
-  // Quill.register(Font, true);
-
-  const {invite, room, username, showModal, setShowModal } = useContext(RoomContext)
+  const {
+    invite,
+    room,
+    username,
+    showModal,
+    setShowModal,
+    showStream,
+    stream,
+    peers,
+    me
+  } = useContext(RoomContext);
   const ydoc = new Y.Doc();
   const provider = new WebrtcProvider(room, ydoc);
   const awareness = provider.awareness;
@@ -60,9 +54,9 @@ const DefaultScreen = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [videoStructure, setVideoStructure] = useState(2);
 
   const renderDocs = () => {
-    console.log("Executed RenderDocs");
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
     const editorTextArray = [];
@@ -72,7 +66,6 @@ const DefaultScreen = ({
         let tabName = ymap.get("tabName");
         const typeOfTab = ymap.get("typeOftab");
         editorTextArray.push(ymap.get("newDoc"));
-        console.log("Tab list", tabs.toJSON());
         return { id, index, text: tabName, typeOfTab };
       })
     );
@@ -91,15 +84,9 @@ const DefaultScreen = ({
   };
 
   useEffect(() => {
-    // renderDocs();
     tabs.observe(renderDocs);
   }, []);
   useEffect(() => {
-    console.log("Editor ytext", editorYtext);
-    // if (docs.length > 0) {
-    //   console.log("Oh yh its here")
-    // }
-    console.log("Docs here", docs);
     if (editorYtext.length > 0) {
       const quillEditors = docs.map((doc) => {
         return {
@@ -130,13 +117,6 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log(
-    "CurrentIndex",
-    currentIndex,
-    "Editors",
-    editors,
-    editors[currentIndex]
-  );
   return (
     <YjsContext.Provider
       value={{
@@ -148,22 +128,19 @@ const DefaultScreen = ({
         awareness,
         currentIndex,
         invite,
-
         setDocs,
         setEditorYtext,
         setCurrentIndex,
+        setVideoStructure,
       }}
     >
-      <main className="flex flex-col md:h-screen overflow-clip">
+      <main className="flex flex-col md:h-screen overflow-clip select-none">
         <div className="h-90">
           <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
-            {username}
+            {username} myID: {me.id}
           </span>
-          <Bar
-            setShowModal={setShowModal}
-            showModal={showModal}
-          />
+          <Bar setShowModal={setShowModal} showModal={showModal} />
         </div>
 
         {/* Hidden */}
@@ -186,19 +163,62 @@ const DefaultScreen = ({
         </div>
 
         <div className="flex h-full overflow-clip">
-          <div className="flex flex-col flex-1 overflow-auto">
-            <div className="h-full">
-              {docs.length === 0 ? (
-                <div className="max-w-sm mx-auto py-12">
-                  <Options />
+          <div className="flex flex-col flex-1">
+            {videoStructure !== 0 && (
+              <div id="screen" className="h-full">
+                {docs.length === 0 ? (
+                  <div className="max-w-sm mx-auto py-12">
+                    <Options />
+                  </div>
+                ) : (
+                  editors.map((editor) => {
+                    if (editor.id === docs[currentIndex]?.id) {
+                      return (
+                        <div key={editor.id} className="h-full">
+                          {editor.tag}
+                        </div>
+                      );
+                    }
+                  })
+                )}
+              </div>
+            )}
+            {videoStructure === 0 && (
+              <div className="overflow-auto m-2">
+                <VideoGrid
+                  peers={peers}
+                  showStream={showStream}
+                  stream={stream}
+                  username={username}
+                  location={"default"}
+                />
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <div className="rounded inline-block">
+              {
+                /* 1 === video sidebar */
+                videoStructure === 1 && (
+                  <VideoSideBar
+                    peers={peers}
+                    showStream={showStream}
+                    stream={stream}
+                    username={username}
+                    location={"default"}
+                  />
+                )
+              }
+              {videoStructure === 2 && (
+                <div className="absolute top-0 right-0">
+                  <FloatingVideos
+                    peers={peers}
+                    showStream={showStream}
+                    stream={stream}
+                    username={username}
+                    location={"default"}
+                  />
                 </div>
-              ) : (
-                editors.map((editor) => {
-                  console.log("Editor", editor);
-                  if (editor.id === docs[currentIndex]?.id) {
-                    return <div key={editor.id} className="h-full">{editor.tag}</div>;
-                  }
-                })
               )}
             </div>
           </div>
