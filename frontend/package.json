@@ -22,6 +22,7 @@
     "react-icons": "^4.8.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.10.0",
+    "react-tooltip": "^5.19.0",
     "socket.io-client": "^4.6.1",
     "uuidv4": "^6.2.13",
     "y-monaco": "^0.1.4",

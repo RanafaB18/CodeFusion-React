@@ -10,9 +10,21 @@ import {
 import { YjsContext } from "../context/YjsContext";
 import { RoomContext } from "../context/RoomContext";
 import { updatePeerAction } from "../context/peerActions";
+import { Tooltip } from "react-tooltip";
 
 const SideBar = ({ showModal, setShowModal }) => {
-  const { setShowStream, setIsMuted, showStream, isMuted, socket, room, me, peers, stream, username } = useContext(RoomContext)
+  const {
+    setShowStream,
+    setIsMuted,
+    showStream,
+    isMuted,
+    socket,
+    room,
+    me,
+    peers,
+    stream,
+    username,
+  } = useContext(RoomContext);
   const [off, setOff] = useState({
     microphone: isMuted,
     video: !showStream,
@@ -29,22 +41,44 @@ const SideBar = ({ showModal, setShowModal }) => {
       ...prevState,
       microphone: !prevState.microphone,
     }));
-    setIsMuted(prevState => !prevState)
-    socket.emit('toggle-video-audio', ({room, id: me.id, viewStream: showStream, isMuted: !isMuted}))
+    setIsMuted((prevState) => !prevState);
+    socket.emit("toggle-video-audio", {
+      room,
+      id: me.id,
+      viewStream: showStream,
+      isMuted: !isMuted,
+    });
     console.log("Turning off user with id: ", me.id, "in room", room);
-    console.log("Give my Peers", peers)
-    console.log("This", {id: me.id, stream, username, viewStream: showStream, isMuted: !isMuted})
+    console.log("Give my Peers", peers);
+    console.log("This", {
+      id: me.id,
+      stream,
+      username,
+      viewStream: showStream,
+      isMuted: !isMuted,
+    });
   };
   const toggleVideo = () => {
     setOff((prevState) => ({
       ...prevState,
       video: !prevState.video,
     }));
-    setShowStream(prevState => !prevState)
-    socket.emit('toggle-video-audio', ({room, id: me.id, viewStream: off.video, isMuted: isMuted}))
+    setShowStream((prevState) => !prevState);
+    socket.emit("toggle-video-audio", {
+      room,
+      id: me.id,
+      viewStream: off.video,
+      isMuted: isMuted,
+    });
     console.log("Turning off user with id: ", me.id, "in room", room);
-    console.log("Give my Peers", peers)
-    console.log("This", {id: me.id, stream, username, viewStream: off.video, isMuted})
+    console.log("Give my Peers", peers);
+    console.log("This", {
+      id: me.id,
+      stream,
+      username,
+      viewStream: off.video,
+      isMuted,
+    });
   };
 
   const toggleSidebar = () => {
@@ -53,7 +87,7 @@ const SideBar = ({ showModal, setShowModal }) => {
       ...prevState,
       videoSidebar: true,
       videoGrid: false,
-      videoFloat: false
+      videoFloat: false,
     }));
   };
 
@@ -63,19 +97,19 @@ const SideBar = ({ showModal, setShowModal }) => {
       ...prevState,
       videoSidebar: false,
       videoGrid: true,
-      videoFloat: false
+      videoFloat: false,
     }));
   };
 
   const toggleFloat = () => {
-    setVideoStructure(2)
+    setVideoStructure(2);
     setOff((prevState) => ({
       ...prevState,
       videoSidebar: false,
       videoGrid: false,
-      videoFloat: true
+      videoFloat: true,
     }));
-  }
+  };
   return (
     <aside
       className="hidden relative border border-white border-opacity-25 p-3
@@ -84,11 +118,11 @@ const SideBar = ({ showModal, setShowModal }) => {
       <div>
         <div
           onClick={toggleGrid}
-          before={"Video Grid"}
-          className={`hover:before:content-[attr(before)] sidebar-icon ${
-            off.videoGrid && "bg-blacklike"
-          }`}
+          data-tooltip-id="grid"
+          data-tooltip-content={"Video Grid"}
+          className={`sidebar-icon ${off.videoGrid && "bg-blacklike"}`}
         >
+          <Tooltip id="grid" place="left" />
           <svg
             fill="white"
             width="24"
@@ -103,11 +137,11 @@ const SideBar = ({ showModal, setShowModal }) => {
         </div>
         <div
           onClick={toggleSidebar}
-          before={"Video Sidebar"}
-          className={`hover:before:content-[attr(before)] sidebar-icon ${
-            off.videoSidebar && "bg-blacklike"
-          }`}
+          data-tooltip-content={"Video Sidebar"}
+          data-tooltip-id="sidebar"
+          className={`sidebar-icon ${off.videoSidebar && "bg-blacklike"}`}
         >
+          <Tooltip id="sidebar" place="left" />
           <svg
             fill="white"
             width="24"
@@ -123,11 +157,11 @@ const SideBar = ({ showModal, setShowModal }) => {
         </div>
         <div
           onClick={toggleFloat}
-          before={"Floating Videos"}
-          className={`hover:before:content-[attr(before)] sidebar-icon ${
-            off.videoFloat && "bg-blacklike"
-          }`}
+          data-tooltip-content={"Floating Videos"}
+          data-tooltip-id="float"
+          className={`sidebar-icon ${off.videoFloat && "bg-blacklike"}`}
         >
+          <Tooltip id="float" place="left" />
           <svg
             fill="white"
             width="24"
@@ -143,12 +177,16 @@ const SideBar = ({ showModal, setShowModal }) => {
       </div>
       <div>
         <div
-          before={`${off.microphone ? "Unmute Microphone" : "Mute Microphone"}`}
-          className={`hover:before:content-[attr(before)] sidebar-icon ${
+          data-tooltip-content={
+            off.microphone ? "Unmute Microphone" : "Mute Microphone"
+          }
+          data-tooltip-id="microphone-tooltip"
+          className={`sidebar-icon ${
             off.microphone && "bg-red-700 hover:bg-red-900"
           }`}
           onClick={toggleMicrophone}
         >
+          <Tooltip id="microphone-tooltip" place="left" />
           {off.microphone ? (
             <FaMicrophoneSlash className="bottom-nav-icon opacity-100 text-xl" />
           ) : (
@@ -156,12 +194,14 @@ const SideBar = ({ showModal, setShowModal }) => {
           )}
         </div>
         <div
-          before={`${off.video ? "Resume Video" : "Stop Video"}`}
-          className={`hover:before:content-[attr(before)] sidebar-icon ${
+          data-tooltip-content={off.video ? "Resume Video" : "Stop Video"}
+          data-tooltip-id="video-tooltip"
+          className={`sidebar-icon ${
             off.video && "bg-red-700 hover:bg-red-900"
           }`}
           onClick={toggleVideo}
         >
+          <Tooltip id="video-tooltip" place="left" />
           {off.video ? (
             <FaVideoSlash className="bottom-nav-icon opacity-100 text-xl" />
           ) : (
@@ -169,9 +209,12 @@ const SideBar = ({ showModal, setShowModal }) => {
           )}
         </div>
         <div
+          data-tooltip-content={"Chat"}
+          data-tooltip-id="chat"
           className="my-2 mx-auto hover:bg-blackhover rounded p-3 cursor-pointer"
           onClick={handleClick}
         >
+          <Tooltip id="chat" place="left" />
           {showModal ? (
             <FaRegComment className="bottom-nav-icon opacity-100 text-xl" />
           ) : (

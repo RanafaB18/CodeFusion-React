@@ -9,6 +9,7 @@ const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
         stream={stream}
         username={username}
         location={location}
+        isPeer={false}
       />
       {Object.values(peers).map((peer) => {
         return (
@@ -19,6 +20,7 @@ const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
               stream={peer.stream}
               username={peer.username}
               location={location}
+              isPeer={true}
             />
           </div>
         );
