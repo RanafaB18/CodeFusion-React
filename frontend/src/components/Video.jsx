@@ -42,18 +42,20 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
     };
   }, [showStream]);
   const handleVideo = (stream, showStream) => {
-    if (showStream === false) {
-      stream.getTracks().forEach(function (track) {
-        if (track.readyState === "live" && track.kind === "video") {
-          track.enabled = false;
-        }
-      });
-    } else {
-      stream.getTracks().forEach(function (track) {
-        if (track.readyState === "live" && track.kind === "video") {
-          track.enabled = true;
-        }
-      });
+    if (stream !== undefined) {
+      if (showStream === false) {
+        stream.getTracks().forEach(function (track) {
+          if (track.readyState === "live" && track.kind === "video") {
+            track.enabled = false;
+          }
+        });
+      } else {
+        stream.getTracks().forEach(function (track) {
+          if (track.readyState === "live" && track.kind === "video") {
+            track.enabled = true;
+          }
+        });
+      }
     }
   };
   const trackPosition = (data) => {

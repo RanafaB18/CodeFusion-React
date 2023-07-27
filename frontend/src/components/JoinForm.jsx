@@ -7,12 +7,11 @@ export async function loader({ params }) {
   return params.id;
 }
 const JoinForm = ({
-  room,
   userRoomName,
   setUserRoomName,
   setCreatedUsername,
 }) => {
-  const { socket, me } = useContext(RoomContext);
+  const { socket } = useContext(RoomContext);
   const roomLink = useLoaderData();
   const handleSubmit = () => {
     socket.emit("join_room", roomLink);
