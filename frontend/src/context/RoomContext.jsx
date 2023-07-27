@@ -6,7 +6,7 @@ import { peerReducer } from "./peerReducer";
 import { addPeerAction, removePeerAction, updatePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
-const socket = io("http://localhost:3004");
+const socket = io("https://codefusion-react-production.up.railway.app/");
 
 export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState();
