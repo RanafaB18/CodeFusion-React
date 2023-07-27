@@ -8,7 +8,7 @@ const cors = require('cors')
 const { Server } = require('socket.io')
 const io = new Server(server, {
     cors: {
-        origin: "https://code-fusion-react.vercel.app/"
+        origin: "https://code-fusion-react.vercel.app"
     }
 })
 app.use(express.json())
