@@ -1,7 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import CustomToolbar from "./CustomToolbar";
+import { YjsContext } from "../context/YjsContext";
 // Modules object for setting up the Quill editor
 const modules = {
   toolbar: "#toolbar",
@@ -28,6 +29,8 @@ const formats = [
   "code-block",
 ];
 const TextEditor = ({ ytext }) => {
+  const { awareness } = useContext(YjsContext)
+  console.log("Awareness", awareness)
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper === null) {
       return;
@@ -40,7 +43,7 @@ const TextEditor = ({ ytext }) => {
       formats: formats,
       modules: modules,
     });
-    new QuillBinding(ytext, quill);
+    new QuillBinding(ytext, quill, awareness);
   }, []);
   return (
     <>
