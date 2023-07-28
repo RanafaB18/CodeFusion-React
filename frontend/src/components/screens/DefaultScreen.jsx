@@ -42,7 +42,7 @@ const DefaultScreen = ({
     me
   } = useContext(RoomContext);
   const ydoc = new Y.Doc();
-  const provider = new WebrtcProvider(room, ydoc);
+  const provider = new WebrtcProvider(room, ydoc, { signaling: "wss://demos.yjs.dev" });
   const awareness = provider.awareness;
   const docsDiv = useRef();
   const newDocTab = useRef();
