@@ -8,14 +8,13 @@ import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 import { YjsContext } from "../../context/YjsContext";
+import { WebsocketProvider } from "y-websocket"
 import "react-quill/dist/quill.snow.css";
 import React from "react";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
 import TextEditor from "../TextEditor";
-import VideoScreen from "./VideoScreen";
 import VideoSideBar from "../VideoSideBar";
 import VideoGrid from "../VideoGrid";
 import FloatingVideos from "../FloatingVideos";
@@ -42,7 +41,7 @@ const DefaultScreen = ({
     me
   } = useContext(RoomContext);
   const ydoc = new Y.Doc();
-  const provider = new WebrtcProvider(room, ydoc, { signaling: "wss://demos.yjs.dev" });
+  const provider = new WebsocketProvider('wss://demos.yjs.dev', room, ydoc)
   const awareness = provider.awareness;
   const docsDiv = useRef();
   const newDocTab = useRef();

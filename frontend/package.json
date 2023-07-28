@@ -27,7 +27,7 @@
     "uuidv4": "^6.2.13",
     "y-monaco": "^0.1.4",
     "y-quill": "^0.1.5",
-    "y-webrtc": "^10.2.5",
+    "y-websocket": "^1.5.0",
     "yjs": "^13.5.51"
   },
   "devDependencies": {

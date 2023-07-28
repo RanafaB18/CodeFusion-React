@@ -1,22 +1,13 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import Options from "./Options";
-import AnimatedModal from "./AnimatedModal";
-import Modal from "./Modal";
-import axiosUtil from "../services";
 import BottomNavigationBar from "./BottomNavigationBar";
 import PeopleScreen from "./screens/PeopleScreen";
 import TabScreen from "./screens/TabScreen";
 import DefaultScreen from "./screens/DefaultScreen";
 import ChatScreen from "./screens/ChatScreen";
 import { RoomContext } from "../context/RoomContext";
-import UserJoinedModal from "./UserJoinedModal";
 import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
-import { redirect } from "react-router-dom";
 import MessageToast from "./MessageToast";
-import Tab from "./Tab";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }) => {
   // let roomLink;
