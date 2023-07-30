@@ -1,12 +1,14 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 import Person from "./Person";
 import Draggable, { DraggableCore } from "react-draggable";
 import { data } from "autoprefixer";
 import CircleAvatar from "./CircleAvatar";
 import { Tooltip } from "react-tooltip";
+import { ProviderContext } from "../context/ProviderContext";
 
 const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
   const videoRef = useRef(null);
+  const { color } = useContext(ProviderContext)
   const [position, setPosition] = useState({
     node: "",
     x: 0,
@@ -143,7 +145,7 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
                   location === "default" ? "h-36" : "h-64"
                 } w-full rounded-lg`}
               />
-              <div className="video-text">
+              <div style={{borderLeftColor: color}}  className="video-text">
                 <span
                   className={`${
                     location === "default" ? "text-md" : "text-lg"

@@ -7,7 +7,6 @@ import { useEffect, useState, useRef, useContext } from "react";
 import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
-import * as Y from "yjs";
 import { YjsContext } from "../../context/YjsContext";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
@@ -17,7 +16,7 @@ import TextEditor from "../TextEditor";
 import VideoSideBar from "../VideoSideBar";
 import VideoGrid from "../VideoGrid";
 import FloatingVideos from "../FloatingVideos";
-import { WebsocketProvider } from 'y-websocket'
+import { ProviderContext } from "../../context/ProviderContext";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -38,16 +37,12 @@ const DefaultScreen = ({
     showStream,
     stream,
     peers,
-    me
+    me,
   } = useContext(RoomContext);
-  const ydoc = new Y.Doc();
-  const provider = new WebsocketProvider('wss://demos.yjs.dev', room, ydoc)
-  console.log("Path", room)
-  const awareness = provider.awareness;
+  const { tabs } = useContext(ProviderContext)
   const docsDiv = useRef();
   const newDocTab = useRef();
   const newCodeTab = useRef();
-  const tabs = ydoc.getArray("tabs");
   const [docs, setDocs] = useState([]);
   let quill = null;
   let binding = null;
@@ -92,7 +87,7 @@ const DefaultScreen = ({
         return {
           tag:
             doc.typeOfTab === "document" ? (
-              <TextEditor ytext={editorYtext[doc.index]} />
+              <TextEditor ytext={editorYtext[doc.index]} username={username}/>
             ) : (
               <CodeEditor ytext={editorYtext[doc.index]} />
             ),
@@ -125,7 +120,6 @@ const DefaultScreen = ({
         newDocTab,
         newCodeTab,
         docs,
-        awareness,
         currentIndex,
         invite,
         setDocs,

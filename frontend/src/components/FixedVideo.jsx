@@ -1,8 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import Person from "./Person";
 import CircleAvatar from "./CircleAvatar";
-
+import util from "../services";
+import { ProviderContext } from "../context/ProviderContext";
 const FixedVideo = ({ stream, showStream, username, isMuted, location, videoType }) => {
+  const { color } = useContext(ProviderContext)
   const videoRef = useRef(null);
   /*
     location could be [default, permission]
@@ -42,7 +44,7 @@ const FixedVideo = ({ stream, showStream, username, isMuted, location, videoType
               videoType === "sidebar" ? "h-44 w-full" : ""
             } rounded-lg`}
           />
-          <div className="video-text">
+          <div style={{borderLeftColor: color }} className="video-text">
             <span
               className={`${
                 location === "default" ? "text-md" : "text-lg"
@@ -66,7 +68,7 @@ const FixedVideo = ({ stream, showStream, username, isMuted, location, videoType
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <CircleAvatar name={username} />
             </div>
-            <div className="video-text">
+            <div style={{borderLeftColor: color}}  className="video-text">
               <span
                 className={`${
                   location === "default" ? "text-md" : "text-lg"

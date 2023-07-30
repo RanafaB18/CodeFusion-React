@@ -1,4 +1,4 @@
-import { uuidv4 } from "lib0/random";
+import {v4 as uuid } from 'uuid'
 import Peer from "peerjs";
 import { createContext, useEffect, useState, useReducer } from "react";
 import { io } from "socket.io-client";
@@ -16,8 +16,9 @@ export const RoomProvider = ({ children }) => {
   const removePeer = (peerId) => {
     dispatch(removePeerAction(peerId))
   }
+  console.log("Room Context")
   useEffect(() => {
-    const meId = uuidv4();
+    const meId = uuid();
 
     const peer = new Peer(meId);
     setMe(peer);
@@ -44,11 +45,7 @@ export const RoomProvider = ({ children }) => {
         dispatch(addPeerAction(peerId, peerStream, username, viewStream, isMuted));
       });
     });
-
-    socket.on("updated-peers", () => {
-
-    })
-
+    
     me.on("call", (call) => {
       call.answer(stream);
       call.on("stream", (peerStream) => {

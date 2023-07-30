@@ -21,9 +21,20 @@ const getTabName = async (room) => {
     return response.data
 }
 
+const getNameColorCode = (name) => {
+    let hashCode = 0;
+    for (let i = 0; i < name.length; i++) {
+      hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
+    }
+
+    const colorCode = '#' + ((hashCode & 0x00FFFFFF) << 0).toString(16).padStart(6, '0');
+    return colorCode;
+}
+
 export default {
     getRoomID,
     getMessages,
     updateUsers,
-    getTabName
+    getTabName,
+    getNameColorCode
 }
