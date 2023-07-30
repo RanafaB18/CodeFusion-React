@@ -21,7 +21,7 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
   console.log("Permissions Modal", room);
   const color = util.getNameColorCode(username);
   useEffect(() => {
-    provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://demos.yjs.dev', 'wss://clumsy-group-production.up.railway.app/'] })
+    provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://clumsy-group-production.up.railway.app'] })
     awareness = provider.awareness;
   }, [])
   const tabs = ydoc.getArray("tabs");
