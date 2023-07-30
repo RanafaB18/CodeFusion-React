@@ -8,6 +8,7 @@ import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import { YjsContext } from "../../context/YjsContext";
+import { WebsocketProvider } from "y-websocket"
 import "react-quill/dist/quill.snow.css";
 import React from "react";
 import CodeEditor from "../CodeEditor";

@@ -9,7 +9,6 @@ import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
 import MessageToast from "./MessageToast";
 
-
 const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);

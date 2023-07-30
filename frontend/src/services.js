@@ -1,6 +1,6 @@
 import axios from "axios"
-const baseUrl = 'http://localhost:3004/room'
-const rootUrl = 'http://localhost:3004'
+const baseUrl = 'https://codefusion-react-production.up.railway.app/room'
+const rootUrl = 'https://codefusion-react-production.up.railway.app'
 const getRoomID = async (id) => {
     const response = await axios.post(baseUrl, { room: id })
     return response.data
