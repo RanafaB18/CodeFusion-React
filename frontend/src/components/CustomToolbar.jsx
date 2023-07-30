@@ -1,10 +1,13 @@
 import { Quill } from "react-quill";
-import LowerBar from "./LowerBar";
 import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
+import util from "../services"
+import { ProviderContext } from "../context/ProviderContext";
 
 const CustomToolbar = () => {
   const { invite, username, showModal, setShowModal } = useContext(RoomContext);
+  const { color } = useContext(ProviderContext)
+
   const handleClick = () => {
     setShowModal(!showModal);
   };
@@ -87,9 +90,10 @@ const CustomToolbar = () => {
           Invite Others
         </button>
         <button
+          style={{ borderColor: color }}
           className="
           bg-blacklike
-          border-2 border-red-600
+          border-2
           text-white rounded-full
           py-2 px-4 hover:bg-blackhover"
           onClick={handleClick}
