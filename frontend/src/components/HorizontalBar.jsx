@@ -8,7 +8,6 @@ import {
 
 const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket, room, me, off, setOff }) => {
   const toggleMicrophone = () => {
-    console.log("Off.mic", off)
     setOff((prevState) => ({
       ...prevState,
       microphone: !prevState.microphone,
@@ -22,7 +21,6 @@ const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket,
     });
   };
   const toggleVideo = () => {
-    console.log("Off.video", off)
     setOff((prevState) => ({
       ...prevState,
       video: !prevState.video,
