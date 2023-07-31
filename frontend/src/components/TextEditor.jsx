@@ -73,7 +73,7 @@ awareness.setLocalStateField('user', {
   return (
     <>
       <CustomToolbar />
-      <div id="container" className="h-full max-w-[28rem] max-h-[86vh] md:max-w-full" ref={wrapperRef}></div>
+      <div id="container" className="h-full max-w-md mx-auto w-full max-h-[86vh] md:max-w-full" ref={wrapperRef}></div>
     </>
   );
 };

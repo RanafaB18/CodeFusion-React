@@ -1,7 +1,6 @@
 import { Quill } from "react-quill";
 import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
-import util from "../services";
 import { ProviderContext } from "../context/ProviderContext";
 
 const CustomToolbar = () => {
@@ -21,11 +20,11 @@ const CustomToolbar = () => {
   Font.whitelist = ["sans", "monospace", "serif"];
   Quill.register(Font, true);
   return (
-    <div className="flex relative h-16 bg-[#353a41] p-2">
+    <div className="flex relative h-16 bg-[#353a41] p-2 z-10">
       <div className="flex w-screen md:w-9/12 lg:w-10/12 items-center md:whitespace-pre-wrap md:overflow-hidden whitespace-nowrap overflow-x-scroll">
         <div id="toolbar" className="">
           <span className="ql-formats flex">
-            <select className="ql-font !m-0 !p-0 !z-20" defaultValue="arial">
+            <select className="ql-font !m-0 !p-0" defaultValue="arial">
               <option value="arial">Sans</option>
               <option value="monospace">Monospace</option>
               <option value="serif">Serif</option>

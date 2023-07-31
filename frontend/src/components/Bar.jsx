@@ -13,7 +13,7 @@ const Bar = () => {
   const {
     tabs,
     docsDiv,
-    awareness,
+    setCurrentTab,
     setEditorYtext,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
@@ -156,6 +156,7 @@ const Bar = () => {
     socket.emit("tab-change", { id, room, color, username });
     setDocs((prevState) => {
       const currentTab = prevState[index];
+      setCurrentTab(prevState[index].typeOfTab)
       if (currentTab.id === id) {
         setCurrentIndex(index);
       }
@@ -175,7 +176,7 @@ const Bar = () => {
               <FaPlus className="" />
             </button>
             {showOptions && (
-              <div className="absolute mt-1 left-1 w-80 z-20">
+              <div className="absolute mt-1 left-1 w-80 z-30">
                 <Options />
               </div>
             )}

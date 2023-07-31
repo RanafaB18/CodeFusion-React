@@ -53,6 +53,7 @@ const DefaultScreen = ({
   let quill = null;
   let binding = null;
   const [videoStructure, setVideoStructure] = useState(2);
+  const [currentTab, setCurrentTab] = useState('')
 
   const renderDocs = () => {
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
@@ -86,6 +87,7 @@ const DefaultScreen = ({
   }, []);
   useEffect(() => {
     if (editorYtext.length > 0) {
+      setCurrentTab(docs[currentIndex]?.typeOfTab)
       const quillEditors = docs.map((doc) => {
         return {
           tag:
@@ -123,6 +125,8 @@ const DefaultScreen = ({
         docsDiv,
         docs,
         currentIndex,
+        currentTab,
+        setCurrentTab,
         invite,
         setDocs,
         setEditorYtext,
@@ -134,7 +138,7 @@ const DefaultScreen = ({
         <div className="">
           {/* <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
-            {username} myID: {me.id}
+            {username} myID: {me.id} tab: {currentTab}
           </span> */}
           <Bar setShowModal={setShowModal} showModal={showModal} />
         </div>
@@ -171,7 +175,7 @@ const DefaultScreen = ({
                     console.log("Editor", editor)
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
-                        <div key={editor.id} className="h-full w-full">
+                        <div key={editor.id} className="h-full w-full bg-[#eaedf0]">
                           {editor.tag}
                         </div>
                       );

@@ -4,14 +4,16 @@ import Draggable, { DraggableCore } from "react-draggable";
 import CircleAvatar from "./CircleAvatar";
 import { Tooltip } from "react-tooltip";
 import { ProviderContext } from "../context/ProviderContext";
+import { YjsContext } from "../context/YjsContext";
 
 const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
   const videoRef = useRef(null);
-  const { color } = useContext(ProviderContext)
+  const { color } = useContext(ProviderContext);
+  const { currentTab } = useContext(YjsContext)
   const [position, setPosition] = useState({
     node: "",
     x: 0,
-    y: 0,
+    y: 64,
     deltaX: 0,
     deltaY: 0,
   });
@@ -21,8 +23,10 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
   */
   const screenRef = useRef();
   const nodeRef = useRef();
-  const verticalOffset = 72;
+  const verticalOffset = 64;
   const horizontalOffset = 128;
+  const newY  = currentTab === 'document' ? verticalOffset : 0
+
   useEffect(() => {
     screenRef.current = document.querySelector("#screen");
     if (videoRef.current) {
@@ -30,18 +34,23 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
     }
     handleVideo(stream, showStream);
     // handleAudio(stream, isMuted)
-    const resetPosition = () => {
+    const resetPosition = (e) => {
       setTransition(true);
-      setPosition({ ...data, x: 0, y: 0 });
+      setPosition({ ...position, x: 0, y: newY });
       setTimeout(() => {
         setTransition(false);
       }, 400);
     };
-    document.addEventListener("resize", resetPosition);
+    window.addEventListener("resize", resetPosition);
+    setTransition(true);
+      setPosition({ ...position, x: position.x, y: 64 });
+      setTimeout(() => {
+        setTransition(false);
+      }, 400);
     return () => {
-      document.removeEventListener("resize", resetPosition);
+      window.removeEventListener("resize", resetPosition);
     };
-  }, [showStream]);
+  }, [showStream, currentTab]);
   const handleVideo = (stream, showStream) => {
     if (stream !== undefined) {
       if (showStream === false) {
@@ -91,8 +100,8 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
         nodePosition.left < screenPosition.left)
     ) {
       setPosition({ ...data, x: 0, y: 0 });
-    } else if (nodePosition.top < screenPosition.top) {
-      setPosition({ ...data, y: 0, x: position.x });
+    } else if (nodePosition.top < screenPosition.top + 136) {
+      setPosition({ ...data, y: newY, x: position.x });
     } else if (nodePosition.right > screenPosition.right) {
       setPosition({ ...data, x: 0, y: position.y });
     } else if (nodePosition.left < screenPosition.left) {
@@ -115,25 +124,17 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
       onStart={(e, data) => trackPosition(data)}
       nodeRef={nodeRef}
     >
-      <div
-        className={`inline-block ${
-          location === "permission" ? "w-full" : "w-64 cursor-move"
-        }`}
-      >
+      <div className={`inline-block bg-black w-64`}>
         {showStream ? (
           <div
             ref={nodeRef}
-            style={
-              location === "permission"
-                ? {}
-                : {
-                    transition: transition === true ? "all 0.5s" : "",
-                    position: "absolute",
-                    top: position.y,
-                    left: position.x,
-                  }
-            }
-            className="w-full"
+            style={{
+              transition: transition === true ? "all 0.5s" : "",
+              position: "absolute",
+              top: position.y,
+              left: position.x,
+            }}
+            className="w-full cursor-move"
           >
             <div className="relative">
               <video
@@ -144,7 +145,7 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
                   location === "default" ? "h-36" : "h-64"
                 } w-full rounded-lg`}
               />
-              <div style={{borderLeftColor: color}}  className="video-text">
+              <div style={{ borderLeftColor: color }} className="video-text">
                 <span
                   className={`${
                     location === "default" ? "text-md" : "text-lg"
@@ -160,7 +161,7 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
                   className="absolute flex justify-center items-center w-7 h-7 p-1
                 rounded-full  bg-black bg-opacity-30 top-1 right-2"
                 >
-                  <Tooltip id="mic-muted" className="z-20"/>
+                  <Tooltip id="mic-muted" className="z-20" />
                   <svg
                     fill="white"
                     width="20"
@@ -178,16 +179,12 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
           </div>
         ) : (
           <div
-            style={
-              location === "permission"
-                ? {}
-                : {
-                    transition: transition === true ? "all 0.5s" : "",
-                    position: "absolute",
-                    top: position.y,
-                    left: position.x,
-                  }
-            }
+            style={{
+              transition: transition === true ? "all 0.5s" : "",
+              position: "absolute",
+              top: position.y,
+              left: position.x,
+            }}
             ref={nodeRef}
             className={`relative  bg-black ${
               location === "default" ? "h-36" : "h-64"

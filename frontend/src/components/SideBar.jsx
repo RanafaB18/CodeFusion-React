@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import { YjsContext } from "../context/YjsContext";
 import { RoomContext } from "../context/RoomContext";
-import { updatePeerAction } from "../context/peerActions";
 import { Tooltip } from "react-tooltip";
 
 const SideBar = ({ showModal, setShowModal }) => {
@@ -20,10 +19,7 @@ const SideBar = ({ showModal, setShowModal }) => {
     isMuted,
     socket,
     room,
-    me,
-    peers,
-    stream,
-    username,
+    me
   } = useContext(RoomContext);
   const [off, setOff] = useState({
     microphone: isMuted,
@@ -48,15 +44,6 @@ const SideBar = ({ showModal, setShowModal }) => {
       viewStream: showStream,
       isMuted: !isMuted,
     });
-    console.log("Turning off user with id: ", me.id, "in room", room);
-    console.log("Give my Peers", peers);
-    console.log("This", {
-      id: me.id,
-      stream,
-      username,
-      viewStream: showStream,
-      isMuted: !isMuted,
-    });
   };
   const toggleVideo = () => {
     setOff((prevState) => ({
@@ -69,15 +56,6 @@ const SideBar = ({ showModal, setShowModal }) => {
       id: me.id,
       viewStream: off.video,
       isMuted: isMuted,
-    });
-    console.log("Turning off user with id: ", me.id, "in room", room);
-    console.log("Give my Peers", peers);
-    console.log("This", {
-      id: me.id,
-      stream,
-      username,
-      viewStream: off.video,
-      isMuted,
     });
   };
 

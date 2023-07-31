@@ -8,6 +8,7 @@ import { RoomContext } from "../context/RoomContext";
 import Toast from "./Toast";
 import MessageToast from "./MessageToast";
 import VideoGrid from "./VideoGrid";
+import HorizontalBar from "./HorizontalBar";
 
 const Room = ({
   room,
@@ -38,7 +39,6 @@ const Room = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [awarenessTabs, setAwarenessTabs] = useState({});
-
 
   useEffect(() => {
     const resize = () => {
@@ -148,7 +148,7 @@ const Room = ({
   const showScreen = (index) => {
     setScreenIndex(index);
   };
-  console.log("Screen Index", screenIndex)
+  console.log("Screen Index", screenIndex);
   return (
     <div className="flex flex-col min-h-screen w-full relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
@@ -222,16 +222,16 @@ const Room = ({
             )}
           </div>
           {screenIndex === 2 && (
-              <DefaultScreen
-                participants={participants}
-                closeButtonRef={closeButtonRef}
-                closeInvite={closeInvite}
-                copyLink={copyLink}
-                inviteModalRef={inviteModalRef}
-                roomLink={roomLink}
-                showClipBoardModal={showClipBoardModal}
-                visible={visible}
-              />
+            <DefaultScreen
+              participants={participants}
+              closeButtonRef={closeButtonRef}
+              closeInvite={closeInvite}
+              copyLink={copyLink}
+              inviteModalRef={inviteModalRef}
+              roomLink={roomLink}
+              showClipBoardModal={showClipBoardModal}
+              visible={visible}
+            />
           )}
           <div className="md:hidden">
             {screenIndex === 3 && (
@@ -251,6 +251,17 @@ const Room = ({
           <div className="md:hidden">{screenIndex === 4 && <TabScreen />}</div>
         </div>
       </RoomContext.Provider>
+      {screenIndex === 1 && (
+        <HorizontalBar
+          setIsMuted={setIsMuted}
+          setShowStream={setShowStream}
+          showStream={showStream}
+          isMuted={isMuted}
+          me={me}
+          room={room}
+          socket={socket}
+        />
+      )}
       <div className="relative h-16 md:hidden">
         <BottomNavigationBar
           showScreen={showScreen}
