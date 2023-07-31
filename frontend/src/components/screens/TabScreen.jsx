@@ -51,7 +51,7 @@ const TabScreen = () => {
   };
   return (
     <>
-      <div className="relative h-14 w-full bg-blackhover px-4 flex justify-between items-center">
+      <div className="relative h-14 w-screen bg-blackhover px-4 flex justify-between items-center">
         <div className="flex items-center">
           <svg
             fill="#d2d4d9"

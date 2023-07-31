@@ -18,7 +18,7 @@ const TabScreenTab = ({
     <div
       index={index}
       onClick={switchTab}
-      className={`flex items-center justify-between rounded-md cursor-pointer pr-3 bg-[#353a41]`}
+      className={`flex text-white items-center justify-between rounded-md cursor-pointer pr-3 bg-[#353a41]`}
     >
       <div className="flex h-14 items-center">
         {awarenessBars[id]?.map((color) => {

@@ -8,11 +8,11 @@ const LowerBar = () => {
     setShowModal(!showModal);
   };
   return (
-    <div className="flex items-center h-16 bg-[#353a41] p-2">
-      <div className="flex w-3/4 lg:w-10/12 items-center gap-3 whitespace-wrap">
-        {/* {docs[currentIndex]?.typeOfTab === "document" && <CustomToolbar />} */}
-      </div>
-      <div className="flex  justify-around w-1/4 lg:w-2/12">
+    <div className="flex justify-end items-center h-16 bg-[#353a41] p-2">
+      {/* <div className="flex w-3/4 lg:w-10/12 items-center gap-3 whitespace-wrap">
+        //{docs[currentIndex]?.typeOfTab === "document" && <CustomToolbar />}
+      </div> */}
+      <div className="flex justify-around w-1/4 lg:w-2/12">
         <button
           className="bg-bluish
           text-white text-md

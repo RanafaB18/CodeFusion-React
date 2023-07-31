@@ -150,7 +150,7 @@ const Room = ({
   };
   console.log("Screen Index", screenIndex)
   return (
-    <div className="flex flex-col min-h-screen relative bg-blackBackground">
+    <div className="flex flex-col min-h-screen w-full relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
       <Toast toast={toast} showToast={showToast} />
       {screenIndex !== 0 && !showModal && (
@@ -206,7 +206,7 @@ const Room = ({
             />
           </div>
         )}
-        <div className="flex-1 relative">
+        <div className="flex flex-1 relative overflow-auto">
           <div className="md:hidden">
             {screenIndex === 0 && <ChatScreen username={username} />}
           </div>

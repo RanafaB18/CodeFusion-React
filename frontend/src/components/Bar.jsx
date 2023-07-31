@@ -7,7 +7,6 @@ import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
 import axiosUtil from "../services";
 import { RoomContext } from "../context/RoomContext";
-import CustomToolbar from "./CustomToolbar";
 import LowerBar from "./LowerBar";
 import { ProviderContext } from "../context/ProviderContext";
 const Bar = () => {
@@ -144,21 +143,6 @@ const Bar = () => {
     }
   };
 
-  const handleActive = (id) => {
-    setTabs((prevState) => ({
-      ...prevState,
-      allTabs: prevState.allTabs.map((tab) => {
-        if (tab.id === id) {
-          if (tab.active) {
-            return tab;
-          } else {
-            return { ...tab, active: true };
-          }
-        }
-        return { ...tab, active: false };
-      }),
-    }));
-  };
   const closeTab = (id, index) => {
     console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);

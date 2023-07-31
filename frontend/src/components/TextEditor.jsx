@@ -64,14 +64,16 @@ awareness.setLocalStateField('user', {
     const quill = new Quill(editor, {
       theme: "snow",
       formats: formats,
-      modules: modules,
+      modules: {
+        toolbar: "#toolbar",
+      },
     });
     new QuillBinding(ytext, quill, awareness);
   }, []);
   return (
     <>
       <CustomToolbar />
-      <div id="container" className="h-full" ref={wrapperRef}></div>
+      <div id="container" className="h-full max-w-[28rem] max-h-[86vh] md:max-w-full" ref={wrapperRef}></div>
     </>
   );
 };

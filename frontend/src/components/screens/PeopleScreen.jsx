@@ -15,7 +15,7 @@ const PeopleScreen = ({
 }) => {
   return (
     <div>
-      <div className="h-14 w-full bg-blackhover px-4 flex justify-between items-center">
+      <div className="h-14 w-screen bg-blackhover px-4 flex justify-between items-center">
         <div className="flex items-center">
           <FaUsers className="bottom-nav-icon opacity-100" />
           <span className="pl-4 text-xl font-semibold text-white tracking-wide">

@@ -130,17 +130,17 @@ const DefaultScreen = ({
         setVideoStructure,
       }}
     >
-      <main className="flex flex-col md:h-screen overflow-clip select-none">
-        <div className="h-90">
-          <span className="text-white">
+      <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
+        <div className="">
+          {/* <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id}
-          </span>
+          </span> */}
           <Bar setShowModal={setShowModal} showModal={showModal} />
         </div>
 
         {/* Hidden */}
-        <div className="flex flex-col relative w-full md:hidden">
+        {/* <div className="flex flex-col relative w-full md:hidden">
           <div className="flex justify-between h-14 bg-blackhover">
             <Link
               to={"/"}
@@ -156,7 +156,7 @@ const DefaultScreen = ({
               <FaEllipsisV className="text-white text-lg cursor-pointer" />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex h-full overflow-clip">
           <div className="flex flex-col flex-1">
@@ -171,7 +171,7 @@ const DefaultScreen = ({
                     console.log("Editor", editor)
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
-                        <div key={editor.id} className="h-full">
+                        <div key={editor.id} className="h-full w-full">
                           {editor.tag}
                         </div>
                       );

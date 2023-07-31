@@ -5,7 +5,7 @@ const Toast = ({ toast, showToast }) => {
     <div
       className={`absolute left-0 top-[80%] right-0
           transition duration-300 ${
-            showToast ? "-translate-y-5" : "opacity-0"
+            showToast ? "-translate-y-5" : "opacity-0 hidden"
           }  z-20
        mx-auto w-64 h-4 `}
     >

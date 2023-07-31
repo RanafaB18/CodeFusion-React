@@ -2,7 +2,7 @@ import FixedVideo from "./FixedVideo";
 
 const VideoGrid = ({ username, stream, peers, showStream, location }) => {
   return (
-    <div className="flex justify-center flex-wrap gap-4">
+    <div className="flex justify-center flex-wrap gap-4 m-1">
       <FixedVideo
         showStream={showStream}
         isMuted={true}
