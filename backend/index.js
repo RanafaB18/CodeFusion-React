@@ -232,5 +232,5 @@ app.post('/:room/users', (req, res) => {
 
 const PORT = process.env.PORT || 3004
 server.listen(PORT, () => {
-    // console.log(`Server running at port ${PORT}`)
+    console.log(`Server running at port ${PORT}`)
 })

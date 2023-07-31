@@ -19,15 +19,11 @@ const SideBar = ({ showModal, setShowModal }) => {
     isMuted,
     socket,
     room,
+    off,
+    setOff,
     me
   } = useContext(RoomContext);
-  const [off, setOff] = useState({
-    microphone: isMuted,
-    video: !showStream,
-    videoGrid: false,
-    videoSidebar: false,
-    videoFloat: true,
-  });
+
   const { setVideoStructure } = useContext(YjsContext);
   const handleClick = () => {
     setShowModal(!showModal);

@@ -4,8 +4,8 @@ const Toast = ({ toast, showToast }) => {
     <div
       className={`absolute left-0 top-[80%] right-0
           transition duration-300 ${
-            showToast ? "-translate-y-5" : "opacity-0 hidden"
-          }  z-20
+            showToast ? "-translate-y-5 z-20" : "-z-10"
+          }
        mx-auto w-64 h-4 `}
     >
       <div className="flex items-center gap-3 rounded-lg bg-[#16191d] bg-opacity-50">

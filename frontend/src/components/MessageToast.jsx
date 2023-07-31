@@ -6,7 +6,7 @@ const MessageToast = ({ toast, showMessageToast, setScreenIndex }) => {
     <div
       className={`absolute left-0 top-[80%] right-0
           transition duration-300 ${
-            showMessageToast ? "-translate-y-5" : "opacity-0"
+            showMessageToast ? "-translate-y-5 z-30" : "opacity-0 -z-10"
           }  z-20
        mx-auto max-w-sm h-4 `}
     >

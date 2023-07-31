@@ -39,6 +39,13 @@ const Room = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [awarenessTabs, setAwarenessTabs] = useState({});
+  const [off, setOff] = useState({
+    microphone: isMuted,
+    video: !showStream,
+    videoGrid: false,
+    videoSidebar: false,
+    videoFloat: true,
+  });
 
   useEffect(() => {
     const resize = () => {
@@ -50,6 +57,7 @@ const Room = ({
       if (screenIndex === 0) {
         setScreenIndex(2);
         showScreen(2);
+        setShowModal(false)
       }
     }
     return () => {
@@ -176,6 +184,8 @@ const Room = ({
           setShowStream,
           editors,
           awarenessTabs,
+          off,
+          setOff,
           setAwarenessTabs,
           setEditors,
           editorYtext,
@@ -259,6 +269,8 @@ const Room = ({
           me={me}
           room={room}
           socket={socket}
+          off={off}
+          setOff={setOff}
         />
       )}
       <div className="relative h-16 md:hidden">

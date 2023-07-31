@@ -6,12 +6,9 @@ import {
   FaVideoSlash,
 } from "react-icons/fa";
 
-const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket, room, me }) => {
-  const [off, setOff] = useState({
-    microphone: isMuted,
-    video: !showStream,
-  });
+const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket, room, me, off, setOff }) => {
   const toggleMicrophone = () => {
+    console.log("Off.mic", off)
     setOff((prevState) => ({
       ...prevState,
       microphone: !prevState.microphone,
@@ -25,6 +22,7 @@ const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket,
     });
   };
   const toggleVideo = () => {
+    console.log("Off.video", off)
     setOff((prevState) => ({
       ...prevState,
       video: !prevState.video,
@@ -40,8 +38,8 @@ const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket,
   return (
     <div className="flex items-center h-16">
       <div
-        className={`sidebar-icon w-full h-full items-center flex justify-center rounded-none ${
-          off.microphone && "bg-red-700"
+        className={`w-full h-full items-center flex justify-center rounded-none ${
+          off.microphone === true && "bg-red-700"
         }`}
         onClick={toggleMicrophone}
       >
@@ -52,8 +50,8 @@ const HorizontalBar = ({ setIsMuted, setShowStream, showStream, isMuted, socket,
         )}
       </div>
       <div
-        className={`sidebar-icon w-full h-full items-center flex justify-center rounded-none ${
-          off.video && "bg-red-700"
+        className={`w-full h-full items-center flex justify-center rounded-none ${
+          off.video === true && "bg-red-700"
         }`}
         onClick={toggleVideo}
       >

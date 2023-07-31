@@ -35,7 +35,6 @@ const formats = [
 ];
 const TextEditor = ({ ytext, username }) => {
   const { awareness, color } = useContext(ProviderContext)
-  // All of our network providers implement the awareness crdt
 
 // You can observe when a user updates their awareness information
 // awareness.on('change', changes => {
