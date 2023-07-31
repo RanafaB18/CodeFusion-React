@@ -32,6 +32,8 @@ const DefaultScreen = ({
   const {
     invite,
     room,
+    docs,
+    setDocs,
     username,
     showModal,
     setShowModal,
@@ -39,17 +41,17 @@ const DefaultScreen = ({
     stream,
     peers,
     me,
+    editors,
+    setEditors,
+    editorYtext,
+    setEditorYtext,
+    currentIndex,
+    setCurrentIndex
   } = useContext(RoomContext);
   const { tabs } = useContext(ProviderContext)
   const docsDiv = useRef();
-  const newDocTab = useRef();
-  const newCodeTab = useRef();
-  const [docs, setDocs] = useState([]);
   let quill = null;
   let binding = null;
-  const [editors, setEditors] = useState([]);
-  const [editorYtext, setEditorYtext] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [videoStructure, setVideoStructure] = useState(2);
 
   const renderDocs = () => {
@@ -113,13 +115,12 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
+  console.log("Editors", editors)
   return (
     <YjsContext.Provider
       value={{
         tabs,
         docsDiv,
-        newDocTab,
-        newCodeTab,
         docs,
         currentIndex,
         invite,
@@ -167,6 +168,7 @@ const DefaultScreen = ({
                   </div>
                 ) : (
                   editors.map((editor) => {
+                    console.log("Editor", editor)
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
                         <div key={editor.id} className="h-full">

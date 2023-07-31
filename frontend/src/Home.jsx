@@ -58,10 +58,10 @@ export default function Home() {
                   <p>Business Plans are here! →</p>
                 </div>
                 <div className="mt-2 text-center lg:text-left">
-                  <h1 className="mb-4 text-7xl font-bold text-whitish">
+                  <h1 className="mb-4 mx-5 text-5xl lg:text-7xl lg:mx-0 font-bold text-whitish">
                     The Better Way to Meeting
                   </h1>
-                  <h2 className="mb-4 text-3xl text-grayish">
+                  <h2 className="mb-4 mx-3 text-xl lg:text-3xl lg:mx-0 text-grayish">
                     Get your team on the same page inside online meeting rooms
                     with collaborative productivity tools.
                   </h2>

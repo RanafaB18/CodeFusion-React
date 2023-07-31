@@ -1,36 +1,42 @@
 import { FaBars, FaEllipsisV, FaFileAlt, FaPlus } from "react-icons/fa";
 import { useContext, useEffect, useRef, useState } from "react";
-import SideModal from "./SideModal";
 import Tab from "./Tab";
 import Options from "./Options";
 import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
 import { v4 as uuid } from "uuid";
 import axiosUtil from "../services";
-import { Socket } from "socket.io-client";
 import { RoomContext } from "../context/RoomContext";
 import CustomToolbar from "./CustomToolbar";
 import LowerBar from "./LowerBar";
+import { ProviderContext } from "../context/ProviderContext";
 const Bar = () => {
-  const [showOptions, setShowOptions] = useState(false);
   const {
     tabs,
     docsDiv,
-    newDocTab,
-    newCodeTab,
-    docs,
     awareness,
-    currentIndex,
-    setDocs,
-    setCurrentIndex,
     setEditorYtext,
   } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
-  const { socket, room, username } = useContext(RoomContext);
+  const {
+    socket,
+    room,
+    setDocs,
+    docs,
+    username,
+    newDocTab,
+    newCodeTab,
+    setShowOptions,
+    currentIndex,
+    setCurrentIndex,
+    showOptions,
+    awarenessTabs,
+    setAwarenessTabs
+  } = useContext(RoomContext);
   const [once, setOnce] = useState(false);
-  const [awarenessTabs, setAwarenessTabs] = useState({});
   const optionRef = useRef();
-  const color = getNameColorCode(username);
+  const { color } = useContext(ProviderContext)
+
 
   useEffect(() => {
     document.addEventListener("click", createNewTab);
@@ -160,18 +166,8 @@ const Bar = () => {
   };
 
   const openOptions = () => {
-    setShowOptions(!showOptions);
+    setShowOptions((prevState) => !prevState);
   };
-  function getNameColorCode(name) {
-    let hashCode = 0;
-    for (let i = 0; i < name.length; i++) {
-      hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
-    }
-
-    const colorCode =
-      "#" + ((hashCode & 0x00ffffff) << 0).toString(16).padStart(6, "0");
-    return colorCode;
-  }
   const switchTab = (index, id) => {
     socket.emit("tab-change", { id, room, color, username });
     setDocs((prevState) => {

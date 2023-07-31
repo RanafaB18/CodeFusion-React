@@ -10,6 +10,7 @@ const VideoGrid = ({ username, stream, peers, showStream, location }) => {
         username={username}
         location={location}
         videoType={"grid"}
+        isPeer={false}
       />
       {Object.values(peers).map((peer) => {
         return (
@@ -21,6 +22,7 @@ const VideoGrid = ({ username, stream, peers, showStream, location }) => {
               username={peer.username}
               location={location}
               videoType={"grid"}
+              isPeer={true}
             />
           </div>
         );

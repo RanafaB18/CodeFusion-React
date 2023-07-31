@@ -5,8 +5,9 @@ import { AiOutlineFileWord } from "react-icons/ai";
 import {v4 as uuid } from 'uuid'
 import { YjsContext } from "../context/YjsContext";
 import { useContext } from "react";
+import { RoomContext } from "../context/RoomContext";
 const Options = () => {
-  const { newDocTab, newCodeTab } = useContext(YjsContext)
+  const { newDocTab, newCodeTab } = useContext(RoomContext)
   return (
     <div className="px-4 py-3 bg-[#22262a] rounded shadow-lg">
       <IconContext.Provider value={{color: 'gray', size:"20px"}}>

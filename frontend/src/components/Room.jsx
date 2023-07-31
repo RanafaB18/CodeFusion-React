@@ -5,15 +5,24 @@ import TabScreen from "./screens/TabScreen";
 import DefaultScreen from "./screens/DefaultScreen";
 import ChatScreen from "./screens/ChatScreen";
 import { RoomContext } from "../context/RoomContext";
-import VideoScreen from "./screens/VideoScreen";
 import Toast from "./Toast";
 import MessageToast from "./MessageToast";
+import VideoGrid from "./VideoGrid";
 
-const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }) => {
+const Room = ({
+  room,
+  username,
+  showStream,
+  isMuted,
+  setIsMuted,
+  setShowStream,
+}) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
   // const [showUserJoined, setUserJoined] = useState(false)
+  const newDocTab = useRef();
+  const newCodeTab = useRef();
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
@@ -22,7 +31,14 @@ const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }
   const [showToast, setShowToast] = useState(false);
   const [showMessageToast, setShowMessageToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [docs, setDocs] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [editors, setEditors] = useState([]);
+  const [editorYtext, setEditorYtext] = useState([]);
+  const [awarenessTabs, setAwarenessTabs] = useState({});
+
 
   useEffect(() => {
     const resize = () => {
@@ -50,7 +66,7 @@ const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }
       room,
       peerId: me._id,
       viewStream: showStream,
-      isMuted: isMuted
+      isMuted: isMuted,
     });
     socket.on("show-message-toast", handleMessageToast);
     socket.on("get-users", handleUsers);
@@ -132,6 +148,7 @@ const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }
   const showScreen = (index) => {
     setScreenIndex(index);
   };
+  console.log("Screen Index", screenIndex)
   return (
     <div className="flex flex-col min-h-screen relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
@@ -150,13 +167,27 @@ const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }
           socket,
           peers,
           username,
+          docs,
           showModal,
           showStream,
           isMuted,
           stream,
-          setShowModal,
+          newDocTab,
+          newCodeTab,
           setShowStream,
+          editors,
+          awarenessTabs,
+          setAwarenessTabs,
+          setEditors,
+          editorYtext,
+          setEditorYtext,
           setIsMuted,
+          currentIndex,
+          setCurrentIndex,
+          showOptions,
+          setShowModal,
+          setShowOptions,
+          setDocs,
           invite,
         }}
       >
@@ -181,30 +212,26 @@ const Room = ({ room, username, showStream, isMuted, setIsMuted, setShowStream }
           </div>
           <div className="md:hidden">
             {screenIndex === 1 && (
-              <VideoScreen
-                showStream={showStream}
-                username={username}
-                stream={stream}
+              <VideoGrid
                 peers={peers}
+                showStream={showStream}
+                stream={stream}
+                username={username}
+                location={"default"}
               />
             )}
           </div>
           {screenIndex === 2 && (
-            <DefaultScreen
-              participants={participants}
-              invite={invite}
-              username={username}
-              room={room}
-              closeButtonRef={closeButtonRef}
-              closeInvite={closeInvite}
-              copyLink={copyLink}
-              inviteModalRef={inviteModalRef}
-              roomLink={roomLink}
-              showClipBoardModal={showClipBoardModal}
-              visible={visible}
-              showModal={showModal}
-              setShowModal={setShowModal}
-            />
+              <DefaultScreen
+                participants={participants}
+                closeButtonRef={closeButtonRef}
+                closeInvite={closeInvite}
+                copyLink={copyLink}
+                inviteModalRef={inviteModalRef}
+                roomLink={roomLink}
+                showClipBoardModal={showClipBoardModal}
+                visible={visible}
+              />
           )}
           <div className="md:hidden">
             {screenIndex === 3 && (

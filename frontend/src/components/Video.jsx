@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useContext } from "react";
 import Person from "./Person";
 import Draggable, { DraggableCore } from "react-draggable";
-import { data } from "autoprefixer";
 import CircleAvatar from "./CircleAvatar";
 import { Tooltip } from "react-tooltip";
 import { ProviderContext } from "../context/ProviderContext";
@@ -38,9 +37,9 @@ const Video = ({ stream, showStream, username, isMuted, isPeer, location }) => {
         setTransition(false);
       }, 400);
     };
-    window.addEventListener("resize", resetPosition);
+    document.addEventListener("resize", resetPosition);
     return () => {
-      window.removeEventListener("resize", resetPosition);
+      document.removeEventListener("resize", resetPosition);
     };
   }, [showStream]);
   const handleVideo = (stream, showStream) => {

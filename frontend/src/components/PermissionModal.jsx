@@ -9,6 +9,7 @@ import { WebsocketProvider } from "y-websocket";
 import { WebrtcProvider } from "y-webrtc";
 import { ProviderContext } from "../context/ProviderContext";
 import util from "../services";
+import FixedVideo from "./FixedVideo";
 
 const ydoc = new Y.Doc();
 let provider
@@ -42,13 +43,14 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
         value={{ ydoc, provider, awareness, tabs, color }}
       >
         <div className="w-screen h-screen pt-12">
-          <div className="rounded-md p-4 max-w-lg mx-auto min-h-2/3 bg-white">
-            <Video
+          <div className="rounded-md p-4 max-w-xs sm:max-w-lg mx-auto min-h-2/3 bg-white">
+            <FixedVideo
               showStream={showStream}
               stream={stream}
               isMuted={true}
               username={username}
               location={"permission"}
+              isPeer={false}
             />
             <div className="flex gap-2 items-center mt-4 ml-1">
               <FaVideo className="w-4 h-4 text-[#353a41]" />

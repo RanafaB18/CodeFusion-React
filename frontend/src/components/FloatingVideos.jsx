@@ -2,7 +2,7 @@ import Video from "./Video";
 
 const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen hidden md:flex">
       <Video
         showStream={showStream}
         isMuted={true}

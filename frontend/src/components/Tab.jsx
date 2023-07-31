@@ -1,6 +1,5 @@
 import { FaCode, FaFileAlt } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
 import {v4 as uuid } from 'uuid'
 
 const Tab = ({
@@ -34,9 +33,6 @@ const Tab = ({
               ></div>
             );
           })}
-          <div>
-
-          </div>
         <span className="opacity-50 mx-2">
           {text.includes("Document") ? <FaFileAlt /> : <FaCode />}
         </span>

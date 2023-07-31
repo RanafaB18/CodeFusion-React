@@ -6,7 +6,7 @@ import { peerReducer } from "./peerReducer";
 import { addPeerAction, removePeerAction, updatePeerAction } from "./peerActions";
 
 export const RoomContext = createContext(null);
-const socket = io("https://codefusion-react-production.up.railway.app/");
+const socket = io('http://localhost:3004');
 
 export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState();
@@ -45,7 +45,7 @@ export const RoomProvider = ({ children }) => {
         dispatch(addPeerAction(peerId, peerStream, username, viewStream, isMuted));
       });
     });
-    
+
     me.on("call", (call) => {
       call.answer(stream);
       call.on("stream", (peerStream) => {
