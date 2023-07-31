@@ -25,17 +25,14 @@ const TabScreen = () => {
   const [copyTabs, setCopyTabs] = useState(tabs);
   useEffect(() => {
     socket.on("get-active-tabs", ({ activeTabs }) => {
-      console.log("Active tabs", activeTabs);
       setAwarenessTabs(activeTabs);
     });
 
     socket.on("removal", ({ username, color }) => {
-      console.log("Remove this color of ", username, color);
       socket.emit("remove-color", { username, color, room });
     });
   }, []);
   const closeTab = (id, index) => {
-    console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
     socket.emit("delete-tab", { room, id, color });
   };

@@ -1,6 +1,5 @@
 import { FaUser } from "react-icons/fa";
 const Toast = ({ toast, showToast }) => {
-  console.log("Toast", showToast);
   return (
     <div
       className={`absolute left-0 top-[80%] right-0

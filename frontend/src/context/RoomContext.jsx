@@ -16,7 +16,6 @@ export const RoomProvider = ({ children }) => {
   const removePeer = (peerId) => {
     dispatch(removePeerAction(peerId))
   }
-  console.log("Room Context")
   useEffect(() => {
     const meId = uuid();
 

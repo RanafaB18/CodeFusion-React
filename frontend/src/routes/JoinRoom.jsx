@@ -32,7 +32,6 @@ const JoinRoom = () => {
       }, 800);
     });
   }, []);
-  // console.log("Error:", error);
 
   if (isLoading) {
     return <Loading />;

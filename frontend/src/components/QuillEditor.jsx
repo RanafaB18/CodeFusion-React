@@ -34,12 +34,10 @@ const formats = [
   const quillRef = useRef()
   let binding
   const { awareness } = useContext(YjsContext)
-  console.log("Ytext", ytext, awareness)
   useEffect(() => {
     if (binding) {
       binding.destroy()
     }
-    console.log("QuillRef", quillRef)
     binding = new QuillBinding(ytext, quillRef.current.getEditor(), awareness)
   }, [ytext])
   return (

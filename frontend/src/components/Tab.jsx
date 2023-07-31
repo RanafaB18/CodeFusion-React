@@ -23,7 +23,6 @@ const Tab = ({
         className={`flex items-center cursor-pointer pr-3 bg-[#353a41] h-full`}
       >
           {awarenessBars[id]?.map((color) => {
-            console.log("Active Id in tab", id, color);
             const key = uuid()
             return (
               <div

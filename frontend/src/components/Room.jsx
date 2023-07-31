@@ -148,7 +148,6 @@ const Room = ({
   const showScreen = (index) => {
     setScreenIndex(index);
   };
-  console.log("Screen Index", screenIndex);
   return (
     <div className="flex flex-col min-h-screen w-full relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}

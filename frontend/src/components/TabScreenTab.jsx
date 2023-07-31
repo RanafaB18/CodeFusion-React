@@ -22,7 +22,6 @@ const TabScreenTab = ({
     >
       <div className="flex h-14 items-center">
         {awarenessBars[id]?.map((color) => {
-          console.log("Active Id in tab", id, color);
           const key = uuid();
           return (
             <div

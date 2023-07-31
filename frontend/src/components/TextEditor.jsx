@@ -38,11 +38,11 @@ const TextEditor = ({ ytext, username }) => {
   // All of our network providers implement the awareness crdt
 
 // You can observe when a user updates their awareness information
-awareness.on('change', changes => {
-  // Whenever somebody updates their awareness information,
-  // we log all awareness information from all users.
-  console.log(Array.from(awareness.getStates().values()))
-})
+// awareness.on('change', changes => {
+//   // Whenever somebody updates their awareness information,
+//   // we log all awareness information from all users.
+//   console.log(Array.from(awareness.getStates().values()))
+// })
 
 // You can think of your own awareness information as a key-value store.
 // We update our "user" field to propagate relevant user information.
@@ -53,7 +53,6 @@ awareness.setLocalStateField('user', {
   color: color // should be a hex color
 })
 
-  console.log("Awareness", awareness)
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper === null) {
       return;

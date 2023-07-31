@@ -45,12 +45,10 @@ const Bar = () => {
   }, []);
   useEffect(() => {
     socket.on("get-active-tabs", ({ activeTabs }) => {
-      console.log("Active tabs", activeTabs);
       setAwarenessTabs(activeTabs);
     });
 
     socket.on("removal", ({ username, color }) => {
-      console.log("Remove this color of ", username, color);
       socket.emit("remove-color", { username, color, room });
     });
   }, []);
@@ -63,7 +61,6 @@ const Bar = () => {
         const pressedButton = newCodeTab.current;
         const val = pressedButton.getAttribute("index");
         if (val === "code") {
-          console.log("Code");
           const getTab = async () => {
             const response = await axiosUtil.getTabName(room);
             return response;
@@ -104,7 +101,6 @@ const Bar = () => {
         const id = uuid();
         const pressedButton = newDocTab.current;
         const val = pressedButton.getAttribute("index");
-        console.log("Val", val);
         if (val === "document") {
           const getTab = async () => {
             const response = await axiosUtil.getTabName(room);
@@ -144,7 +140,6 @@ const Bar = () => {
   };
 
   const closeTab = (id, index) => {
-    console.log("Deleting ", id, copyTabs.length);
     copyTabs.delete(index, 1);
     socket.emit("delete-tab", { room, id, color });
   };

@@ -117,7 +117,6 @@ const DefaultScreen = ({
     socket.emit("leave-room", { room, username });
     return redirect("/");
   };
-  console.log("Editors", editors)
   return (
     <YjsContext.Provider
       value={{
@@ -172,7 +171,6 @@ const DefaultScreen = ({
                   </div>
                 ) : (
                   editors.map((editor) => {
-                    console.log("Editor", editor)
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
                         <div key={editor.id} className="h-full w-full bg-[#eaedf0]">

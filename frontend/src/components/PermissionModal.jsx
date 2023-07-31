@@ -19,7 +19,6 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
   const [showStream, setShowStream] = useState(viewStream);
   const [isMuted, setIsMuted] = useState(false);
   const [clicked, setClicked] = useState(false);
-  console.log("Permissions Modal", room);
   const color = util.getNameColorCode(username);
   useEffect(() => {
     provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://clumsy-group-production.up.railway.app'] })
