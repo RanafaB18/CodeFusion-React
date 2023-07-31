@@ -15,7 +15,7 @@ app.use(express.json())
 
 app.use(cors())
 
-console.log("roomLinks", roomLinks)
+// console.log("roomLinks", roomLinks)
 // Delete empty rooms every 10 mins
 let deleteInterval = 0
 setInterval(() => {
@@ -24,7 +24,7 @@ setInterval(() => {
         if (Rooms !== {}) {
             for (let room in Rooms) {
                 if (Rooms[room].length === 0) {
-                    console.log("Deleting", room);
+                    // console.log("Deleting", room);
                     delete Rooms[room]
                     delete Messages[room]
                     delete Tabs[room]
@@ -44,13 +44,13 @@ function getNameColorCode(name) {
     return colorCode;
   }
 io.on('connection', (socket) => {
-    console.log('a user connected', socket.id);
+    // console.log('a user connected', socket.id);
 
     socket.on("join_room", (room) => {
         if (Rooms[room]) {
-            console.log(room, "made")
+            // console.log(room, "made")
             socket.join(room)
-            console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
+            // console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
         }
     })
     socket.on("join-video", (room) => {
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
         }
     })
     socket.on("toggle-video-audio", ({room, id, viewStream, isMuted }) => {
-        console.log("Peer", {id, viewStream, isMuted })
+        // console.log("Peer", {id, viewStream, isMuted })
         io.to(room).emit('updated-peers', {id, viewStream, isMuted})
     })
     socket.on('request-permissions', () => {
@@ -87,23 +87,23 @@ io.on('connection', (socket) => {
             }
 
             socket.join(room)
-            console.log("View stream ?", viewStream)
+            // console.log("View stream ?", viewStream)
             socket.to(room).emit("user-joined", { peerId, username, viewStream, isMuted })
-            console.log("New user: ", username, peerId)
+            // console.log("New user: ", username, peerId)
             socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.emit('get-users', { room: room, participants: Rooms[room] })
-            console.log("Specific Rooms", Rooms[room])
-            console.log("Rooms", Rooms)
+            // console.log("Specific Rooms", Rooms[room])
+            // console.log("Rooms", Rooms)
             deleteInterval = 0
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', () => {
-                console.log(`${username} left the room`)
+                // console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
                 Tabs[room].numOfUsers = Tabs[room].numOfUsers.filter(name => name !== username)
                 const removedUserColor = getNameColorCode(username)
                 socket.to(room).emit('removal', {username, color: removedUserColor})
                 socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
-                console.log(Rooms)
+                // console.log(Rooms)
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
                 socket.leave(room) //testing
@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
         }
     })
     socket.on('message-sent', (message) => {
-        console.log("Receiving message: ", message)
+        // console.log("Receiving message: ", message)
         socket.to(message.room).emit('show-message-toast', message)
     })
     socket.on('leave-room', ({ username, room, userId }) => {
@@ -119,14 +119,14 @@ io.on('connection', (socket) => {
         Rooms[room] = Rooms[room].filter((user) => user.userId !== userId)
         Tabs[room].numOfUsers = Tabs[room].numOfUsers.filter(name => name !== username)
         socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
-        console.log(Rooms)
+        // console.log(Rooms)
         // Might change
         socket.to(room).emit('user-disconnected', userId)
     })
     // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
     socket.on("send_message", (messageData) => {
-        // console.log("Message Data: ", messageData)
+        // // console.log("Message Data: ", messageData)
         if (!Messages[messageData.room]) {
             Messages[messageData.room] = { messages: [messageData] }
         } else {
@@ -139,13 +139,13 @@ io.on('connection', (socket) => {
         const room = tabObj.room
         const id = tabObj.id
         const color = tabObj.color
-        const name = tabObj.username
-        console.log("Tab change", id, room, color)
-        if (Tabs[room].numOfUsers.length === 2){
-            console.log("Color", color)
-        }
+        // const name = tabObj.username
+        // console.log("Tab change", id, room, color)
+        // if (Tabs[room].numOfUsers.length === 2){
+        //     // console.log("Color", color)
+        // }
         if (Tabs[room].tabs[id] === undefined) {
-            console.log("Keys", Object.values(Tabs[room]))
+            // console.log("Keys", Object.values(Tabs[room]))
             if (Tabs[room].numOfTabs === 1) {
                 Tabs[room].tabs[id] = [color]
             } else {
@@ -165,7 +165,7 @@ io.on('connection', (socket) => {
                 }
             }
         }
-        console.log(Tabs[room].tabs)
+        // console.log(Tabs[room].tabs)
         io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
     })
     socket.on('delete-tab', (tabObj) => {
@@ -173,7 +173,7 @@ io.on('connection', (socket) => {
         const room = tabObj.room
 
         delete Tabs[room].tabs[id]
-        console.log(Tabs[room].tabs)
+        // console.log(Tabs[room].tabs)
     })
 
     socket.on('remove-color', obj => {
@@ -212,7 +212,7 @@ app.get('/:room/tabs', (req, res) => {
 app.post('/:room/users', (req, res) => {
     const name = req.body.name
     const room = req.body.room
-    console.log(`${name} is either leaving`)
+    // console.log(`${name} is either leaving`)
     // Check if it's a refresh
     if (Rooms[room]) {
         Rooms[room] = Rooms[room].filter((user) => user.username != name)
@@ -220,9 +220,9 @@ app.post('/:room/users', (req, res) => {
             delete Rooms[room]
             delete Messages[room]
             delete Tabs[room]
-            console.log("New Rooms after deletion", Rooms)
-            console.log("New Messages after deletion", Messages)
-            console.log("Tabs", Tabs)
+            // console.log("New Rooms after deletion", Rooms)
+            // console.log("New Messages after deletion", Messages)
+            // console.log("Tabs", Tabs)
             io.local.socketsLeave(room)
         }
         io.to(room).emit("all_users", { rooms: Rooms })
@@ -232,5 +232,5 @@ app.post('/:room/users', (req, res) => {
 
 const PORT = process.env.PORT || 3004
 server.listen(PORT, () => {
-    console.log(`Server running at port ${PORT}`)
+    // console.log(`Server running at port ${PORT}`)
 })
