@@ -9,6 +9,7 @@ const { Server } = require('socket.io')
 const io = new Server(server, {
     cors: {
         origin: "https://code-fusion-react.vercel.app"
+        // origin: "http://localhost:5173"
     }
 })
 app.use(express.json())
@@ -17,32 +18,42 @@ app.use(cors())
 
 // console.log("roomLinks", roomLinks)
 // Delete empty rooms every 10 mins
-let deleteInterval = 0
-setInterval(() => {
-    deleteInterval = deleteInterval + 1000
-    if (deleteInterval === 600000) {
-        if (Rooms !== {}) {
-            for (let room in Rooms) {
-                if (Rooms[room].length === 0) {
-                    // console.log("Deleting", room);
-                    delete Rooms[room]
-                    delete Messages[room]
-                    delete Tabs[room]
-                }
-            }
+let deleteRoomsInterval; // Holds the reference to the setInterval timer
+
+function deleteEmptyRooms() {
+    for (const roomName in Rooms) {
+        if (Rooms.hasOwnProperty(roomName) && Rooms[roomName].length === 0) {
+            // Delete room, messages, and tabs associated with the empty room
+            delete Rooms[roomName];
+            delete Messages[roomName];
+            delete Tabs[roomName];
+            console.log(`Room '${roomName}' and its associated data deleted.`);
         }
-        deleteInterval = 0
     }
-}, 1000)
+}
+function startRoomCleanup() {
+    // Clear any previous interval to avoid multiple timers running
+    clearInterval(deleteRoomsInterval);
+
+    // Start checking and deleting empty rooms every 10 minutes
+    deleteRoomsInterval = setInterval(deleteEmptyRooms, 60000);
+    console.log('Room cleanup process started.');
+}
+
+function stopRoomCleanup() {
+    // Clear the interval to stop the room cleanup process
+    clearInterval(deleteRoomsInterval);
+    console.log('Room cleanup process stopped.');
+}
 function getNameColorCode(name) {
     let hashCode = 0;
     for (let i = 0; i < name.length; i++) {
-      hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
+        hashCode = name.charCodeAt(i) + ((hashCode << 5) - hashCode);
     }
 
     const colorCode = '#' + ((hashCode & 0x00FFFFFF) << 0).toString(16).padStart(6, '0');
     return colorCode;
-  }
+}
 io.on('connection', (socket) => {
     // console.log('a user connected', socket.id);
 
@@ -63,9 +74,9 @@ io.on('connection', (socket) => {
             socket.emit("valid-room", false)
         }
     })
-    socket.on("toggle-video-audio", ({room, id, viewStream, isMuted }) => {
+    socket.on("toggle-video-audio", ({ room, id, viewStream, isMuted }) => {
         // console.log("Peer", {id, viewStream, isMuted })
-        io.to(room).emit('updated-peers', {id, viewStream, isMuted})
+        io.to(room).emit('updated-peers', { id, viewStream, isMuted })
     })
     socket.on('request-permissions', () => {
         socket.emit('get-permissions')
@@ -74,16 +85,16 @@ io.on('connection', (socket) => {
         if (Rooms[room]) {
             Rooms[room].push({ username: username, userId: peerId, viewStream: viewStream, isMuted })
             if (Tabs[room] === undefined) {
-                Tabs[room] = { numOfTabs: 0, tabs: {}, numOfUsers: [username]}
+                Tabs[room] = { numOfTabs: 0, tabs: {}, numOfUsers: [username] }
             }
-            if (!Tabs[room].numOfUsers.includes(username)){
+            if (!Tabs[room].numOfUsers.includes(username)) {
                 Tabs[room].numOfUsers.push(username)
             }
             const firstID = Object.keys(Tabs[room].tabs)[0]
             const userColor = getNameColorCode(username)
             if (Tabs[room].numOfTabs > 0 && !Tabs[room].tabs[firstID]?.includes(userColor)) {
                 Tabs[room].tabs[firstID]?.push(userColor)
-                io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
+                io.to(room).emit('get-active-tabs', { activeTabs: Tabs[room].tabs })
             }
 
             socket.join(room)
@@ -93,15 +104,14 @@ io.on('connection', (socket) => {
             socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.emit('get-users', { room: room, participants: Rooms[room] })
             // console.log("Specific Rooms", Rooms[room])
-            // console.log("Rooms", Rooms)
-            deleteInterval = 0
+            console.log("Rooms", Rooms)
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', () => {
                 // console.log(`${username} left the room`)
                 Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
                 Tabs[room].numOfUsers = Tabs[room].numOfUsers.filter(name => name !== username)
                 const removedUserColor = getNameColorCode(username)
-                socket.to(room).emit('removal', {username, color: removedUserColor})
+                socket.to(room).emit('removal', { username, color: removedUserColor })
                 socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
                 // console.log(Rooms)
                 // Might change
@@ -160,13 +170,13 @@ io.on('connection', (socket) => {
             }
             const ids = Object.keys(Tabs[room].tabs)
             for (const ID of ids) {
-                if (ID !== id){
+                if (ID !== id) {
                     Tabs[room].tabs[ID] = Tabs[room].tabs[ID].filter(colorInArray => colorInArray !== color)
                 }
             }
         }
         // console.log(Tabs[room].tabs)
-        io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
+        io.to(room).emit('get-active-tabs', { activeTabs: Tabs[room].tabs })
     })
     socket.on('delete-tab', (tabObj) => {
         const id = tabObj.id
@@ -180,10 +190,10 @@ io.on('connection', (socket) => {
         const color = obj.color
         const room = obj.room
         const ids = Object.keys(Tabs[room].tabs)
-        for (const id of ids){
+        for (const id of ids) {
             Tabs[room].tabs[id] = Tabs[room].tabs[id].filter((colorsInArray) => colorsInArray != color)
         }
-        io.to(room).emit('get-active-tabs',{activeTabs: Tabs[room].tabs})
+        io.to(room).emit('get-active-tabs', { activeTabs: Tabs[room].tabs })
     })
     socket.on("delete-message", (messageData) => {
         const id = messageData.id
@@ -208,6 +218,17 @@ app.get('/:room/tabs', (req, res) => {
     Tabs[room].numOfTabs++
     return res.json({ tabs: Tabs })
 })
+
+app.get('/start-cleanup', (req, res) => {
+    startRoomCleanup();
+    res.send('Room cleanup process started.');
+});
+
+// HTTP endpoint to stop the room cleanup process
+app.get('/stop-cleanup', (req, res) => {
+    stopRoomCleanup();
+    res.send('Room cleanup process stopped.');
+});
 
 app.post('/:room/users', (req, res) => {
     const name = req.body.name
