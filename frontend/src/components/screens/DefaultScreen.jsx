@@ -8,7 +8,7 @@ import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import { YjsContext } from "../../context/YjsContext";
-import { WebsocketProvider } from "y-websocket"
+import { WebsocketProvider } from "y-websocket";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
 import CodeEditor from "../CodeEditor";
@@ -46,14 +46,14 @@ const DefaultScreen = ({
     editorYtext,
     setEditorYtext,
     currentIndex,
-    setCurrentIndex
+    setCurrentIndex,
   } = useContext(RoomContext);
-  const { tabs } = useContext(ProviderContext)
+  const { tabs } = useContext(ProviderContext);
   const docsDiv = useRef();
   let quill = null;
   let binding = null;
   const [videoStructure, setVideoStructure] = useState(2);
-  const [currentTab, setCurrentTab] = useState('')
+  const [currentTab, setCurrentTab] = useState("");
 
   const renderDocs = () => {
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
@@ -87,14 +87,14 @@ const DefaultScreen = ({
   }, []);
   useEffect(() => {
     if (editorYtext.length > 0) {
-      setCurrentTab(docs[currentIndex]?.typeOfTab)
+      setCurrentTab(docs[currentIndex]?.typeOfTab);
       const quillEditors = docs.map((doc) => {
         return {
           tag:
             doc.typeOfTab === "document" ? (
-              <TextEditor ytext={editorYtext[doc.index]} username={username}/>
+              <TextEditor ytext={editorYtext[doc.index]} username={username} />
             ) : (
-              <CodeEditor ytext={editorYtext[doc.index]} username={username}/>
+              <CodeEditor ytext={editorYtext[doc.index]} username={username} />
             ),
           id: doc.id,
           index: doc.index,
@@ -173,7 +173,16 @@ const DefaultScreen = ({
                   editors.map((editor) => {
                     if (editor.id === docs[currentIndex]?.id) {
                       return (
-                        <div key={editor.id} className="h-full w-full bg-[#eaedf0]">
+                        <div
+                          key={editor.id}
+                          className={`h-full transition-all ease-in ${
+                            showModal === true
+                              ? videoStructure === 1
+                                ? "w-[51vw]"
+                                : "w-[70vw]"
+                              : (videoStructure === 1 ? "w-[74vw]" : "w-full")
+                          }  bg-[#eaedf0]`}
+                        >
                           {editor.tag}
                         </div>
                       );
@@ -219,10 +228,7 @@ const DefaultScreen = ({
                   />
                 </div>
               )}
-              {videoStructure === 3 && (
-                <div>
-                </div>
-              )}
+              {videoStructure === 3 && <div></div>}
             </div>
           </div>
 
