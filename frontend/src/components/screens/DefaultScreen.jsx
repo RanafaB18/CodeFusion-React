@@ -94,7 +94,7 @@ const DefaultScreen = ({
             doc.typeOfTab === "document" ? (
               <TextEditor ytext={editorYtext[doc.index]} username={username}/>
             ) : (
-              <CodeEditor ytext={editorYtext[doc.index]} />
+              <CodeEditor ytext={editorYtext[doc.index]} username={username}/>
             ),
           id: doc.id,
           index: doc.index,

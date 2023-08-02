@@ -75,7 +75,7 @@ const Bar = () => {
           getTab().then((data) => {
             tabValue = data.tabs[room].numOfTabs;
             let name = `Code ${tabValue}`;
-            newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
+            // newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
             // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);
@@ -116,7 +116,7 @@ const Bar = () => {
           getTab().then((data) => {
             tabValue = data.tabs[room].numOfTabs;
             let name = `Document ${tabValue}`;
-            newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
+            // newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
             // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);

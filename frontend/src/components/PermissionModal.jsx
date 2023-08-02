@@ -8,11 +8,13 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { WebrtcProvider } from "y-webrtc";
 import { ProviderContext } from "../context/ProviderContext";
+import { IndexeddbPersistence } from "y-indexeddb";
 import util from "../services";
 import FixedVideo from "./FixedVideo";
 
 const ydoc = new Y.Doc();
 let provider
+let persistence
 let awareness
 const PermissionModal = ({ username, room, viewStream = true }) => {
   const { stream } = useContext(RoomContext);
@@ -22,7 +24,8 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
   const color = util.getNameColorCode(username);
   useEffect(() => {
     provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://clumsy-group-production.up.railway.app'] })
-    awareness = provider.awareness;
+    persistence = new IndexeddbPersistence(room, ydoc)
+    awareness = provider.awareness
   }, [])
   const tabs = ydoc.getArray("tabs");
 
