@@ -45,6 +45,7 @@ const Room = ({
     videoGrid: false,
     videoSidebar: false,
     videoFloat: true,
+    noVideo: false
   });
 
   useEffect(() => {
