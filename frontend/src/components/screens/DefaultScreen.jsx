@@ -219,6 +219,10 @@ const DefaultScreen = ({
                   />
                 </div>
               )}
+              {videoStructure === 3 && (
+                <div>
+                </div>
+              )}
             </div>
           </div>
 

@@ -64,6 +64,7 @@ const SideBar = () => {
       videoSidebar: true,
       videoGrid: false,
       videoFloat: false,
+      noVideo: false
     }));
   };
 
@@ -74,6 +75,7 @@ const SideBar = () => {
       videoSidebar: false,
       videoGrid: true,
       videoFloat: false,
+      noVideo: false
     }));
   };
 
@@ -84,8 +86,20 @@ const SideBar = () => {
       videoSidebar: false,
       videoGrid: false,
       videoFloat: true,
+      noVideo: false
     }));
   };
+
+  const toggleNoVideo = () => {
+    setVideoStructure(3)
+    setOff((prevState) => ({
+      ...prevState,
+      videoSidebar: false,
+      videoGrid: false,
+      videoFloat: false,
+      noVideo: true
+    }));
+  }
   return (
     <aside
       className="hidden relative border border-white border-opacity-25 p-3
@@ -149,6 +163,9 @@ const SideBar = () => {
           >
             <path d="M19,7L11,7L11,13L19,13L19,7M21,3L3,3C1.903,3 1,3.903 1,5L1,19C1,20.097 1.903,21 3,21L21,21C22.097,21 23,20.097 23,19L23,5C23,3.903 22.097,3 21,3M21,19L3,19L3,5L21,5L21,19Z"></path>
           </svg>
+        </div>
+        <div className={`sidebar-icon ${off.noVideo && "bg-blacklike"}`} onClick={toggleNoVideo}>
+          <FaVideoSlash className="bottom-nav-icon opacity-100 text-xl" />
         </div>
       </div>
       <div>
