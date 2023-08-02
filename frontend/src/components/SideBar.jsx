@@ -11,9 +11,11 @@ import { YjsContext } from "../context/YjsContext";
 import { RoomContext } from "../context/RoomContext";
 import { Tooltip } from "react-tooltip";
 
-const SideBar = ({ showModal, setShowModal }) => {
+const SideBar = () => {
   const {
     setShowStream,
+    showModal,
+    setShowModal,
     setIsMuted,
     showStream,
     isMuted,

@@ -8,8 +8,8 @@ const cors = require('cors')
 const { Server } = require('socket.io')
 const io = new Server(server, {
     cors: {
-        origin: "https://code-fusion-react.vercel.app"
-        // origin: "http://localhost:5173"
+        // origin: "https://code-fusion-react.vercel.app"
+        origin: "http://localhost:5173"
     }
 })
 app.use(express.json())
@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
             socket.to(room).emit("user-joined", { peerId, username, viewStream, isMuted })
             // console.log("New user: ", username, peerId)
             socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
-            socket.emit('get-users', { room: room, participants: Rooms[room] })
+            socket.emit('get-users', { participants: Rooms[room] })
             // console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
         }
     })
     socket.on('message-sent', (message) => {
-        // console.log("Receiving message: ", message)
+        console.log("Receiving message: ", message)
         socket.to(message.room).emit('show-message-toast', message)
     })
     socket.on('leave-room', ({ username, room, userId }) => {

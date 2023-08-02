@@ -20,10 +20,10 @@ const CustomToolbar = () => {
   Font.whitelist = ["sans", "monospace", "serif"];
   Quill.register(Font, true);
   return (
-    <div className="flex relative h-16 bg-[#353a41] p-2 z-10">
-      <div className="flex w-screen md:w-9/12 lg:w-10/12 items-center md:whitespace-pre-wrap md:overflow-hidden whitespace-nowrap overflow-x-scroll">
-        <div id="toolbar" className="">
-          <span className="ql-formats flex">
+    <div className="flex md:flex-wrap relative bg-[#353a41] p-2 z-10 md:min-h-[3.25rem]">
+      <div className="flex h-13 md:overflow-visible items-center">
+        <div id="toolbar" className="h-13">
+          <span className="ql-formats">
             <select className="ql-font !m-0 !p-0" defaultValue="arial">
               <option value="arial">Sans</option>
               <option value="monospace">Monospace</option>
@@ -50,40 +50,40 @@ const CustomToolbar = () => {
           </span>
           <span className="border border-white border-opacity-30 h-full"></span>
 
-          <span className="ql-formats">
+          {/* <span className="ql-formats">
             <button className="ql-script" value="super" />
             <button className="ql-script" value="sub" />
             <button className="ql-blockquote" />
           </span>
-          <span className="border border-white border-opacity-30 h-full"></span>
+          <span className="border border-white border-opacity-30 h-full"></span> */}
 
           <span className="ql-formats">
             <select className="ql-align" />
-            <select className="ql-color" />
-            <select className="ql-background" />
+            {/* <select className="ql-color" /> */}
+            {/* <select className="ql-background" /> */}
           </span>
           <span className="border border-white border-opacity-30 h-full"></span>
 
-          <span className="ql-formats">
+          {/* <span className="ql-formats">
             <button className="ql-link" />
             <button className="ql-image" />
             <button className="ql-video" />
           </span>
-          <span className="border border-white border-opacity-30 h-full"></span>
+          <span className="border border-white border-opacity-30 h-full"></span> */}
 
           <span className="ql-formats">
-            <button className="ql-formula" />
-            <button className="ql-code-block p-3 w-10 h-10" />
+            {/* <button className="ql-formula" />
+            <button className="ql-code-block p-3 w-10 h-10" /> */}
             <button className="ql-clean" />
           </span>
         </div>
       </div>
-      <div className="md:flex hidden justify-between md:gap-4 w-1/4 md:3/12 lg:w-2/12">
+      <div className="relative z-10 hidden md:flex gap-2 items-stretch flex-shrink-0 pl-2 ml-auto bg-opacity-25 h-13">
         <button
           className="bg-bluish
           text-white text-md
       font-semibold rounded-md px-4
-      tracking-wide hover:bg-blue-500"
+      tracking-wide h-full hover:bg-blue-500"
           onClick={invite}
         >
           Invite Others
@@ -91,10 +91,9 @@ const CustomToolbar = () => {
         <button
           style={{ borderColor: color }}
           className="
-          bg-blacklike
-          border-2
-          text-white rounded-full
-          py-2 px-4 hover:bg-blackhover"
+          flex items-center justify-center w-10  h-10 border-2 bg-blacklike rounded-full
+          text-white
+          hover:bg-blackhover"
           onClick={handleClick}
         >
           {username[0].toUpperCase()}

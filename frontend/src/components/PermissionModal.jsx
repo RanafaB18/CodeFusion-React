@@ -50,6 +50,7 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
               username={username}
               location={"permission"}
               isPeer={false}
+              color={color}
             />
             <div className="flex gap-2 items-center mt-4 ml-1">
               <FaVideo className="w-4 h-4 text-[#353a41]" />

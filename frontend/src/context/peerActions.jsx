@@ -4,9 +4,9 @@ export const ACTIONS = {
     UPDATE_PEER: 'UPDATE_PEER'
 }
 
-export const addPeerAction = (peerId, stream, username, viewStream, isMuted) => ({
+export const addPeerAction = (peerId, stream, username, viewStream, isMuted, color) => ({
     type: ACTIONS.ADD_PEER,
-    payload: { peerId, stream, username, viewStream, isMuted }
+    payload: { peerId, stream, username, viewStream, isMuted, color }
 })
 
 export const updatePeerAction = (peerId, stream, username, viewStream, isMuted) => ({

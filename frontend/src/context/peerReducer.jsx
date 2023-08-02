@@ -10,6 +10,7 @@ export const peerReducer = (state, action) => {
           username: action.payload.username,
           viewStream: action.payload.viewStream,
           isMuted: action.payload.isMuted,
+          color: action.payload.color
         },
       };
     case ACTIONS.REMOVE_PEER:

@@ -1,7 +1,9 @@
-import Video from "./Video";
 import FixedVideo from "./FixedVideo";
+import { ProviderContext } from "../context/ProviderContext";
+import { useContext } from "react";
 
 const VideoSideBar = ({ username, stream, peers, showStream, location }) => {
+  const { color } = useContext(ProviderContext);
   return (
     <div className="min-h-screen max-w-xs w-80 bg-blackBackground py-1 px-2 border-l border-white border-opacity-25">
       <FixedVideo
@@ -11,6 +13,8 @@ const VideoSideBar = ({ username, stream, peers, showStream, location }) => {
         username={username}
         location={location}
         videoType={"sidebar"}
+        color={color}
+        isPeer={false}
       />
       {Object.values(peers).map((peer) => {
         return (
@@ -22,6 +26,8 @@ const VideoSideBar = ({ username, stream, peers, showStream, location }) => {
               username={peer.username}
               location={location}
               videoType={"sidebar"}
+              color={peer.color}
+              isPeer={true}
             />
           </div>
         );

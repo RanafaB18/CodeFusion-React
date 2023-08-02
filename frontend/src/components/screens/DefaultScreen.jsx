@@ -235,7 +235,7 @@ const DefaultScreen = ({
               />
             </div>
           </div>
-          <SideBar setShowModal={setShowModal} showModal={showModal} />
+          <SideBar />
         </div>
         <Modal
           closeButtonRef={closeButtonRef}

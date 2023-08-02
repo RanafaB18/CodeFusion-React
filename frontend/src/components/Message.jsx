@@ -1,6 +1,7 @@
 import { FaChevronDown } from "react-icons/fa";
 import Person from "./Person";
 import { useState } from "react";
+import CircleAvatar from "./CircleAvatar";
 
 const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
   const [isHovering, setIsHovering] = useState(false);
@@ -30,7 +31,7 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
         className={`relative text-white text-opacity-60 flex ${
           isReply && "flex-row-reverse"
         } h-full items-end whitespace-pre-wrap
-            gap-4 p-2 pb-0 rounded-lg bg-blackhover`}
+            gap-4 p-2 pb-0 mx-1 rounded-lg bg-blackhover`}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       >
@@ -77,8 +78,7 @@ const Message = ({ message, username, time, isReply, id, deleteFxn }) => {
           </div>
         )}
       </div>
-      {/* Should be on current message */}
-      <Person name={username} showOnlyCircle color="white" small />
+      <CircleAvatar name={username} small={true}/>
     </div>
   );
 };

@@ -4,9 +4,11 @@ import { createContext, useEffect, useState, useReducer } from "react";
 import { io } from "socket.io-client";
 import { peerReducer } from "./peerReducer";
 import { addPeerAction, removePeerAction, updatePeerAction } from "./peerActions";
+import util from "../services"
 
 export const RoomContext = createContext(null);
-const socket = io('https://codefusion-react-production.up.railway.app/');
+const socket = io('http://localhost:3004/');
+// const socket = io('https://codefusion-react-production.up.railway.app/');
 
 export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState();
@@ -33,15 +35,16 @@ export const RoomProvider = ({ children }) => {
     if (!me) return;
     if (!stream) return;
 
-    socket.on('get-users', ({room, participants}) => {
+    socket.on('get-users', ({ participants }) => {
       setAllUsers(participants)
     })
 
     socket.on("user-joined", ({ peerId, username, viewStream, isMuted }) => {
       setAllUsers(allUsers.concat({userId: peerId, username, viewStream, isMuted}))
+      const color = util.getNameColorCode(username);
       const call = me.call(peerId, stream, {metadata: username});
       call.on("stream", (peerStream) => {
-        dispatch(addPeerAction(peerId, peerStream, username, viewStream, isMuted));
+        dispatch(addPeerAction(peerId, peerStream, username, viewStream, isMuted, color));
       });
     });
 
@@ -50,9 +53,10 @@ export const RoomProvider = ({ children }) => {
       call.on("stream", (peerStream) => {
         const user = allUsers.find((user) => user.userId === call.peer)
         const username = user ? user.username : "unknown"
+        const color = util.getNameColorCode(username);
         const viewStream = user ? user.viewStream : null
         const isMuted = user ? user.isMuted : null
-        dispatch(addPeerAction(call.peer, peerStream, username, viewStream, isMuted));
+        dispatch(addPeerAction(call.peer, peerStream, username, viewStream, isMuted, color));
       });
     });
   });

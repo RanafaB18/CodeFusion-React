@@ -23,7 +23,7 @@ const LowerBar = () => {
           Invite Others
         </button>
         <div className="cursor-pointer" onClick={handleClick}>
-          <CircleAvatar name={username[0].toUpperCase()} />
+          <CircleAvatar name={username} />
         </div>
       </div>
     </div>

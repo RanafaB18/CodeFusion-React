@@ -7,7 +7,7 @@ const MessageToast = ({ toast, showMessageToast, setScreenIndex }) => {
       className={`absolute left-0 top-[80%] right-0
           transition duration-300 ${
             showMessageToast ? "-translate-y-5 z-30" : "opacity-0 -z-10"
-          }  z-20
+          }
        mx-auto max-w-sm h-4 `}
     >
       <div className="flex items-center justify-evenly gap-3 rounded-lg bg-[#16191d] py-3 bg-opacity-50">

@@ -1,6 +1,9 @@
+import { useContext } from "react";
 import Video from "./Video";
+import { ProviderContext } from "../context/ProviderContext";
 
 const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
+    const { color } = useContext(ProviderContext);
   return (
     <div className="h-fit hidden md:flex">
       <Video
@@ -10,6 +13,7 @@ const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
         username={username}
         location={location}
         isPeer={false}
+        color={color}
       />
       {Object.values(peers).map((peer) => {
         return (
@@ -21,6 +25,7 @@ const FloatingVideos = ({ username, stream, peers, showStream, location }) => {
               username={peer.username}
               location={location}
               isPeer={true}
+              color={peer.color}
             />
           </div>
         );
