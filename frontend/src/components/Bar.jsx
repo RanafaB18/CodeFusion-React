@@ -149,9 +149,9 @@ const Bar = () => {
   };
   const switchTab = (index, id) => {
     socket.emit("tab-change", { id, room, color, username });
+    setCurrentTab(docs[index].typeOfTab)
     setDocs((prevState) => {
       const currentTab = prevState[index];
-      setCurrentTab(prevState[index].typeOfTab)
       if (currentTab.id === id) {
         setCurrentIndex(index);
       }

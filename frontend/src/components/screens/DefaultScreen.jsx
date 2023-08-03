@@ -18,6 +18,7 @@ import VideoSideBar from "../VideoSideBar";
 import VideoGrid from "../VideoGrid";
 import FloatingVideos from "../FloatingVideos";
 import { ProviderContext } from "../../context/ProviderContext";
+import { languageOptions } from "../../constants/langDropdown";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -54,7 +55,10 @@ const DefaultScreen = ({
   let binding = null;
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
-
+  const [language, setLanguage] = useState(languageOptions[0])
+  const [outputDetails, setOutputDetails] = useState(null)
+  const [customInput, setCustomInput] = useState('')
+  const [processing, setProcessing] = useState(null);
   const renderDocs = () => {
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
@@ -122,15 +126,21 @@ const DefaultScreen = ({
       value={{
         tabs,
         docsDiv,
-        docs,
         currentIndex,
         currentTab,
         setCurrentTab,
         invite,
-        setDocs,
         setEditorYtext,
         setCurrentIndex,
+        setLanguage,
+        language,
         setVideoStructure,
+        setOutputDetails,
+        setCustomInput,
+        outputDetails,
+        customInput,
+        processing,
+        setProcessing
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
