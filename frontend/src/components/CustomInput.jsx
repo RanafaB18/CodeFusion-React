@@ -9,7 +9,7 @@ const CustomInput = ({ setCustomInput, customInput }) => {
     <textarea
       value={customInput}
       placeholder="Enter your input"
-      className="p-3 row-span-1 rounded-lg drop-shadow resize-none"
+      className="p-3 text-black row-span-1 rounded-lg drop-shadow resize-none"
       onChange={handleChange}
     ></textarea>
   );
