@@ -55,10 +55,9 @@ const DefaultScreen = ({
   let binding = null;
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
-  const [language, setLanguage] = useState(languageOptions[0])
-  const [outputDetails, setOutputDetails] = useState(null)
-  const [customInput, setCustomInput] = useState('')
-  const [processing, setProcessing] = useState(null);
+  const [language, setLanguage] = useState(languageOptions[0]);
+  const [toggled, setToggled] = useState({ chatScreen: false, people: false });
+
   const renderDocs = () => {
     // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
     // insert the list of all docs. But the first one is a "create new document" button
@@ -110,11 +109,11 @@ const DefaultScreen = ({
 
   useEffect(() => {
     if (chatOpen) {
-      setShowModal(true);
+      setShowModal((prevState) => ({...prevState, open: true}));
     }
   }, [chatOpen]);
   const closeSideModal = () => {
-    setShowModal(false);
+    setShowModal((prevState) => ({...prevState, open: false}));
   };
   const handleLeave = () => {
     sessionStorage.clear("user_room_name");
@@ -135,12 +134,8 @@ const DefaultScreen = ({
         setLanguage,
         language,
         setVideoStructure,
-        setOutputDetails,
-        setCustomInput,
-        outputDetails,
-        customInput,
-        processing,
-        setProcessing
+        setToggled,
+        toggled
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
@@ -149,7 +144,7 @@ const DefaultScreen = ({
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
           </span> */}
-          <Bar setShowModal={setShowModal} showModal={showModal} />
+          <Bar />
         </div>
 
         {/* Hidden */}
@@ -186,11 +181,9 @@ const DefaultScreen = ({
                         <div
                           key={editor.id}
                           className={`h-full transition-all ease-in ${
-                            showModal === true
-                              ? videoStructure === 1
-                                ? "w-[51vw]"
-                                : "w-[70vw]"
-                              : (videoStructure === 1 ? "w-[74vw]" : "w-full")
+                            showModal.messageBar === true || videoStructure === 1
+                              ? "lg:w-[97%] md:w-[45vw]"
+                              : ""
                           }  bg-[#eaedf0]`}
                         >
                           {editor.tag}
@@ -215,18 +208,6 @@ const DefaultScreen = ({
           </div>
           <div className="relative">
             <div className="rounded inline-block">
-              {
-                /* 1 === video sidebar */
-                videoStructure === 1 && (
-                  <VideoSideBar
-                    peers={peers}
-                    showStream={showStream}
-                    stream={stream}
-                    username={username}
-                    location={"default"}
-                  />
-                )
-              }
               {videoStructure === 2 && (
                 <div className="absolute top-0 right-0">
                   <FloatingVideos
@@ -242,16 +223,23 @@ const DefaultScreen = ({
             </div>
           </div>
 
-          <div className={`hidden md:block relative`}>
+          <div className={`hidden md:inline-block relative`}>
             <div
               className={`transition-all ease-in h-full ${
-                showModal ? "mr-0" : "-mr-96"
+                showModal.open ? "mr-0" : "-mr-96"
               }`}
             >
               <SideModal
                 participants={participants}
                 closeSideModal={closeSideModal}
                 username={username}
+                peers={peers}
+                showStream={showStream}
+                stream={stream}
+                location={"default"}
+                showModal={showModal}
+                toggled={toggled}
+                setToggled={setToggled}
               />
             </div>
           </div>

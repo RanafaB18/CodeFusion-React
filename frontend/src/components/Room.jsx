@@ -31,7 +31,7 @@ const Room = ({
   const [toast, setToast] = useState({ name: "", text: "" });
   const [showToast, setShowToast] = useState(false);
   const [showMessageToast, setShowMessageToast] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState({videoSidebar:false, messageBar: false, open: false});
   const [showOptions, setShowOptions] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [docs, setDocs] = useState([]);
@@ -58,7 +58,7 @@ const Room = ({
       if (screenIndex === 0) {
         setScreenIndex(2);
         showScreen(2);
-        setShowModal(false)
+        setShowModal(prevState => ({...prevState, messageBar: false}))
       }
     }
     return () => {
@@ -161,7 +161,7 @@ const Room = ({
     <div className="flex flex-col min-h-screen w-full relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
       <Toast toast={toast} showToast={showToast} />
-      {screenIndex !== 0 && !showModal && (
+      {screenIndex !== 0 && !showModal.messageBar && (
         <MessageToast
           toast={toast}
           showMessageToast={showMessageToast}

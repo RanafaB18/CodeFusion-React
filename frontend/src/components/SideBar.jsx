@@ -25,10 +25,31 @@ const SideBar = () => {
     setOff,
     me,
   } = useContext(RoomContext);
-
-  const { setVideoStructure } = useContext(YjsContext);
+  const { setVideoStructure, toggled, setToggled } = useContext(YjsContext);
   const handleClick = () => {
-    setShowModal(!showModal);
+    switch (showModal.open) {
+      case true:
+        if (showModal.messageBar) {
+          if (toggled.chatScreen) {
+            setShowModal({
+              videoSidebar: false,
+              messageBar: true,
+              open: false,
+            });
+          } else {
+            setToggled({ chatScreen: true, people: false });
+          }
+        }
+        else {
+          setToggled({ chatScreen: true, people: false });
+          setShowModal({ videoSidebar: false, messageBar: true, open: true });
+        }
+        break;
+      case false:
+        setShowModal({ videoSidebar: false, messageBar: true, open: true });
+        setToggled({ chatScreen: true, people: false });
+        break;
+    }
   };
   const toggleMicrophone = () => {
     setOff((prevState) => ({
@@ -59,6 +80,8 @@ const SideBar = () => {
 
   const toggleSidebar = () => {
     setVideoStructure(1);
+    setShowModal({ videoSidebar: true, messageBar: false, open: true });
+    setToggled({ chatScreen: false, people: false });
     setOff((prevState) => ({
       ...prevState,
       videoSidebar: true,
@@ -214,7 +237,7 @@ const SideBar = () => {
           onClick={handleClick}
         >
           <Tooltip id="chat" place="left" />
-          {showModal ? (
+          {showModal.messageBar ? (
             <FaRegComment className="bottom-nav-icon opacity-100 text-xl" />
           ) : (
             <FaComment className="bottom-nav-icon opacity-100 text-xl" />

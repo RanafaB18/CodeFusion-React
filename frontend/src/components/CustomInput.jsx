@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { YjsContext } from "../context/YjsContext";
 
-const CustomInput = () => {
-  const { setCustomInput, customInput } = useContext(YjsContext);
+const CustomInput = ({ setCustomInput, customInput }) => {
   const handleChange = (event) => {
     setCustomInput(event.target.value);
   };
