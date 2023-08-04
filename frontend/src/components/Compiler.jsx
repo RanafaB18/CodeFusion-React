@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { YjsContext } from "../context/YjsContext";
 import OutputWindow from "./OutputWindow";
 import { Buffer } from "buffer";
@@ -6,13 +6,13 @@ import axios from "axios";
 import CustomInput from "./CustomInput";
 const Compiler = ({ ytext }) => {
   const {
-    setOutputDetails,
-    customInput,
-    setCustomInput,
-    outputDetails,
     language,
   } = useContext(YjsContext);
+  const [outputDetails, setOutputDetails] = useState(null)
+  const [customInput, setCustomInput] = useState('')
+  const [processing, setProcessing] = useState(null);
   const handleCompile = () => {
+    setProcessing(true)
     const formData = {
       language_id: language.id,
       // encode source code in base64
@@ -67,6 +67,7 @@ const Compiler = ({ ytext }) => {
         return;
       } else {
         setOutputDetails(response.data);
+        setProcessing(false)
         return;
       }
     } catch (err) {
@@ -83,12 +84,12 @@ const Compiler = ({ ytext }) => {
           className="font-bold text-lg bg-[#1e293b] text-white py-1 px-4 rounded mb-2"
           onClick={handleCompile}
         >
-          Compile & Execute
+          {processing === true ? "Processing" : "Compile & Execute"}
         </button>
       </div>
       <div className="grid grid-flow-row md:grid-cols-3 mx-1 gap-1">
         <OutputWindow outputDetails={outputDetails} />
-        <CustomInput />
+        <CustomInput customInput={customInput} setCustomInput={setCustomInput}/>
       </div>
     </div>
   );
