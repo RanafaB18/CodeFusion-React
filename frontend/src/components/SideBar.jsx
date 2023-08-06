@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import {
   FaComment,
   FaMicrophone,
@@ -23,33 +23,30 @@ const SideBar = () => {
     room,
     off,
     setOff,
+    windowWidth,
     me,
   } = useContext(RoomContext);
-  const { setVideoStructure, toggled, setToggled } = useContext(YjsContext);
+  const { setVideoStructure, setToggled, toggled } = useContext(YjsContext);
   const handleClick = () => {
-    switch (showModal.open) {
-      case true:
-        if (showModal.messageBar) {
-          if (toggled.chatScreen) {
-            setShowModal({
-              videoSidebar: false,
-              messageBar: true,
-              open: false,
-            });
-          } else {
-            setToggled({ chatScreen: true, people: false });
-          }
+    if (windowWidth <= 1024) {
+      setVideoStructure(prevState => {
+        if (prevState !== 1) {
+          return prevState
         }
-        else {
-          setToggled({ chatScreen: true, people: false });
-          setShowModal({ videoSidebar: false, messageBar: true, open: true });
+        return null
+      });
+    }
+    switch (showModal) {
+      case true:
+        if (toggled.chatScreen) {
+          setShowModal(false);
         }
         break;
       case false:
-        setShowModal({ videoSidebar: false, messageBar: true, open: true });
-        setToggled({ chatScreen: true, people: false });
+        setShowModal(true);
         break;
     }
+    setToggled({ people: false, chatScreen: true });
   };
   const toggleMicrophone = () => {
     setOff((prevState) => ({
@@ -80,8 +77,6 @@ const SideBar = () => {
 
   const toggleSidebar = () => {
     setVideoStructure(1);
-    setShowModal({ videoSidebar: true, messageBar: false, open: true });
-    setToggled({ chatScreen: false, people: false });
     setOff((prevState) => ({
       ...prevState,
       videoSidebar: true,
@@ -237,7 +232,7 @@ const SideBar = () => {
           onClick={handleClick}
         >
           <Tooltip id="chat" place="left" />
-          {showModal.messageBar ? (
+          {showModal ? (
             <FaRegComment className="bottom-nav-icon opacity-100 text-xl" />
           ) : (
             <FaComment className="bottom-nav-icon opacity-100 text-xl" />

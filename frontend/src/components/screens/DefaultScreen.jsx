@@ -1,6 +1,5 @@
-import { FaEllipsisV } from "react-icons/fa";
 import Options from "../Options";
-import { Link, redirect } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import Bar from "../Bar";
 import SideBar from "../SideBar";
 import { useEffect, useState, useRef, useContext } from "react";
@@ -8,8 +7,6 @@ import SideModal from "../SideModal";
 import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import { YjsContext } from "../../context/YjsContext";
-import { WebsocketProvider } from "y-websocket";
-import "react-quill/dist/quill.snow.css";
 import React from "react";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
@@ -41,7 +38,6 @@ const DefaultScreen = ({
     showStream,
     stream,
     peers,
-    me,
     editors,
     setEditors,
     editorYtext,
@@ -51,16 +47,12 @@ const DefaultScreen = ({
   } = useContext(RoomContext);
   const { tabs } = useContext(ProviderContext);
   const docsDiv = useRef();
-  let quill = null;
-  let binding = null;
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
   const [language, setLanguage] = useState(languageOptions[0]);
   const [toggled, setToggled] = useState({ chatScreen: false, people: false });
 
   const renderDocs = () => {
-    // render documents to an HTML string (e.g. '<input type button index="0" value="Document 0" /><input ...')
-    // insert the list of all docs. But the first one is a "create new document" button
     const editorTextArray = [];
     setDocs(
       tabs.toArray().map((ymap, index) => {
@@ -72,17 +64,6 @@ const DefaultScreen = ({
       })
     );
     setEditorYtext(editorTextArray);
-    // insert the list of all docs. But the first one is a "create new document" button
-    // docsDiv.current.innerHTML = docs;
-    if (tabs.length === 0) {
-      // A user deleted all documents. Clear the editor content & binding.
-      if (binding) {
-        binding.destroy();
-      }
-      if (quill) {
-        quill.setContents("");
-      }
-    }
   };
 
   useEffect(() => {
@@ -109,11 +90,11 @@ const DefaultScreen = ({
 
   useEffect(() => {
     if (chatOpen) {
-      setShowModal((prevState) => ({...prevState, open: true}));
+      setShowModal((prevState) => !prevState);
     }
   }, [chatOpen]);
   const closeSideModal = () => {
-    setShowModal((prevState) => ({...prevState, open: false}));
+    setShowModal((prevState) => !prevState);
   };
   const handleLeave = () => {
     sessionStorage.clear("user_room_name");
@@ -134,8 +115,8 @@ const DefaultScreen = ({
         setLanguage,
         language,
         setVideoStructure,
+        toggled,
         setToggled,
-        toggled
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
@@ -181,7 +162,7 @@ const DefaultScreen = ({
                         <div
                           key={editor.id}
                           className={`h-full transition-all ease-in ${
-                            showModal.messageBar === true || videoStructure === 1
+                            showModal === true || videoStructure === 1
                               ? "lg:w-[97%] md:w-[45vw]"
                               : ""
                           }  bg-[#eaedf0]`}
@@ -208,6 +189,20 @@ const DefaultScreen = ({
           </div>
           <div className="relative">
             <div className="rounded inline-block">
+              {
+                /* 1 === video sidebar */
+                videoStructure === 1 && (
+                  <div className="hidden lg:flex">
+                    <VideoSideBar
+                      peers={peers}
+                      showStream={showStream}
+                      stream={stream}
+                      username={username}
+                      location={"default"}
+                    />
+                  </div>
+                )
+              }
               {videoStructure === 2 && (
                 <div className="absolute top-0 right-0">
                   <FloatingVideos
@@ -226,7 +221,7 @@ const DefaultScreen = ({
           <div className={`hidden md:inline-block relative`}>
             <div
               className={`transition-all ease-in h-full ${
-                showModal.open ? "mr-0" : "-mr-96"
+                showModal ? "mr-0" : "-mr-96"
               }`}
             >
               <SideModal
@@ -237,9 +232,7 @@ const DefaultScreen = ({
                 showStream={showStream}
                 stream={stream}
                 location={"default"}
-                showModal={showModal}
-                toggled={toggled}
-                setToggled={setToggled}
+                videoStructureIndex={videoStructure}
               />
             </div>
           </div>

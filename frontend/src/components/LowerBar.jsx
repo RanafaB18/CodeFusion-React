@@ -5,28 +5,29 @@ import LanguagesDropdown from "./LanguagesDropdown";
 import { YjsContext } from "../context/YjsContext";
 
 const LowerBar = () => {
-  const { invite, username, showModal, setShowModal, docs, currentIndex } =
+  const { invite, username, showModal, setShowModal, docs, currentIndex, windowWidth } =
     useContext(RoomContext);
-  const { setToggled, toggled } = useContext(YjsContext);
+  const { setToggled, toggled, setVideoStructure } = useContext(YjsContext);
   const handleClick = () => {
-    switch (showModal.open) {
+    if (windowWidth <= 1024) {
+      setVideoStructure(prevState => {
+        if (prevState !== 1) {
+          return prevState
+        }
+        return null
+      });
+    }
+    switch (showModal) {
       case true:
-        if (showModal.messageBar) {
-          if (toggled.people) {
-            setShowModal({ videoSidebar: false, messageBar: true, open: false });
-          } else {
-            setToggled({ chatScreen: false, people: true })
-          }
-        } else {
-          setShowModal({ videoSidebar: false, messageBar: true, open: true });
-          setToggled({ chatScreen: false, people: true })
+        if (toggled.people) {
+          setShowModal(false);
         }
         break;
       case false:
-        setShowModal({ videoSidebar: false, messageBar: true, open: true });
-        setToggled({ chatScreen: false, people: true })
-        break
+        setShowModal(true);
+        break;
     }
+    setToggled({ people: true, chatScreen: false });
   };
   return (
     <div

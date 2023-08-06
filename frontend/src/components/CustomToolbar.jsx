@@ -8,7 +8,7 @@ const CustomToolbar = () => {
   const { color } = useContext(ProviderContext);
 
   const handleClick = () => {
-    setShowModal(prevState => ({...prevState, open:!prevState.open}));
+    setShowModal(prevState => (!prevState));
   };
   // Add sizes to whitelist and register them
   const Size = Quill.import("formats/size");
