@@ -1,8 +1,10 @@
 import { AiOutlineClose } from "react-icons/ai";
 import Person from "./Person";
 import ChatScreen from "./screens/ChatScreen";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import VideoSideBar from "./VideoSideBar";
+import { YjsContext } from "../context/YjsContext";
+import { RoomContext } from "../context/RoomContext";
 
 const SideModal = ({
   participants,
@@ -12,20 +14,21 @@ const SideModal = ({
   showStream,
   stream,
   location,
-  showModal,
-  toggled,
-  setToggled
+  videoStructureIndex,
 }) => {
-  console.log("Side modal", showModal, "toggled", toggled);
-  if (showModal.videoSidebar === true) {
+  const { toggled, setToggled } = useContext(YjsContext);
+  const { windowWidth } = useContext(RoomContext)
+  if (videoStructureIndex === 1 && windowWidth <= 1024) {
     return (
-      <VideoSideBar
-        peers={peers}
-        showStream={showStream}
-        stream={stream}
-        username={username}
-        location={location}
-      />
+      <div className="bg-black">
+        <VideoSideBar
+          peers={peers}
+          showStream={showStream}
+          stream={stream}
+          username={username}
+          location={location}
+        />
+      </div>
     );
   }
   return (
