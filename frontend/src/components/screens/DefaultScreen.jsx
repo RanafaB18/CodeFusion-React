@@ -8,6 +8,7 @@ import Modal from "../Modal";
 import AnimatedModal from "../AnimatedModal";
 import { YjsContext } from "../../context/YjsContext";
 import React from "react";
+import "react-quill/dist/quill.snow.css";
 import CodeEditor from "../CodeEditor";
 import { RoomContext } from "../../context/RoomContext";
 import TextEditor from "../TextEditor";
