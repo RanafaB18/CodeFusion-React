@@ -36,6 +36,7 @@ const Compiler = ({ ytext }) => {
       .request(options)
       .then(function (response) {
         const token = response.data.token;
+        console.log("Response", response)
         checkStatus(token);
       })
       .catch((err) => {
