@@ -16,7 +16,6 @@ import VideoSideBar from "../VideoSideBar";
 import VideoGrid from "../VideoGrid";
 import FloatingVideos from "../FloatingVideos";
 import { ProviderContext } from "../../context/ProviderContext";
-import { languageOptions } from "../../constants/langDropdown";
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -50,7 +49,6 @@ const DefaultScreen = ({
   const docsDiv = useRef();
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
-  const [language, setLanguage] = useState(languageOptions[0]);
   const [toggled, setToggled] = useState({ chatScreen: false, people: false });
 
   const renderDocs = () => {
@@ -79,7 +77,7 @@ const DefaultScreen = ({
             doc.typeOfTab === "document" ? (
               <TextEditor ytext={editorYtext[doc.index]} username={username} />
             ) : (
-              <CodeEditor ytext={editorYtext[doc.index]} username={username} />
+              <CodeEditor ytext={editorYtext[doc.index]} />
             ),
           id: doc.id,
           index: doc.index,
@@ -113,8 +111,6 @@ const DefaultScreen = ({
         invite,
         setEditorYtext,
         setCurrentIndex,
-        setLanguage,
-        language,
         setVideoStructure,
         toggled,
         setToggled,

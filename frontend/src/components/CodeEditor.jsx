@@ -2,14 +2,15 @@ import { Editor } from "@monaco-editor/react";
 import { useRef, useContext } from "react";
 import { MonacoBinding } from "y-monaco";
 import { ProviderContext } from "../context/ProviderContext";
-import { YjsContext } from "../context/YjsContext";
 import Compiler from "./Compiler";
 import LanguagesDropdown from "./LanguagesDropdown";
+import { languageOptions } from "../constants/langDropdown";
 
-const CodeEditor = ({ ytext, username }) => {
+const CodeEditor = ({ ytext }) => {
   const editorRef = useRef();
   const { awareness } = useContext(ProviderContext);
-  const { language } = useContext(YjsContext)
+  const [language, setLanguage] = useState(languageOptions[0]);
+
   console.log("Language", language)
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -23,7 +24,7 @@ const CodeEditor = ({ ytext, username }) => {
   return (
     <>
       <div className="w-full md:hidden">
-        <LanguagesDropdown />
+        <LanguagesDropdown setLanguage={setLanguage}/>
       </div>
       <Editor
         theme="vs-dark"
@@ -33,7 +34,7 @@ const CodeEditor = ({ ytext, username }) => {
         language={language === undefined ? "javascript" : language.value}
         className=""
       />
-      <Compiler ytext={ytext}/>
+      <Compiler ytext={ytext} language={language}/>
     </>
   );
 };

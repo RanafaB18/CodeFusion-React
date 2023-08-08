@@ -16,8 +16,7 @@ app.use(express.json())
 
 app.use(cors())
 
-// console.log("roomLinks", roomLinks)
-// Delete empty rooms every 10 mins
+
 let deleteRoomsInterval; // Holds the reference to the setInterval timer
 
 function deleteEmptyRooms() {

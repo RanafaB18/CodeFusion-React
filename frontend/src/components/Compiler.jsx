@@ -4,14 +4,11 @@ import OutputWindow from "./OutputWindow";
 import { Buffer } from "buffer";
 import axios from "axios";
 import CustomInput from "./CustomInput";
-const Compiler = ({ ytext }) => {
-  const {
-    language,
-  } = useContext(YjsContext);
+const Compiler = ({ ytext, language }) => {
   const [outputDetails, setOutputDetails] = useState(null)
   const [customInput, setCustomInput] = useState('')
   const [processing, setProcessing] = useState(null);
-  const url = import.meta.env.VITE_APP_RAPID_API_URL
+
   const handleCompile = () => {
     setProcessing(true)
     const formData = {
@@ -22,7 +19,7 @@ const Compiler = ({ ytext }) => {
     };
     const options = {
       method: "POST",
-      url,
+      url: import.meta.env.VITE_APP_RAPID_API_URL,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "content-type": "application/json",
@@ -36,13 +33,11 @@ const Compiler = ({ ytext }) => {
     axios(options)
       .then(function (response) {
         const token = response.data.token;
-        console.log("Response", response)
         checkStatus(token);
       })
       .catch((err) => {
         let error = err.response ? err.response.data : err;
         console.log(error);
-        console.log("Url", url);
       });
     setCustomInput("");
   };
