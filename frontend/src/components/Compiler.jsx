@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { YjsContext } from "../context/YjsContext";
+import { useState } from "react";
 import OutputWindow from "./OutputWindow";
 import { Buffer } from "buffer";
 import axios from "axios";
