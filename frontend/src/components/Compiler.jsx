@@ -32,8 +32,7 @@ const Compiler = ({ ytext }) => {
       data: formData,
     };
 
-    axios
-      .request(options)
+    axios(options)
       .then(function (response) {
         const token = response.data.token;
         console.log("Response", response)
