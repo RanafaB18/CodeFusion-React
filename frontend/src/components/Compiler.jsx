@@ -11,6 +11,7 @@ const Compiler = ({ ytext }) => {
   const [outputDetails, setOutputDetails] = useState(null)
   const [customInput, setCustomInput] = useState('')
   const [processing, setProcessing] = useState(null);
+  const url = import.meta.env.VITE_APP_RAPID_API_URL
   const handleCompile = () => {
     setProcessing(true)
     const formData = {
@@ -21,7 +22,7 @@ const Compiler = ({ ytext }) => {
     };
     const options = {
       method: "POST",
-      url: import.meta.env.VITE_APP_RAPID_API_URL,
+      url,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "content-type": "application/json",
