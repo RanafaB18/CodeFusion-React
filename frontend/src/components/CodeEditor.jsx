@@ -1,5 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import { MonacoBinding } from "y-monaco";
 import { ProviderContext } from "../context/ProviderContext";
 import Compiler from "./Compiler";
