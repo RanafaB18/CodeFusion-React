@@ -155,7 +155,7 @@ const Bar = () => {
     setCurrentTab(docs[index].typeOfTab)
     setDocs((prevState) => {
       const currentTab = prevState[index];
-      if (currentTab.id === id) {
+      if (currentTab.docId === id) {
         setCurrentIndex(index);
       }
       return prevState;
