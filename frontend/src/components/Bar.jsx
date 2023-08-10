@@ -36,7 +36,7 @@ const Bar = () => {
   const optionRef = useRef();
   const { color } = useContext(ProviderContext)
 
-
+  console.log("Tabs", tabs.toJSON());
   useEffect(() => {
     document.addEventListener("click", createNewTab);
     return () => {
@@ -81,9 +81,11 @@ const Bar = () => {
             newMap.set("docId", id);
             newMap.set("tabName", name);
             newMap.set("typeOftab", "code");
+            newMap.set("index", tabs.length)
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
+            console.log("Index", tabs.length)
             tabs.push([newMap]);
             if (once === false) {
               socket.emit("tab-change", { id, room, color });
@@ -122,6 +124,7 @@ const Bar = () => {
             newMap.set("docId", id);
             newMap.set("tabName", name);
             newMap.set("typeOftab", "document");
+            newMap.set("index", tabs.length)
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
@@ -184,14 +187,14 @@ const Bar = () => {
             {docs.map((tab, i) => {
               return (
                 <Tab
-                  key={tab.id}
+                  key={tab.docId}
                   index={tab.index}
-                  text={tab.text}
-                  closeTab={() => closeTab(tab.id, tab.index)}
-                  switchTab={() => switchTab(i, tab.id)}
+                  text={tab.tabName}
+                  closeTab={() => closeTab(tab.docId, tab.index)}
+                  switchTab={() => switchTab(i, tab.docId)}
                   active={currentIndex === tab.index}
                   name={username}
-                  id={tab.id}
+                  id={tab.docId}
                   awarenessBars={awarenessTabs}
                 />
               );

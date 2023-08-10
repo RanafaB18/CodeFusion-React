@@ -54,12 +54,14 @@ const DefaultScreen = ({
   const renderDocs = () => {
     const editorTextArray = [];
     setDocs(
-      tabs.toArray().map((ymap, index) => {
-        const id = ymap.get("docId");
+      tabs.toArray().map((ymap) => {
+        const docId = ymap.get("docId");
         let tabName = ymap.get("tabName");
         const typeOfTab = ymap.get("typeOftab");
+        const index = ymap.get("index");
         editorTextArray.push(ymap.get("newDoc"));
-        return { id, index, text: tabName, typeOfTab };
+        console.log("New Obj", { docId, index, tabName, typeOfTab })
+        return { docId, index, tabName, typeOfTab };
       })
     );
     setEditorYtext(editorTextArray);
@@ -79,7 +81,7 @@ const DefaultScreen = ({
             ) : (
               <CodeEditor ytext={editorYtext[doc.index]} />
             ),
-          id: doc.id,
+          id: doc.docId,
           index: doc.index,
         };
       });
@@ -154,7 +156,7 @@ const DefaultScreen = ({
                   </div>
                 ) : (
                   editors.map((editor) => {
-                    if (editor.id === docs[currentIndex]?.id) {
+                    if (editor.id === docs[currentIndex]?.docId) {
                       return (
                         <div
                           key={editor.id}

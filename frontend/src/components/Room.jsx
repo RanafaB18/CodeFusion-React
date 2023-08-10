@@ -9,6 +9,7 @@ import Toast from "./Toast";
 import MessageToast from "./MessageToast";
 import VideoGrid from "./VideoGrid";
 import HorizontalBar from "./HorizontalBar";
+import { ProviderContext } from "../context/ProviderContext";
 
 const Room = ({
   room,
@@ -34,7 +35,8 @@ const Room = ({
   const [showModal, setShowModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [docs, setDocs] = useState([]);
+  const { tabs } = useContext(ProviderContext)
+  const [docs, setDocs] = useState(tabs.toJSON());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
@@ -47,6 +49,8 @@ const Room = ({
     videoFloat: true,
     noVideo: false
   });
+  console.log("Tabs in room", tabs.toJSON())
+  console.log("Docs in room", docs)
 
   useEffect(() => {
     const resize = () => {
