@@ -47,7 +47,10 @@ const Bar = () => {
       socket.emit("remove-color", { username, color, room });
     });
   }, []);
-
+  const getTab = async () => {
+    const response = await axiosUtil.getTabName(room);
+    return response;
+  };
   const createNewTab = (event) => {
     event.stopPropagation();
     if (newCodeTab.current) {
@@ -56,10 +59,6 @@ const Bar = () => {
         const pressedButton = newCodeTab.current;
         const val = pressedButton.getAttribute("index");
         if (val === "code") {
-          const getTab = async () => {
-            const response = await axiosUtil.getTabName(room);
-            return response;
-          };
           // Create Y.Map
           const newMap = new Y.Map();
           // Put newDoc in Y.Map
@@ -99,10 +98,6 @@ const Bar = () => {
         const pressedButton = newDocTab.current;
         const val = pressedButton.getAttribute("index");
         if (val === "document") {
-          const getTab = async () => {
-            const response = await axiosUtil.getTabName(room);
-            return response;
-          };
           // Create Y.Map
           const newMap = new Y.Map();
           // Put newDoc in Y.Map
@@ -113,7 +108,7 @@ const Bar = () => {
           getTab().then((data) => {
             tabValue = data.tabs[room].numOfTabs;
             let name = `Document ${tabValue}`;
-            // newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
+            newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
             // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);
