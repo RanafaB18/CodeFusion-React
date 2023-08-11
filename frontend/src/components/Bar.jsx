@@ -178,7 +178,7 @@ const Bar = () => {
                   key={tab.docId}
                   index={tab.index}
                   text={tab.tabName}
-                  closeTab={() => closeTab(tab.docId, tab.index)}
+                  closeTab={() => closeTab(tab.docId, i)}
                   switchTab={() => switchTab(i, tab.docId)}
                   active={currentIndex === tab.index}
                   name={username}
