@@ -31,7 +31,6 @@ const Bar = () => {
   const [once, setOnce] = useState(false);
   const optionRef = useRef();
 
-  console.log("Tabs", tabs.toJSON());
   useEffect(() => {
     document.addEventListener("click", createNewTab);
     return () => {
@@ -79,7 +78,6 @@ const Bar = () => {
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
-            console.log("Index", tabs.length);
             tabs.push([newMap]);
             if (once === false) {
               socket.emit("tab-change", { id, room, color });

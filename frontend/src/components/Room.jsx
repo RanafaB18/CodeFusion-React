@@ -49,8 +49,6 @@ const Room = ({
     videoFloat: true,
     noVideo: false
   });
-  console.log("Tabs in room", tabs.toJSON())
-  console.log("Docs in room", docs)
 
   useEffect(() => {
     const resize = () => {

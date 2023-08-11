@@ -60,7 +60,6 @@ const DefaultScreen = ({
         const typeOfTab = ymap.get("typeOftab");
         const index = ymap.get("index");
         editorTextArray.push(ymap.get("newDoc"));
-        console.log("New Obj", { docId, index, tabName, typeOfTab })
         return { docId, index, tabName, typeOfTab };
       })
     );
