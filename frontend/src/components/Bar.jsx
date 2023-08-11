@@ -11,6 +11,7 @@ import LowerBar from "./LowerBar";
 import { ProviderContext } from "../context/ProviderContext";
 const Bar = () => {
   const { docsDiv, setCurrentTab, setEditorYtext } = useContext(YjsContext);
+  const { color, tabs } = useContext(ProviderContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const {
     socket,
@@ -29,7 +30,6 @@ const Bar = () => {
   } = useContext(RoomContext);
   const [once, setOnce] = useState(false);
   const optionRef = useRef();
-  const { color, tabs } = useContext(ProviderContext);
 
   console.log("Tabs", tabs.toJSON());
   useEffect(() => {
