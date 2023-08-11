@@ -10,12 +10,7 @@ import { RoomContext } from "../context/RoomContext";
 import LowerBar from "./LowerBar";
 import { ProviderContext } from "../context/ProviderContext";
 const Bar = () => {
-  const {
-    tabs,
-    docsDiv,
-    setCurrentTab,
-    setEditorYtext,
-  } = useContext(YjsContext);
+  const { docsDiv, setCurrentTab, setEditorYtext } = useContext(YjsContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const {
     socket,
@@ -30,11 +25,11 @@ const Bar = () => {
     setCurrentIndex,
     showOptions,
     awarenessTabs,
-    setAwarenessTabs
+    setAwarenessTabs,
   } = useContext(RoomContext);
   const [once, setOnce] = useState(false);
   const optionRef = useRef();
-  const { color } = useContext(ProviderContext)
+  const { color, tabs } = useContext(ProviderContext);
 
   console.log("Tabs", tabs.toJSON());
   useEffect(() => {
@@ -81,11 +76,11 @@ const Bar = () => {
             newMap.set("docId", id);
             newMap.set("tabName", name);
             newMap.set("typeOftab", "code");
-            newMap.set("index", tabs.length)
+            newMap.set("index", tabs.length);
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
-            console.log("Index", tabs.length)
+            console.log("Index", tabs.length);
             tabs.push([newMap]);
             if (once === false) {
               socket.emit("tab-change", { id, room, color });
@@ -124,7 +119,7 @@ const Bar = () => {
             newMap.set("docId", id);
             newMap.set("tabName", name);
             newMap.set("typeOftab", "document");
-            newMap.set("index", tabs.length)
+            newMap.set("index", tabs.length);
             setEditorYtext((prevText) => {
               return [...prevText, newDoc];
             });
@@ -152,7 +147,7 @@ const Bar = () => {
   };
   const switchTab = (index, id) => {
     socket.emit("tab-change", { id, room, color, username });
-    setCurrentTab(docs[index].typeOfTab)
+    setCurrentTab(docs[index].typeOfTab);
     setDocs((prevState) => {
       const currentTab = prevState[index];
       if (currentTab.docId === id) {
