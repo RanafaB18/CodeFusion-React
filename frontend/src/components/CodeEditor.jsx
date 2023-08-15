@@ -11,9 +11,9 @@ const CodeEditor = ({ ytext }) => {
   const { awareness } = useContext(ProviderContext);
   const [language, setLanguage] = useState(languageOptions[0]);
 
-  console.log("Language", language)
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
+    console.log("Ytext in code", ytext)
     const binding = new MonacoBinding(
       ytext,
       editorRef.current.getModel(),

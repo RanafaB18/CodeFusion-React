@@ -2,15 +2,9 @@ import React, { useCallback, useContext } from "react";
 import { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import CustomToolbar from "./CustomToolbar";
-import { YjsContext } from "../context/YjsContext";
 import QuillCursors from 'quill-cursors'
 import { ProviderContext } from "../context/ProviderContext";
-import util from "../services"
 
-// Modules object for setting up the Quill editor
-const modules = {
-  toolbar: "#toolbar",
-};
 
 // Formats objects for setting up the Quill editor
 const formats = [
@@ -43,7 +37,6 @@ const TextEditor = ({ ytext, username }) => {
     color: color // should be a hex color
   })
 
-console.log("Awareness", awareness)
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper === null) {
       return;
