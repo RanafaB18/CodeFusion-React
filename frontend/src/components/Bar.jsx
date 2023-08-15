@@ -70,7 +70,6 @@ const Bar = () => {
             let name = `Code ${tabValue}`;
             // newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
             newMap.set("newDoc", newDoc);
-            // Set initial content with the headline being the index of the documentList
             newMap.set("docId", id);
             newMap.set("tabName", name);
             newMap.set("typeOftab", "code");
