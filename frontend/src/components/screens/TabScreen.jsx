@@ -48,7 +48,7 @@ const TabScreen = () => {
   };
   return (
     <>
-      <div className="relative h-14 w-screen bg-blackhover px-4 flex justify-between items-center">
+      <div className="relative h-14 w-screen bg-blackhover px-4 flex justify-between items-center overflow-hidden">
         <div className="flex items-center">
           <svg
             fill="#d2d4d9"
@@ -79,16 +79,16 @@ const TabScreen = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col p-2 gap-1">
+      <div className="flex flex-col p-2 gap-1 overflow-hidden">
         {docs.map((tab, i) => {
           return (
             <TabScreenTab
-              key={tab.id}
+              key={tab.docId}
               index={tab.index}
-              text={tab.text}
-              closeTab={() => closeTab(tab.id, tab.index)}
-              switchTab={() => switchTab(i, tab.id)}
-              id={tab.id}
+              text={tab.tabName}
+              closeTab={() => closeTab(tab.docId, tab.index)}
+              switchTab={() => switchTab(i, tab.docId)}
+              id={tab.docId}
               awarenessBars={awarenessTabs}
             />
           );
