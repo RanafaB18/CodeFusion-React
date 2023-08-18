@@ -75,6 +75,10 @@ body {
   margin-left: 10px !important;
   margin-right: 10px !important;
 }
+
+.contexify_item:not(.contexify_item-disabled):hover>.contexify_itemContent {
+  background-color: #2d3748 !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

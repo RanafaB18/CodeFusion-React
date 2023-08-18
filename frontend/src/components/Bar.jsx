@@ -1,4 +1,4 @@
-import { FaBars, FaEllipsisV, FaFileAlt, FaPlus } from "react-icons/fa";
+import { FaBars, FaPlus } from "react-icons/fa";
 import { useContext, useEffect, useRef, useState } from "react";
 import Tab from "./Tab";
 import Options from "./Options";
@@ -9,6 +9,7 @@ import axiosUtil from "../services";
 import { RoomContext } from "../context/RoomContext";
 import LowerBar from "./LowerBar";
 import { ProviderContext } from "../context/ProviderContext";
+import { Item, Menu, contextMenu } from "react-contexify";
 const Bar = () => {
   const { docsDiv, setCurrentTab, setEditorYtext } = useContext(YjsContext);
   const { color, tabs } = useContext(ProviderContext);
@@ -52,6 +53,8 @@ const Bar = () => {
   };
   const createNewTab = (event) => {
     event.stopPropagation();
+    contextMenu.hideAll()
+
     if (newCodeTab.current) {
       if (newCodeTab.current.contains(event.target)) {
         const id = uuid();

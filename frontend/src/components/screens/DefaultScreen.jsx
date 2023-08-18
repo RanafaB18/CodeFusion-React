@@ -68,6 +68,7 @@ const DefaultScreen = ({
 
   useEffect(() => {
     tabs.observe(renderDocs);
+    tabs.observeDeep(renderDocs);
   }, []);
   useEffect(() => {
     if (editorYtext.length > 0) {

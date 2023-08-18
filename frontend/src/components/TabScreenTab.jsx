@@ -1,6 +1,8 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { FaFileAlt, FaCode } from "react-icons/fa";
 import { v4 as uuid } from "uuid";
+import { useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 
 const TabScreenTab = ({
   text,
@@ -10,12 +12,22 @@ const TabScreenTab = ({
   switchTab,
   awarenessBars,
 }) => {
+  const { show } = useContextMenu({
+    id: "menu",
+  });
+  function handleContextMenu(event) {
+    show({
+      event,
+      props: { index, id }
+    });
+  }
   const handleCloseTab = (event) => {
     event.stopPropagation();
     closeTab(index);
   };
   return (
     <div
+      onContextMenu={handleContextMenu}
       index={index}
       onClick={switchTab}
       className={`flex text-white items-center justify-between rounded-md cursor-pointer pr-3 bg-[#353a41]`}
@@ -34,7 +46,7 @@ const TabScreenTab = ({
         <span className="opacity-50 mx-2 ml-3">
           {text.includes("Document") ? <FaFileAlt /> : <FaCode />}
         </span>
-        <span className="select-none text-white pr-3">{text}</span>
+        <span className="select-none text-white pr-3 w-96 whitespace-nowrap overflow-hidden text-ellipsis">{text}</span>
       </div>
       <AiOutlineClose
         onClick={handleCloseTab}

@@ -10,6 +10,9 @@ import MessageToast from "./MessageToast";
 import VideoGrid from "./VideoGrid";
 import HorizontalBar from "./HorizontalBar";
 import { ProviderContext } from "../context/ProviderContext";
+import { Item, Menu } from "react-contexify";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import RenameModal from "./RenameModal";
 
 const Room = ({
   room,
@@ -35,7 +38,7 @@ const Room = ({
   const [showModal, setShowModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const { tabs } = useContext(ProviderContext)
+  const { tabs } = useContext(ProviderContext);
   const [docs, setDocs] = useState(tabs.toJSON());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editors, setEditors] = useState([]);
@@ -47,7 +50,11 @@ const Room = ({
     videoGrid: false,
     videoSidebar: false,
     videoFloat: true,
-    noVideo: false
+    noVideo: false,
+  });
+  const [showRenameModal, setShowRenameModal] = useState({
+    visible: false,
+    index: null,
   });
 
   useEffect(() => {
@@ -60,7 +67,7 @@ const Room = ({
       if (screenIndex === 0) {
         setScreenIndex(2);
         showScreen(2);
-        setShowModal(prevState => (!prevState))
+        setShowModal((prevState) => !prevState);
       }
     }
     return () => {
@@ -159,6 +166,16 @@ const Room = ({
   const showScreen = (index) => {
     setScreenIndex(index);
   };
+  const renameHandler = ({ props }) => {
+    const { index } = props;
+    setShowRenameModal({ visible: true, index });
+  };
+
+  const deleteHandler = ({ props }) => {
+    const { index, id } = props
+    tabs.delete(index, 1);
+    socket.emit("delete-tab", { room, id, color });
+  }
   return (
     <div className="flex flex-col min-h-screen w-full relative bg-blackBackground">
       {/* <span className="text-white text-lg text-center">{windowWidth}</span> */}
@@ -202,8 +219,25 @@ const Room = ({
           setShowOptions,
           setDocs,
           invite,
+          showRenameModal,
+          setShowRenameModal,
         }}
       >
+        <Menu theme="dark" id={"menu"}>
+          <Item onClick={renameHandler}>
+            <div className="flex items-center gap-2">
+              <FaEdit />
+              <p>Rename</p>
+            </div>
+          </Item>
+          <Item onClick={deleteHandler}>
+            <div className="flex items-center gap-2">
+              <FaTrash />
+              <p>Delete</p>
+            </div>
+          </Item>
+        </Menu>
+        {showRenameModal.visible === true && <RenameModal />}
         {screenIndex !== 2 && (
           <div className="hidden md:block">
             <DefaultScreen
