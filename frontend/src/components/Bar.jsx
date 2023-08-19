@@ -2,16 +2,12 @@ import { FaBars, FaPlus } from "react-icons/fa";
 import { useContext, useEffect, useRef, useState } from "react";
 import Tab from "./Tab";
 import Options from "./Options";
-import * as Y from "yjs";
 import { YjsContext } from "../context/YjsContext";
-import { v4 as uuid } from "uuid";
-import axiosUtil from "../services";
 import { RoomContext } from "../context/RoomContext";
 import LowerBar from "./LowerBar";
 import { ProviderContext } from "../context/ProviderContext";
-import { Item, Menu, contextMenu } from "react-contexify";
 const Bar = () => {
-  const { docsDiv, setCurrentTab, setEditorYtext } = useContext(YjsContext);
+  const { docsDiv, setCurrentTab } = useContext(YjsContext);
   const { color, tabs } = useContext(ProviderContext);
   const [copyTabs, setCopyTabs] = useState(tabs);
   const {
@@ -20,8 +16,6 @@ const Bar = () => {
     setDocs,
     docs,
     username,
-    newDocTab,
-    newCodeTab,
     setShowOptions,
     currentIndex,
     setCurrentIndex,
@@ -29,15 +23,9 @@ const Bar = () => {
     awarenessTabs,
     setAwarenessTabs,
   } = useContext(RoomContext);
-  const [once, setOnce] = useState(false);
   const optionRef = useRef();
 
-  useEffect(() => {
-    document.addEventListener("click", createNewTab);
-    return () => {
-      document.removeEventListener("click", createNewTab);
-    };
-  }, []);
+
   useEffect(() => {
     socket.on("get-active-tabs", ({ activeTabs }) => {
       setAwarenessTabs(activeTabs);
@@ -47,90 +35,7 @@ const Bar = () => {
       socket.emit("remove-color", { username, color, room });
     });
   }, []);
-  const getTab = async () => {
-    const response = await axiosUtil.getTabName(room);
-    return response;
-  };
-  const createNewTab = (event) => {
-    event.stopPropagation();
-    contextMenu.hideAll()
-
-    if (newCodeTab.current) {
-      if (newCodeTab.current.contains(event.target)) {
-        const id = uuid();
-        const pressedButton = newCodeTab.current;
-        const val = pressedButton.getAttribute("index");
-        if (val === "code") {
-          // Create Y.Map
-          const newMap = new Y.Map();
-          // Put newDoc in Y.Map
-
-          // create a new document
-          const newDoc = new Y.Text();
-          let tabValue;
-          getTab().then((data) => {
-            tabValue = data.tabs[room].numOfTabs;
-            let name = `Code ${tabValue}`;
-            // newDoc.applyDelta([{ insert: `Code ${tabValue}` }]);
-            newMap.set("newDoc", newDoc);
-            newMap.set("docId", id);
-            newMap.set("tabName", name);
-            newMap.set("typeOftab", "code");
-            newMap.set("index", tabs.length);
-            setEditorYtext((prevText) => {
-              return [...prevText, newDoc];
-            });
-            tabs.push([newMap]);
-            if (once === false) {
-              socket.emit("tab-change", { id, room, color });
-            } else {
-              socket.emit("tab-change", { id, room });
-            }
-            setOnce(true);
-          });
-        }
-        setShowOptions(false);
-      }
-    }
-    if (newDocTab.current) {
-      if (newDocTab.current.contains(event.target)) {
-        const id = uuid();
-        const pressedButton = newDocTab.current;
-        const val = pressedButton.getAttribute("index");
-        if (val === "document") {
-          // Create Y.Map
-          const newMap = new Y.Map();
-          // Put newDoc in Y.Map
-
-          // create a new document
-          const newDoc = new Y.Text();
-          let tabValue;
-          getTab().then((data) => {
-            tabValue = data.tabs[room].numOfTabs;
-            let name = `Document ${tabValue}`;
-            newDoc.applyDelta([{ insert: `Document ${tabValue}` }]);
-            newMap.set("newDoc", newDoc);
-            newMap.set("docId", id);
-            newMap.set("tabName", name);
-            newMap.set("typeOftab", "document");
-            newMap.set("index", tabs.length);
-            setEditorYtext((prevText) => {
-              return [...prevText, newDoc];
-            });
-            tabs.push([newMap]);
-            if (once === false) {
-              socket.emit("tab-change", { id, room, color });
-            } else {
-              socket.emit("tab-change", { id, room });
-            }
-            setOnce(true);
-          });
-        }
-        setShowOptions(false);
-      }
-    }
-  };
-
+  
   const closeTab = (id, index) => {
     copyTabs.delete(index, 1);
     socket.emit("delete-tab", { room, id, color });

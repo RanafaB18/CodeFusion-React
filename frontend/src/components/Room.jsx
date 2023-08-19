@@ -26,8 +26,6 @@ const Room = ({
   const [visible, setVisible] = useState(false);
   const [showClipBoardModal, setShowClipBoardModal] = useState(false);
   // const [showUserJoined, setUserJoined] = useState(false)
-  const newDocTab = useRef();
-  const newCodeTab = useRef();
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
   const [screenIndex, setScreenIndex] = useState(2);
@@ -199,8 +197,6 @@ const Room = ({
           showStream,
           isMuted,
           stream,
-          newDocTab,
-          newCodeTab,
           setShowStream,
           editors,
           awarenessTabs,
