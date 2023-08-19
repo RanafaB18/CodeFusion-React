@@ -23,10 +23,15 @@ const Bar = () => {
     awarenessTabs,
     setAwarenessTabs,
   } = useContext(RoomContext);
-  const optionRef = useRef();
-
-
+  // const optionRef = useRef();
   useEffect(() => {
+    // Use if options modal should disappear on outer click and add cleanup
+    // function outerClick(event) {
+    //   if (optionRef.current && !optionRef.current.contains(event.target)) {
+    //     setShowOptions(false);
+    //   }
+    // }
+    // document.addEventListener("click", outerClick);
     socket.on("get-active-tabs", ({ activeTabs }) => {
       setAwarenessTabs(activeTabs);
     });
@@ -35,7 +40,7 @@ const Bar = () => {
       socket.emit("remove-color", { username, color, room });
     });
   }, []);
-  
+
   const closeTab = (id, index) => {
     copyTabs.delete(index, 1);
     socket.emit("delete-tab", { room, id, color });
@@ -61,7 +66,7 @@ const Bar = () => {
         <div className="text-white flex">
           <div className="relative">
             <button
-              ref={optionRef}
+              // ref={optionRef} set if you uncomment the above comment
               onClick={openOptions}
               className="px-4 py-2 border-r opacity-75"
             >
