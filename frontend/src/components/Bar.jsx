@@ -56,8 +56,6 @@ const Bar = () => {
       setCurrentIndex(0);
     }
   };
-  console.log("Docs", docs);
-  console.log("Tabs", copyTabs.toJSON());
 
   const openOptions = () => {
     setShowOptions((prevState) => !prevState);
