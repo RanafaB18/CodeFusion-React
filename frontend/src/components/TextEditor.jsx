@@ -52,7 +52,11 @@ const TextEditor = ({ ytext, username }) => {
         toolbar: "#toolbar",
       },
     });
-    const binding = new QuillBinding(ytext, quill, provider.awareness);
+    try {
+      const binding = new QuillBinding(ytext, quill, provider.awareness);
+    } catch(e) {
+      console.log("Error", e);
+    }
   }, []);
   return (
     <>

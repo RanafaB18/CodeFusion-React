@@ -41,7 +41,6 @@ const Options = () => {
       newMap.set("docId", id);
       newMap.set("tabName", name);
       newMap.set("typeOftab", tabName);
-      newMap.set("index", tabs.length);
       setEditorYtext((prevText) => {
         return [...prevText, newDoc];
       });

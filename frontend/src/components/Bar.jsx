@@ -42,14 +42,28 @@ const Bar = () => {
   }, []);
 
   const closeTab = (id, index) => {
+    console.log("closed tab index", index);
+    console.log("Copy tabs before delete", copyTabs.toJSON());
     copyTabs.delete(index, 1);
+    console.log("Copy tabs after delete", copyTabs.toJSON());
     socket.emit("delete-tab", { room, id, color });
+    if (
+      currentIndex > index ||
+      (currentIndex === index && copyTabs.length > 1)
+    ) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(0);
+    }
   };
+  console.log("Docs", docs);
+  console.log("Tabs", copyTabs.toJSON());
 
   const openOptions = () => {
     setShowOptions((prevState) => !prevState);
   };
   const switchTab = (index, id) => {
+    console.log("Switched");
     socket.emit("tab-change", { id, room, color, username });
     setCurrentTab(docs[index].typeOfTab);
     setDocs((prevState) => {
@@ -87,12 +101,10 @@ const Bar = () => {
               return (
                 <Tab
                   key={tab.docId}
-                  index={tab.index}
+                  index={i}
                   text={tab.tabName}
                   closeTab={() => closeTab(tab.docId, i)}
                   switchTab={() => switchTab(i, tab.docId)}
-                  active={currentIndex === tab.index}
-                  name={username}
                   id={tab.docId}
                   awarenessBars={awarenessTabs}
                 />

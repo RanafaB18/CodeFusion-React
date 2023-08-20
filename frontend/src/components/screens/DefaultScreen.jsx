@@ -44,6 +44,7 @@ const DefaultScreen = ({
     setEditorYtext,
     currentIndex,
     setCurrentIndex,
+    me
   } = useContext(RoomContext);
   const { tabs } = useContext(ProviderContext);
   const docsDiv = useRef();
@@ -58,9 +59,8 @@ const DefaultScreen = ({
         const docId = ymap.get("docId");
         let tabName = ymap.get("tabName");
         const typeOfTab = ymap.get("typeOftab");
-        const index = ymap.get("index");
         editorTextArray.push(ymap.get("newDoc"));
-        return { docId, index, tabName, typeOfTab };
+        return { docId, tabName, typeOfTab };
       })
     );
     setEditorYtext(editorTextArray);
@@ -73,16 +73,15 @@ const DefaultScreen = ({
   useEffect(() => {
     if (editorYtext.length > 0) {
       setCurrentTab(docs[currentIndex]?.typeOfTab);
-      const quillEditors = docs.map((doc) => {
+      const quillEditors = docs.map((doc, index) => {
         return {
           tag:
             doc.typeOfTab === "document" ? (
-              <TextEditor ytext={editorYtext[doc.index]} username={username} />
+              <TextEditor ytext={editorYtext[index]} username={username} />
             ) : (
-              <CodeEditor ytext={editorYtext[doc.index]} />
+              <CodeEditor ytext={editorYtext[index]} />
             ),
           id: doc.docId,
-          index: doc.index,
         };
       });
       setEditors(quillEditors);
@@ -120,10 +119,10 @@ const DefaultScreen = ({
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
         <div className="">
-          {/* <span className="text-white">
+          <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
-          </span> */}
+          </span>
           <Bar />
         </div>
 
