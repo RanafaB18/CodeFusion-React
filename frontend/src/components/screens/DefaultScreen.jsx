@@ -104,14 +104,10 @@ const DefaultScreen = ({
   return (
     <YjsContext.Provider
       value={{
-        tabs,
         docsDiv,
-        currentIndex,
         currentTab,
         setCurrentTab,
         invite,
-        setEditorYtext,
-        setCurrentIndex,
         setVideoStructure,
         toggled,
         setToggled,

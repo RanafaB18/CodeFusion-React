@@ -1,9 +1,7 @@
 import { useRef, useEffect, useState, useContext } from "react";
-import Person from "./Person";
-import Draggable, { DraggableCore } from "react-draggable";
+import { DraggableCore } from "react-draggable";
 import CircleAvatar from "./CircleAvatar";
 import { Tooltip } from "react-tooltip";
-import { ProviderContext } from "../context/ProviderContext";
 import { YjsContext } from "../context/YjsContext";
 
 const Video = ({ stream, showStream, username, isMuted, isPeer, location, color }) => {
