@@ -24,7 +24,7 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
   const [clicked, setClicked] = useState(false);
   const color = util.getNameColorCode(username);
   useEffect(() => {
-    provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://clumsy-group-production.up.railway.app'] })
+    provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://signalling-server-production.up.railway.app'] })
     // persistence = new IndexeddbPersistence(room, ydoc)
     awareness = provider.awareness
   }, [])
