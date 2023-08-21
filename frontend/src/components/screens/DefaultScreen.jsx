@@ -16,6 +16,8 @@ import VideoSideBar from "../VideoSideBar";
 import VideoGrid from "../VideoGrid";
 import FloatingVideos from "../FloatingVideos";
 import { ProviderContext } from "../../context/ProviderContext";
+import { languageOptions } from "../../constants/langDropdown";
+
 const DefaultScreen = ({
   participants,
   chatOpen,
@@ -51,6 +53,7 @@ const DefaultScreen = ({
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
   const [toggled, setToggled] = useState({ chatScreen: false, people: false });
+  const [language, setLanguage] = useState(languageOptions[0]);
 
   const renderDocs = () => {
     const editorTextArray = [];
@@ -110,6 +113,8 @@ const DefaultScreen = ({
         setVideoStructure,
         toggled,
         setToggled,
+        language,
+        setLanguage
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">

@@ -5,11 +5,13 @@ import Compiler from "./Compiler";
 import LanguagesDropdown from "./LanguagesDropdown";
 import { languageOptions } from "../constants/langDropdown";
 import { RoomContext } from "../context/RoomContext";
+import { YjsContext } from "../context/YjsContext";
 
 const CodeEditor = ({ ytext }) => {
   const editorRef = useRef();
   const { socket } = useContext(RoomContext)
-  const [language, setLanguage] = useState(languageOptions[0]);
+  // const [language, setLanguage] = useState(languageOptions[0]);
+  const { language, setLanguage } = useContext(YjsContext)
   useEffect(() => {
     socket.on('show-editors', () => {
       ytext.applyDelta([{ insert: ` ` }]);

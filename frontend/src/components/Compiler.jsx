@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import OutputWindow from "./OutputWindow";
 import { Buffer } from "buffer";
 import axios from "axios";
 import CustomInput from "./CustomInput";
-const Compiler = ({ ytext, language }) => {
+import { YjsContext } from "../context/YjsContext";
+const Compiler = ({ ytext }) => {
+  const { language } = useContext(YjsContext)
   const [outputDetails, setOutputDetails] = useState(null)
   const [customInput, setCustomInput] = useState('')
   const [processing, setProcessing] = useState(null);
