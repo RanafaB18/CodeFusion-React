@@ -67,7 +67,6 @@ const DefaultScreen = ({
   };
 
   useEffect(() => {
-    tabs.observe(renderDocs);
     tabs.observeDeep(renderDocs);
   }, []);
   useEffect(() => {

@@ -42,16 +42,17 @@ const Bar = () => {
   }, []);
 
   const closeTab = (id, index) => {
-    console.log("closed tab index", index);
-    console.log("Copy tabs before delete", copyTabs.toJSON());
     copyTabs.delete(index, 1);
-    console.log("Copy tabs after delete", copyTabs.toJSON());
     socket.emit("delete-tab", { room, id, color });
     if (
       currentIndex > index ||
       (currentIndex === index && copyTabs.length > 1)
     ) {
-      setCurrentIndex(currentIndex - 1);
+      setCurrentIndex(prevState => {
+        switchTab(prevState - 1, id)
+        return prevState - 1
+      });
+
     } else {
       setCurrentIndex(0);
     }
@@ -103,6 +104,7 @@ const Bar = () => {
                   text={tab.tabName}
                   closeTab={() => closeTab(tab.docId, i)}
                   switchTab={() => switchTab(i, tab.docId)}
+                  active={currentIndex === i}
                   id={tab.docId}
                   awarenessBars={awarenessTabs}
                 />

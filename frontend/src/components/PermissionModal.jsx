@@ -13,6 +13,7 @@ import util from "../services";
 import FixedVideo from "./FixedVideo";
 
 const ydoc = new Y.Doc();
+const textDoc = new Y.Doc()
 let provider
 let persistence
 let awareness
@@ -28,7 +29,6 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
     awareness = provider.awareness
   }, [])
   const tabs = ydoc.getArray("tabs");
-
   const handleVideo = (on) => {
     setShowStream(on);
   };

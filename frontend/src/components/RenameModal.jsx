@@ -21,7 +21,6 @@ const RenameModal = () => {
     };
   }, []);
   const renameHandler = () => {
-    const NAME_LIMIT = 12;
     if (!/\S/.test(tabname)) {
       setShowWarning(true);
       setTimeout(() => {

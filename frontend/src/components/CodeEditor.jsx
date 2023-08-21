@@ -1,24 +1,27 @@
 import { Editor } from "@monaco-editor/react";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext, useState, useEffect } from "react";
 import { MonacoBinding } from "y-monaco";
-import { ProviderContext } from "../context/ProviderContext";
 import Compiler from "./Compiler";
 import LanguagesDropdown from "./LanguagesDropdown";
 import { languageOptions } from "../constants/langDropdown";
+import { RoomContext } from "../context/RoomContext";
 
 const CodeEditor = ({ ytext }) => {
   const editorRef = useRef();
-  const { awareness } = useContext(ProviderContext);
+  const { socket } = useContext(RoomContext)
   const [language, setLanguage] = useState(languageOptions[0]);
-
+  useEffect(() => {
+    socket.on('show-editors', () => {
+      ytext.applyDelta([{ insert: ` ` }]);
+      ytext.delete(0, 1)
+    })
+  }, [])
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
-    console.log("Ytext in code", ytext)
-    const binding = new MonacoBinding(
+    new MonacoBinding(
       ytext,
       editorRef.current.getModel(),
       new Set([editor]),
-      awareness
     );
   }
   return (

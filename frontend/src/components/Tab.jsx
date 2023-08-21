@@ -5,6 +5,8 @@ import {
   useContextMenu,
 } from "react-contexify";
 import "react-contexify/ReactContexify.css";
+import { ProviderContext } from "../context/ProviderContext";
+import { useContext } from "react";
 
 const Tab = ({
   text,
@@ -13,10 +15,13 @@ const Tab = ({
   index,
   switchTab,
   awarenessBars,
+  active
 }) => {
   const { show } = useContextMenu({
     id: "menu",
   });
+  const { color } = useContext(ProviderContext);
+
 
   function handleContextMenu(event) {
     show({
@@ -33,7 +38,8 @@ const Tab = ({
       onContextMenu={handleContextMenu}
       index={index}
       onClick={switchTab}
-      className={`flex items-center cursor-pointer pr-3 bg-[#353a41] h-full`}
+      className={`flex items-center cursor-pointer pr-3 bg-[#353a41] h-full ${active ? `border-b-2` : ""}`}
+      style={{ borderBottomColor: color}}
     >
       {awarenessBars[id]?.map((color) => {
         const key = uuid();

@@ -3,7 +3,6 @@ import TabButtons from "./TabButtons";
 import { IconContext } from "react-icons";
 import { AiOutlineFileWord } from "react-icons/ai";
 import { v4 as uuid } from "uuid";
-import { YjsContext } from "../context/YjsContext";
 import { useContext, useState } from "react";
 import { RoomContext } from "../context/RoomContext";
 import * as Y from "yjs";
@@ -15,7 +14,7 @@ const Options = () => {
   const { socket, setShowOptions, room } =
     useContext(RoomContext);
   const { color, tabs } = useContext(ProviderContext);
-  const { setEditorYtext } = useContext(YjsContext);
+  const { setEditorYtext } = useContext(RoomContext);
   const [once, setOnce] = useState(false);
 
   const getTab = async () => {
@@ -36,7 +35,7 @@ const Options = () => {
     getTab().then((data) => {
       tabValue = data.tabs[room].numOfTabs;
       let name = `${tabName === 'code' ? 'Code' : 'Document'} ${tabValue}`;
-      newDoc.applyDelta([{ insert: `Document ${tabValue}` }]); //debugging purposes
+      // newDoc.applyDelta([{ insert: `Document ${tabValue}` }]); //debugging purposes
       newMap.set("newDoc", newDoc);
       newMap.set("docId", id);
       newMap.set("tabName", name);

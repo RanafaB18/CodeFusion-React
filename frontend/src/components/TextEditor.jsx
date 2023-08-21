@@ -1,9 +1,11 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Quill } from "react-quill";
 import { QuillBinding } from "y-quill";
 import CustomToolbar from "./CustomToolbar";
 import QuillCursors from 'quill-cursors'
 import { ProviderContext } from "../context/ProviderContext";
+import { Socket } from "socket.io-client";
+import { RoomContext } from "../context/RoomContext";
 
 
 // Formats objects for setting up the Quill editor
@@ -29,13 +31,17 @@ const formats = [
 const TextEditor = ({ ytext, username }) => {
   Quill.register('modules/cursors', QuillCursors)
   const { awareness, color, provider } = useContext(ProviderContext)
-  console.log("Ytext docs", ytext)
+  const { socket } = useContext(RoomContext)
   awareness.setLocalStateField('user', {
-    // Define a print name that should be displayed
     name: username,
-    // Define a color that should be associated to the user:
     color: color // should be a hex color
   })
+  useEffect(() => {
+    socket.on('show-editors', () => {
+      ytext.applyDelta([{ insert: ` ` }]);
+      ytext.delete(0, 1)
+    })
+  }, [])
 
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper === null) {
