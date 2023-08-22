@@ -47,7 +47,7 @@ const Tab = ({
           <div
             key={key}
             style={{ backgroundColor: color }}
-            className="h-full w-1"
+            className="h-full w-0.5"
           ></div>
         );
       })}
