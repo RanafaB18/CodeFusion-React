@@ -25,6 +25,7 @@ const PermissionModal = ({ username, room, viewStream = true }) => {
   const color = util.getNameColorCode(username);
   useEffect(() => {
     provider = new WebrtcProvider(room, ydoc, { signaling: ['wss://y-webrtc-production-75dd.up.railway.app/'] })
+    // persisitence might be causing some error
     // persistence = new IndexeddbPersistence(room, ydoc)
     awareness = provider.awareness
   }, [])

@@ -48,11 +48,10 @@ const Bar = () => {
       currentIndex > index ||
       (currentIndex === index && copyTabs.length > 1)
     ) {
-      setCurrentIndex(prevState => {
-        switchTab(prevState - 1, id)
-        return prevState - 1
+      setCurrentIndex((prevState) => {
+        switchTab(prevState - 1, id);
+        return prevState - 1;
       });
-
     } else {
       setCurrentIndex(0);
     }
@@ -93,7 +92,7 @@ const Bar = () => {
           <div
             ref={docsDiv}
             role="tabs"
-            className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full"
+            className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full scrollbar-thin scrollbar-thumb-blackBackground scrollbar-track-gray-400"
           >
             {docs.map((tab, i) => {
               return (
