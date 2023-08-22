@@ -52,7 +52,7 @@ const DefaultScreen = ({
   const docsDiv = useRef();
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
-  const [toggled, setToggled] = useState({ chatScreen: false, people: false });
+  const [toggled, setToggled] = useState({ chatScreen: true, people: false });
   const [language, setLanguage] = useState(languageOptions[0]);
 
   const renderDocs = () => {
