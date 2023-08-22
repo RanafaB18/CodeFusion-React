@@ -81,6 +81,7 @@ const Compiler = ({ ytext }) => {
         <button
           className="font-bold text-lg bg-[#1e293b] text-white py-1 px-4 rounded mb-2"
           onClick={handleCompile}
+          disabled={processing}
         >
           {processing === true ? "Processing" : "Compile & Execute"}
         </button>
