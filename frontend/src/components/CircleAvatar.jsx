@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { ProviderContext } from "../context/ProviderContext";
 import util from "../services"
 const CircleAvatar = ({ name, small }) => {
   const color = util.getNameColorCode(name)

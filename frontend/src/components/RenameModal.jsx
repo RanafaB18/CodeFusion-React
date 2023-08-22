@@ -53,10 +53,10 @@ const RenameModal = () => {
         onChange={(e) => setTabname(e.target.value)}
       />
       <button
-        className="rounded hover:text-lg transition-all duration-200 px-4"
+        className="rounded transition-all duration-200 px-4"
         onClick={renameHandler}
       >
-        <span className="text-white">Rename</span>
+        <span className="text-white hover:border">Rename</span>
       </button>
     </div>
   );

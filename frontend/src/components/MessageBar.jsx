@@ -1,10 +1,8 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import {
-  FaInfo,
   FaInfoCircle,
   FaPaperPlane,
   FaPaperclip,
-  FaPlane,
   FaSmile,
 } from "react-icons/fa";
 import { RoomContext } from "../context/RoomContext";
@@ -71,7 +69,7 @@ const MessageBar = ({ username, addMessages }) => {
         className="resize-none w-full p-3 bg-blackhover border-b-2 border-b-gray-500
           rounded-t-md text-white text-lg focus:outline-none
           focus:border-b-bluish placeholder:tracking-wide"
-        placeholder={`Write a message...${username}`}
+        placeholder={`Write a message...`}
         value={message}
         onChange={handleMessageChange}
       />

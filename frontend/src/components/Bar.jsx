@@ -92,7 +92,7 @@ const Bar = () => {
           <div
             ref={docsDiv}
             role="tabs"
-            className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full scrollbar-thin scrollbar-thumb-blackBackground scrollbar-track-gray-400"
+            className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full scrollbar-thin scrollbar-thumb-blackBackground scrollbar-track-white"
           >
             {docs.map((tab, i) => {
               return (
