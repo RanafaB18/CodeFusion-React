@@ -11,6 +11,13 @@ const Compiler = ({ ytext }) => {
   const [processing, setProcessing] = useState(null);
 
   const handleCompile = () => {
+    if (!/\S/.test(ytext.toString())) {
+      ytext.applyDelta([{ insert: "Enter some code"}])
+      setTimeout(() => {
+        ytext.delete(0, ytext.length)
+      }, 1000);
+      return
+    }
     setProcessing(true)
     const formData = {
       language_id: language.id,
