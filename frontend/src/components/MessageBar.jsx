@@ -80,7 +80,7 @@ const MessageBar = ({ username, addMessages }) => {
        rounded-br-md"
       >
         <div className="flex items-center gap-2 relative">
-          <button className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
+          <button type="button" className="hover:bg-white hover:bg-opacity-25 p-1 rounded-md">
             <FaPaperclip className="bottom-nav-icon -rotate-90 text-xl" />
           </button>
           <div

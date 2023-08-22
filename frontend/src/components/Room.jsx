@@ -75,8 +75,7 @@ const Room = ({
   useEffect(() => {
     function windowUnload(event) {
       event.preventDefault()
-      console.log("Window is unloading");
-      return (event.returnValue = "Lose your data")
+      return (event.returnValue = "")
     }
     setRoomLink(window.location.href);
     document.title = `${getRoomName(room)} | codefusion meeting`;

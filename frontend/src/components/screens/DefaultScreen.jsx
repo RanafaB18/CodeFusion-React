@@ -52,7 +52,7 @@ const DefaultScreen = ({
   const docsDiv = useRef();
   const [videoStructure, setVideoStructure] = useState(2);
   const [currentTab, setCurrentTab] = useState("");
-  const [toggled, setToggled] = useState({ chatScreen: false, people: false });
+  const [toggled, setToggled] = useState({ chatScreen: true, people: false });
   const [language, setLanguage] = useState(languageOptions[0]);
 
   const renderDocs = () => {
@@ -118,13 +118,13 @@ const DefaultScreen = ({
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
-        <div className="">
-          <span className="text-white">
+        <>
+          {/* <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
-          </span>
+          </span> */}
           <Bar />
-        </div>
+        </>
 
         {/* Hidden */}
         {/* <div className="flex flex-col relative w-full md:hidden">

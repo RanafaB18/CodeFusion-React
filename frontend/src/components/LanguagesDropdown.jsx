@@ -4,14 +4,14 @@ import { useContext } from "react"
 import { YjsContext } from "../context/YjsContext"
 
 const LanguagesDropdown = () => {
-  const { setLanguage } = useContext(YjsContext)
+  const { setLanguage, language } = useContext(YjsContext)
   const changeHandler = (selectedOpton) => {
     setLanguage(selectedOpton)
   }
   return (
     <Select
         options={languageOptions}
-        defaultValue={languageOptions[0]}
+        defaultValue={language}
         onChange={changeHandler}
         placeholder={`Choose a language`}
     />

@@ -11,6 +11,13 @@ const Compiler = ({ ytext }) => {
   const [processing, setProcessing] = useState(null);
 
   const handleCompile = () => {
+    if (!/\S/.test(ytext.toString())) {
+      ytext.applyDelta([{ insert: "Enter some code"}])
+      setTimeout(() => {
+        ytext.delete(0, ytext.length)
+      }, 1000);
+      return
+    }
     setProcessing(true)
     const formData = {
       language_id: language.id,
@@ -81,6 +88,7 @@ const Compiler = ({ ytext }) => {
         <button
           className="font-bold text-lg bg-[#1e293b] text-white py-1 px-4 rounded mb-2"
           onClick={handleCompile}
+          disabled={processing}
         >
           {processing === true ? "Processing" : "Compile & Execute"}
         </button>
