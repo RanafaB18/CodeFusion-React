@@ -62,7 +62,6 @@ const Bar = () => {
     setShowOptions((prevState) => !prevState);
   };
   const switchTab = (index, id) => {
-    console.log("Switched");
     socket.emit("tab-change", { id, room, color, username });
     setCurrentTab(docs[index].typeOfTab);
     setDocs((prevState) => {

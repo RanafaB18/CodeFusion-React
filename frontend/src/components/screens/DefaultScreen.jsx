@@ -118,13 +118,13 @@ const DefaultScreen = ({
       }}
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
-        <div className="">
-          <span className="text-white">
+        <>
+          {/* <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
-          </span>
+          </span> */}
           <Bar />
-        </div>
+        </>
 
         {/* Hidden */}
         {/* <div className="flex flex-col relative w-full md:hidden">
