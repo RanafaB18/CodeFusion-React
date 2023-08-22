@@ -41,7 +41,7 @@ const LowerBar = () => {
         //{docs[currentIndex]?.typeOfTab === "document" && <CustomToolbar />}
       </div> */}
       {docs[currentIndex]?.typeOfTab === "code" && <LanguagesDropdown />}
-      <div className="flex justify-around w-1/4 md:2/12 lg:w-3/12">
+      <div className="flex justify-around w-1/4 md:w-3/12 lg:w-2/12">
         <button
           className="bg-bluish
           text-white text-md
