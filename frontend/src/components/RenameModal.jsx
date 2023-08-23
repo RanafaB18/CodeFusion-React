@@ -20,7 +20,8 @@ const RenameModal = () => {
       document.removeEventListener("click", outerClickEvent);
     };
   }, []);
-  const renameHandler = () => {
+  const renameHandler = (event) => {
+    event.preventDefault()
     if (!/\S/.test(tabname)) {
       setShowWarning(true);
       setTimeout(() => {
@@ -39,7 +40,8 @@ const RenameModal = () => {
     });
   };
   return (
-    <div
+    <form
+      onSubmit={renameHandler}
       ref={modalRef}
       className="flex flex-col gap-1 max-w-sm h-24 justify-around items-center absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 p-3 bg-[#353a41] rounded"
     >
@@ -53,12 +55,12 @@ const RenameModal = () => {
         onChange={(e) => setTabname(e.target.value)}
       />
       <button
+        type="submit"
         className="rounded transition-all duration-200 px-4"
-        onClick={renameHandler}
       >
-        <span className="text-white hover:border">Rename</span>
+        <span className="text-white hover:border rounded px-3 py-1">Rename</span>
       </button>
-    </div>
+    </form>
   );
 };
 
