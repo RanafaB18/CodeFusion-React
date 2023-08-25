@@ -102,6 +102,7 @@ io.on('connection', (socket) => {
             // console.log("New user: ", username, peerId)
             socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
             socket.emit('get-users', { participants: Rooms[room] })
+            socket.emit('show-editors')
             // console.log("Specific Rooms", Rooms[room])
             console.log("Rooms", Rooms)
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
