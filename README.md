@@ -32,11 +32,13 @@ npm run dev
 ```
 In the following code snippet of index.js, change the value of `origin`
 to your localhost.
+```javascript
 const io = new Server(server, {
     cors: {
         origin: 'http://localhost:<PORT>'
     }
 })
+```
 
 ## Start signaling server
 To start the signalling server:
@@ -45,8 +47,9 @@ To start the signalling server:
 3. Run PORT=4444 node ./bin/server.js in the commandline
 In the ./src/components/PermissionModal.jsx file of the frontend, specify your localhost as a signalling server.
 For example,
+```javascript
 const provider = new WebrtcProvider('your-room-name', ydoc, { signaling: ['wss://y-webrtc-production-2501.up.railway.app', 'ws://localhost:4444'] })
-
+```
 
 ## Acknowledgements
 This application, both frontend and backend was developed as a final year project by Baba Abdul-Raziq and Boateng Kofi Frimpong. Special thanks to Dr. Dominic Asamoah for his dearest supervision.
