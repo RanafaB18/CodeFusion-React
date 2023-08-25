@@ -37,7 +37,7 @@ const TextEditor = ({ ytext, username }) => {
     color: color // should be a hex color
   })
   useEffect(() => {
-    socket.on('show-editors', () => {
+    socket.on('user-joined', () => {
       ytext.applyDelta([{ insert: ` ` }]);
       ytext.delete(0, 1)
     })
