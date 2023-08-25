@@ -10,16 +10,20 @@ Before you begin, ensure you have met the following requirements:
 ## Setting up the Frontend
 To start the frontend, follow these steps:
 On the terminal, run:
-1. cd CodeFusion-React
-2. cd frontend
-3. npm install
-4. npm run dev
-5. Visit the link in a web browser to view the application. Link will be of the form http://localhost:<PORT>
+```bash
+cd CodeFusion-React
+cd frontend
+npm install
+npm run dev
+```
+5. Visit the link in a web browser to view the application. Link will be of the form `http://localhost:<PORT>`
 
 In the following code snippet of ./src/context/RoomContext.jsx,
+```javascript
 const socket = io('http://localhost:<PORT>');
-and in ./src/services.js
-change the baseUrl and rootUrl to reflect your localhost.
+```
+and in `./src/services.js`
+change the `baseUrl` and `rootUrl` to reflect your localhost.
 
 ## Setting up the Backend
 To start the frontend, follow these steps:
@@ -42,10 +46,12 @@ const io = new Server(server, {
 
 ## Start signaling server
 To start the signalling server:
-1. cd y-webtrc
-2. npm install
-3. Run PORT=4444 node ./bin/server.js in the commandline
-In the ./src/components/PermissionModal.jsx file of the frontend, specify your localhost as a signalling server.
+```bash
+cd y-webtrc
+npm install
+Run PORT=4444 node ./bin/server.js in the commandline
+```
+In the `./src/components/PermissionModal.jsx` file of the frontend, specify your localhost as a signalling server.
 For example,
 ```javascript
 const provider = new WebrtcProvider('your-room-name', ydoc, { signaling: ['wss://y-webrtc-production-2501.up.railway.app', 'ws://localhost:4444'] })
