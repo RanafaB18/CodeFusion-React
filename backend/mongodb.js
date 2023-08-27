@@ -18,10 +18,23 @@ const userSchema = new mongoose.Schema({
 });
 
 const roomSchema = new mongoose.Schema({
-    key: String,
+    room: String,
     data: [userSchema]
 });
 
-const Room = mongoose.model('Room', roomSchema)
+const messageSchema = new mongoose.Schema({
+    message: String,
+    user: String,
+    time: Date,
+    id: Number,
+})
+const chatSchema = new mongoose.Schema({
+    room: String,
+    data: {
+        messages: [messageSchema]
+    }
+})
 
-module.exports = { Room }
+const Room = mongoose.model('Room', roomSchema)
+const Message = mongoose.model('Message', chatSchema)
+module.exports = { Room, Message }

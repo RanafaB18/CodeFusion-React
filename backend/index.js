@@ -1,15 +1,16 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const { roomRouter, roomLinks, Rooms, Messages, Tabs } = require('./routes/room')
+const { roomRouter, Rooms, Messages, Tabs } = require('./routes/room')
 const http = require('http')
 const server = http.createServer(app)
 const cors = require('cors')
 const { Server } = require('socket.io')
+const { Room } = require('./mongodb')
 const io = new Server(server, {
     cors: {
-        origin: "https://code-fusion-react.vercel.app"
-        // origin: "http://localhost:5173"
+        // origin: "https://code-fusion-react.vercel.app"
+        origin: "http://localhost:5173"
     }
 })
 app.use(express.json())
@@ -56,22 +57,21 @@ function getNameColorCode(name) {
 io.on('connection', (socket) => {
     // console.log('a user connected', socket.id);
 
-    socket.on("join_room", (room) => {
-        if (Rooms[room]) {
-            // console.log(room, "made")
+    socket.on("join_room", async (room) => {
+        const foundRoom = await Room.findOne({ room: room })
+        console.log("Is room there", foundRoom.data);
+        if (foundRoom) {
             socket.join(room)
-            // console.log(`Number of people in ${room} is ${io.sockets.adapter.rooms.get(room).size}`)
         }
     })
-    socket.on("join-video", (room) => {
-        socket.emit("all_participants", Rooms[room])
-    })
-    socket.on("is-valid-room", (room) => {
-        if (Rooms[room]) {
+    socket.on("is-valid-room", async (room) => {
+        const foundRoom = await Room.findOne({ room: room })
+        if (foundRoom) {
             socket.emit("valid-room", true)
         } else {
             socket.emit("valid-room", false)
         }
+
     })
     socket.on("toggle-video-audio", ({ room, id, viewStream, isMuted }) => {
         // console.log("Peer", {id, viewStream, isMuted })
@@ -80,9 +80,10 @@ io.on('connection', (socket) => {
     socket.on('request-permissions', () => {
         socket.emit('get-permissions')
     })
-    socket.on("user_joined", ({ username, room, peerId, viewStream, isMuted }) => {
-        if (Rooms[room]) {
-            Rooms[room].push({ username: username, userId: peerId, viewStream: viewStream, isMuted })
+    socket.on("user_joined", async ({ username, room, peerId, viewStream, isMuted }) => {
+        const foundRoom = await Room.findOne({ room: room })
+        if (foundRoom) {
+            const updatedRoom = await Room.findOneAndUpdate({ room: room }, { $push: { data: { username, userId: peerId, viewStream, isMuted }}}, { new: true })
             if (Tabs[room] === undefined) {
                 Tabs[room] = { numOfTabs: 0, tabs: {}, numOfUsers: [username] }
             }
@@ -97,23 +98,19 @@ io.on('connection', (socket) => {
             }
 
             socket.join(room)
-            // console.log("View stream ?", viewStream)
             socket.to(room).emit("user-joined", { peerId, username, viewStream, isMuted })
-            // console.log("New user: ", username, peerId)
-            socket.to(room).emit("message", { username: username, participants: Rooms[room], joinedStatus: "joined" })
-            socket.emit('get-users', { participants: Rooms[room] })
+            console.log("peeps", updatedRoom);
+            socket.to(room).emit("message", { username: username, participants: updatedRoom.data, joinedStatus: "joined" })
+            socket.emit('get-users', { participants: updatedRoom.data })
             socket.emit('show-editors')
-            // console.log("Specific Rooms", Rooms[room])
-            console.log("Rooms", Rooms)
+            console.log("Rooms", await Room.find({}))
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
-            socket.on('disconnect', () => {
-                // console.log(`${username} left the room`)
-                Rooms[room] = Rooms[room].filter((user) => user.userId !== peerId)
+            socket.on('disconnect', async () => {
+                const removeUser = await Room.findOneAndUpdate({ room: room }, { $pull: { data: { userId: peerId }}}, { new: true })
                 Tabs[room].numOfUsers = Tabs[room].numOfUsers.filter(name => name !== username)
                 const removedUserColor = getNameColorCode(username)
                 socket.to(room).emit('removal', { username, color: removedUserColor })
-                socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
-                // console.log(Rooms)
+                socket.to(room).emit('message', { username: username, participants: removeUser.data, joinedStatus: "left" })
                 // Might change
                 socket.to(room).emit('user-disconnected', peerId)
                 socket.leave(room) //testing
@@ -124,12 +121,11 @@ io.on('connection', (socket) => {
         console.log("Receiving message: ", message)
         socket.to(message.room).emit('show-message-toast', message)
     })
-    socket.on('leave-room', ({ username, room, userId }) => {
+    socket.on('leave-room', async ({ username, room, userId }) => {
         socket.leave(room)
-        Rooms[room] = Rooms[room].filter((user) => user.userId !== userId)
+        const removedUser = await Room.findOneAndUpdate({ room: room }, { $pull: { data: { userId: userId }}})
         Tabs[room].numOfUsers = Tabs[room].numOfUsers.filter(name => name !== username)
-        socket.to(room).emit('message', { username: username, participants: Rooms[room], joinedStatus: "left" })
-        // console.log(Rooms)
+        socket.to(room).emit('message', { username: username, participants: removedUser.data, joinedStatus: "left" })
         // Might change
         socket.to(room).emit('user-disconnected', userId)
     })
@@ -154,6 +150,7 @@ io.on('connection', (socket) => {
         // if (Tabs[room].numOfUsers.length === 2){
         //     // console.log("Color", color)
         // }
+
         if (Tabs[room].tabs[id] === undefined) {
             // console.log("Keys", Object.values(Tabs[room]))
             if (Tabs[room].numOfTabs === 1) {
@@ -175,7 +172,6 @@ io.on('connection', (socket) => {
                 }
             }
         }
-        // console.log(Tabs[room].tabs)
         io.to(room).emit('get-active-tabs', { activeTabs: Tabs[room].tabs })
     })
     socket.on('delete-tab', (tabObj) => {
@@ -183,7 +179,6 @@ io.on('connection', (socket) => {
         const room = tabObj.room
 
         delete Tabs[room].tabs[id]
-        // console.log(Tabs[room].tabs)
     })
 
     socket.on('remove-color', obj => {
@@ -229,27 +224,6 @@ app.get('/stop-cleanup', (req, res) => {
     stopRoomCleanup();
     res.send('Room cleanup process stopped.');
 });
-
-app.post('/:room/users', (req, res) => {
-    const name = req.body.name
-    const room = req.body.room
-    // console.log(`${name} is either leaving`)
-    // Check if it's a refresh
-    if (Rooms[room]) {
-        Rooms[room] = Rooms[room].filter((user) => user.username != name)
-        if (Rooms[room].length === 0) {
-            delete Rooms[room]
-            delete Messages[room]
-            delete Tabs[room]
-            // console.log("New Rooms after deletion", Rooms)
-            // console.log("New Messages after deletion", Messages)
-            // console.log("Tabs", Tabs)
-            io.local.socketsLeave(room)
-        }
-        io.to(room).emit("all_users", { rooms: Rooms })
-    }
-    return res.end()
-})
 
 const PORT = process.env.PORT || 3004
 server.listen(PORT, () => {
