@@ -4,7 +4,6 @@ import { QuillBinding } from "y-quill";
 import CustomToolbar from "./CustomToolbar";
 import QuillCursors from 'quill-cursors'
 import { ProviderContext } from "../context/ProviderContext";
-import { Socket } from "socket.io-client";
 import { RoomContext } from "../context/RoomContext";
 
 

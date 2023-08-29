@@ -73,10 +73,10 @@ const Room = ({
     };
   }, [windowWidth]);
   useEffect(() => {
-    function windowUnload(event) {
-      event.preventDefault()
-      return (event.returnValue = "")
-    }
+    // function windowUnload(event) {
+    //   event.preventDefault()
+    //   return (event.returnValue = "")
+    // }
     setRoomLink(window.location.href);
     document.title = `${getRoomName(room)} | codefusion meeting`;
 
@@ -91,12 +91,12 @@ const Room = ({
     socket.on("show-message-toast", handleMessageToast);
     socket.on("get-users", handleUsers);
     window.addEventListener("popstate", leaveRoomViaBackButton, { once: true });
-    window.addEventListener('beforeunload', windowUnload)
+    // window.addEventListener('beforeunload', windowUnload)
     return () => {
       socket.off("show-message-toast", handleMessageToast);
       socket.off("get-users", handleUsers);
       socket.off("message", notifyUsers);
-      window.removeEventListener('beforeunload', windowUnload)
+      // window.removeEventListener('beforeunload', windowUnload)
       // window.removeEventListener('popstate', leaveRoomViaBackButton)
     };
   }, [room]);

@@ -17,7 +17,7 @@ const ChatScreen = ({ username, isSmall }) => {
 
     fetchMessages().then((roomMessages) => {
       const updatedMessages = roomMessages.messageData;
-      setMessages(updatedMessages?.messages || []);
+      setMessages(updatedMessages);
     });
   }, []);
 
@@ -31,7 +31,7 @@ const ChatScreen = ({ username, isSmall }) => {
   }, [messages]);
 
   const handleMessages = (messageData) => {
-    setMessages(messageData.messages);
+    setMessages(messageData);
   };
 
   const addMessages = (messageData) => {
