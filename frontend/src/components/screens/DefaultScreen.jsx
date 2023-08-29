@@ -62,8 +62,9 @@ const DefaultScreen = ({
         const docId = ymap.get("docId");
         let tabName = ymap.get("tabName");
         const typeOfTab = ymap.get("typeOftab");
-        editorTextArray.push(ymap.get("newDoc"));
-        return { docId, tabName, typeOfTab };
+        const newDoc = ymap.get("newDoc")
+        editorTextArray.push(newDoc);
+        return { docId, tabName, newDoc, typeOfTab };
       })
     );
     setEditorYtext(editorTextArray);
@@ -119,10 +120,10 @@ const DefaultScreen = ({
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
         <>
-          {/* <span className="text-white">
+          <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
-          </span> */}
+          </span>
           <Bar />
         </>
 

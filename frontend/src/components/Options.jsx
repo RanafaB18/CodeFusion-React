@@ -66,11 +66,11 @@ const Options = () => {
           text={"New Code Tab"}
           clickHandler={() => createTab('code')}
         />
-        <hr className="my-2 h-px opacity-20" />
+        {/* <hr className="my-2 h-px opacity-20" />
         <TabButtons
           icon={<AiOutlineFileWord />}
           text={"Import Word Document"}
-        />
+        /> */}
       </IconContext.Provider>
     </div>
   );

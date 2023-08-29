@@ -95,6 +95,7 @@ const Bar = () => {
             className="flex gap-1 items-center overflow-x-auto whitespace-nowrap w-full scrollbar-thin scrollbar-thumb-blackBackground scrollbar-track-white"
           >
             {docs.map((tab, i) => {
+              if (tab.tabName !== "Dummy"){}
               return (
                 <Tab
                   key={tab.docId}
@@ -105,6 +106,7 @@ const Bar = () => {
                   active={currentIndex === i}
                   id={tab.docId}
                   awarenessBars={awarenessTabs}
+                  newDoc={tab.newDoc}
                 />
               );
             })}
