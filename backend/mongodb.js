@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 console.log(process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
-        console.log("Connected to datatbase");
+        console.log("Connected to database");
     })
     .catch((e) => {
         console.log("Error connecting to database");
@@ -25,14 +25,12 @@ const roomSchema = new mongoose.Schema({
 const messageSchema = new mongoose.Schema({
     message: String,
     user: String,
-    time: Date,
+    time: String,
     id: Number,
 })
 const chatSchema = new mongoose.Schema({
     room: String,
-    data: {
-        messages: [messageSchema]
-    }
+    data:  [messageSchema]
 })
 
 const Room = mongoose.model('Room', roomSchema)

@@ -6,7 +6,7 @@ const http = require('http')
 const server = http.createServer(app)
 const cors = require('cors')
 const { Server } = require('socket.io')
-const { Room } = require('./mongodb')
+const { Room, Message } = require('./mongodb')
 const io = new Server(server, {
     cors: {
         // origin: "https://code-fusion-react.vercel.app"
@@ -59,7 +59,6 @@ io.on('connection', (socket) => {
 
     socket.on("join_room", async (room) => {
         const foundRoom = await Room.findOne({ room: room })
-        console.log("Is room there", foundRoom.data);
         if (foundRoom) {
             socket.join(room)
         }
@@ -129,16 +128,12 @@ io.on('connection', (socket) => {
         // Might change
         socket.to(room).emit('user-disconnected', userId)
     })
-    // Messages = {'room-name': {messages:[{message, username, time, id}],}}
 
-    socket.on("send_message", (messageData) => {
-        // // console.log("Message Data: ", messageData)
-        if (!Messages[messageData.room]) {
-            Messages[messageData.room] = { messages: [messageData] }
-        } else {
-            Messages[messageData.room].messages.push(messageData)
-        }
-        socket.to(messageData.room).emit('chat-message', Messages[messageData.room])
+    socket.on("send_message", async (messageData) => {
+        const { message, user, time, id, room } = messageData
+        const updatedMessages = await Message.findOneAndUpdate({ room: room }, { $push: { data:  { message, user, time, id } }}, { new: true })
+        console.log("Send messages", updatedMessages)
+        socket.to(room).emit('chat-message', updatedMessages.data)
     })
 
     socket.on("tab-change", (tabObj) => {
@@ -203,9 +198,11 @@ io.on('connection', (socket) => {
 app.use('/room', roomRouter)
 
 // Sends the messages to the frontend
-app.get('/:room/messages', (req, res) => {
+app.get('/:room/messages', async (req, res) => {
     const room = req.params.room
-    return res.json({ messageData: Messages[room] })
+    const allMessages = await Message.findOne({ room: room })
+    console.log("All Messages", allMessages);
+    return res.json({ messageData: allMessages.data })
 })
 
 app.get('/:room/tabs', (req, res) => {

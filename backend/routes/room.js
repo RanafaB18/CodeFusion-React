@@ -1,5 +1,5 @@
 const shortUUID = require('short-uuid')
-const { Room } = require('../mongodb')
+const { Room, Message } = require('../mongodb')
 
 const roomRouter = require('express').Router()
 const Rooms = {}
@@ -15,9 +15,16 @@ roomRouter.post('/', async (request, response) => {
     const id = shortUUID.generate()
     const roomLink = `${room}-${id}`
     const newRoom = await Room.create({
-        key: roomLink,
+        room: roomLink,
         data: []
     })
+    const messageFound = await Message.findOne({ room: roomLink })
+    if (messageFound === null) {
+        await Message.create({
+            room: roomLink,
+            data: []
+        })
+    }
     console.log("New room", newRoom);
     response.json({roomLink: roomLink})
 })
