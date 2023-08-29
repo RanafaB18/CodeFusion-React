@@ -29,7 +29,7 @@ const formats = [
 ];
 const TextEditor = ({ ytext, username }) => {
   Quill.register('modules/cursors', QuillCursors)
-  const { awareness, color, provider } = useContext(ProviderContext)
+  const { awareness, color, provider, ydoc } = useContext(ProviderContext)
   const { socket } = useContext(RoomContext)
   awareness.setLocalStateField('user', {
     name: username,
@@ -37,8 +37,10 @@ const TextEditor = ({ ytext, username }) => {
   })
   useEffect(() => {
     socket.on('show-editors', () => {
-      ytext.applyDelta([{ insert: ` ` }]);
-      ytext.delete(0, 1)
+      ydoc.transact(() => {
+        ytext.applyDelta([{ insert: ` ` }]);
+        ytext.delete(0, 1)
+      })
     })
   }, [])
 
