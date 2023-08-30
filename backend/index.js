@@ -9,8 +9,8 @@ const { Server } = require('socket.io')
 const { Room, Message } = require('./mongodb')
 const io = new Server(server, {
     cors: {
-        // origin: "https://code-fusion-react.vercel.app"
-        origin: "http://localhost:5173"
+        origin: "https://code-fusion-react.vercel.app"
+        // origin: "http://localhost:5173"
     }
 })
 app.use(express.json())
