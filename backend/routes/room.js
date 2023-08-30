@@ -25,7 +25,6 @@ roomRouter.post('/', async (request, response) => {
             data: []
         })
     }
-    console.log("New room", newRoom);
     response.json({roomLink: roomLink})
 })
 

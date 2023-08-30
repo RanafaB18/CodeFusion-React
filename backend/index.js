@@ -98,11 +98,10 @@ io.on('connection', (socket) => {
 
             socket.join(room)
             socket.to(room).emit("user-joined", { peerId, username, viewStream, isMuted })
-            console.log("peeps", updatedRoom);
             socket.to(room).emit("message", { username: username, participants: updatedRoom.data, joinedStatus: "joined" })
             socket.emit('get-users', { participants: updatedRoom.data })
             socket.emit('show-editors')
-            console.log("Rooms", await Room.find({}))
+
             // io.to(room).emit("message", { username: username, participants: Rooms[room] })
             socket.on('disconnect', async () => {
                 const removeUser = await Room.findOneAndUpdate({ room: room }, { $pull: { data: { userId: peerId }}}, { new: true })
@@ -117,7 +116,6 @@ io.on('connection', (socket) => {
         }
     })
     socket.on('message-sent', (message) => {
-        console.log("Receiving message: ", message)
         socket.to(message.room).emit('show-message-toast', message)
     })
     socket.on('leave-room', async ({ username, room, userId }) => {
@@ -201,7 +199,6 @@ app.use('/room', roomRouter)
 app.get('/:room/messages', async (req, res) => {
     const room = req.params.room
     const allMessages = await Message.findOne({ room: room })
-    console.log("All Messages", allMessages);
     return res.json({ messageData: allMessages.data })
 })
 
