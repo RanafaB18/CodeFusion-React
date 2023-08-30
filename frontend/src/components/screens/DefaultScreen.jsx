@@ -120,10 +120,10 @@ const DefaultScreen = ({
     >
       <main className="flex flex-col w-full md:h-screen overflow-clip select-none">
         <>
-          <span className="text-white">
+          {/* <span className="text-white">
             Current Index: {currentIndex} id: {docs[currentIndex]?.id} name:{" "}
             {username} myID: {me.id} tab: {currentTab}
-          </span>
+          </span> */}
           <Bar />
         </>
 
