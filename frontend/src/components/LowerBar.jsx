@@ -5,7 +5,7 @@ import LanguagesDropdown from "./LanguagesDropdown";
 import { YjsContext } from "../context/YjsContext";
 
 const LowerBar = () => {
-  const { invite, username, showModal, setShowModal, docs, currentIndex, windowWidth } =
+  const { invite, username, showModal, setShowModal, docs, currentIndex, windowWidth, setCopy } =
     useContext(RoomContext);
   const { setToggled, toggled, setVideoStructure } = useContext(YjsContext);
   const handleClick = () => {
@@ -41,7 +41,18 @@ const LowerBar = () => {
         //{docs[currentIndex]?.typeOfTab === "document" && <CustomToolbar />}
       </div> */}
       {docs[currentIndex]?.typeOfTab === "code" && <LanguagesDropdown />}
-      <div className="flex justify-around w-1/4 md:w-3/12 lg:w-2/12">
+      <div className={`flex justify-around w-1/4 md:w-3/12 ${docs[currentIndex]?.typeOfTab === "code" ? "lg:w-3/12" : "lg:w-2/12"}`}>
+      <button
+          className="bg-bluish
+          text-white text-md
+      font-semibold rounded-md px-4
+      tracking-wide hover:bg-blue-500"
+          onClick={() => {
+            setCopy(true)
+          }}
+        >
+          Copy Code
+        </button>
         <button
           className="bg-bluish
           text-white text-md

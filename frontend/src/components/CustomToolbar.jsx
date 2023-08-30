@@ -3,13 +3,27 @@ import { useContext } from "react";
 import { RoomContext } from "../context/RoomContext";
 import { ProviderContext } from "../context/ProviderContext";
 
-const CustomToolbar = () => {
-  const { invite, username, showModal, setShowModal } = useContext(RoomContext);
+const CustomToolbar = ({ ytext }) => {
+  const { invite, username, showModal, setShowModal, setShowClipBoardModal, setVisible } = useContext(RoomContext);
   const { color } = useContext(ProviderContext);
 
   const handleClick = () => {
-    setShowModal(prevState => (!prevState));
+    setShowModal((prevState) => !prevState);
   };
+  const copyText = () => {
+    navigator.clipboard.writeText(ytext).then(
+      () => {
+        setShowClipBoardModal({text: "Paste into your text editor", show: true});
+        setTimeout(() => {
+          setShowClipBoardModal({text:"Paste and send anywhere to invite others to join!", show:false});
+          setVisible(false);
+        }, 3000);
+      },
+      () => {
+        console.log("Error copying to clipboard");
+      }
+    );
+  }
   // Add sizes to whitelist and register them
   const Size = Quill.import("formats/size");
   Size.whitelist = ["medium", "large", "huge"];
@@ -79,6 +93,15 @@ const CustomToolbar = () => {
         </div>
       </div>
       <div className="relative z-10 hidden md:flex gap-2 items-stretch flex-shrink-0 pl-2 ml-auto bg-opacity-25 h-13">
+        <button
+          className="bg-bluish
+          text-white text-md
+      font-semibold rounded-md px-4
+      tracking-wide hover:bg-blue-500"
+          onClick={copyText}
+        >
+          Copy Text
+        </button>
         <button
           className="bg-bluish
           text-white text-md

@@ -47,7 +47,7 @@ const PeopleScreen = ({
         roomLink={roomLink}
         visible={visible}
       />
-      {showClipBoardModal && (<AnimatedModal />)}
+      {showClipBoardModal.show && (<AnimatedModal />)}
     </div>
   );
 };

@@ -3,15 +3,30 @@ import { useRef, useContext, useState, useEffect } from "react";
 import { MonacoBinding } from "y-monaco";
 import Compiler from "./Compiler";
 import LanguagesDropdown from "./LanguagesDropdown";
-import { languageOptions } from "../constants/langDropdown";
 import { RoomContext } from "../context/RoomContext";
 import { YjsContext } from "../context/YjsContext";
 
 const CodeEditor = ({ ytext }) => {
   const editorRef = useRef();
-  const { socket } = useContext(RoomContext)
-  // const [language, setLanguage] = useState(languageOptions[0]);
+  const { socket, copy, setCopy, setShowClipBoardModal, setVisible } = useContext(RoomContext)
   const { language, setLanguage } = useContext(YjsContext)
+  useEffect(() =>{
+    if (copy === true) {
+      navigator.clipboard.writeText(ytext).then(
+        () => {
+          setShowClipBoardModal({text: "Paste into your code editor", show: true});
+          setTimeout(() => {
+            setShowClipBoardModal({text:"Paste and send anywhere to invite others to join!", show:false});
+            setVisible(false);
+          }, 3000);
+        },
+        () => {
+          console.log("Error copying to clipboard");
+        }
+      );
+    }
+    setCopy(false)
+  }, [copy])
   useEffect(() => {
     socket.on('show-editors', () => {
       ytext.applyDelta([{ insert: ` ` }]);

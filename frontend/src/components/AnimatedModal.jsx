@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { RoomContext } from "../context/RoomContext";
+
 const AnimatedModal = () => {
+  const { showClipBoardModal } = useContext(RoomContext)
   return (
     <div className="absolute w-full top-24 z-40">
       <div
@@ -7,10 +11,10 @@ const AnimatedModal = () => {
       >
         <p className="text-white">
           <span className="text-white font-semibold">
-            Link copied to clipboard.
+            Copied to clipboard.
           </span>
           <span className="opacity-90 pl-2">
-            Paste and send anywhere to invite others to join!
+            {showClipBoardModal.text}
           </span>
         </p>
         <div

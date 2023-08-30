@@ -67,7 +67,7 @@ const TextEditor = ({ ytext, username }) => {
   }, []);
   return (
     <>
-      <CustomToolbar />
+      <CustomToolbar ytext={ytext}/>
       <div id="container" className="h-full max-w-[23rem] md:max-w-[41rem] mx-auto w-full sm:max-w-[35rem] max-h-[86vh] lg:max-w-full" ref={wrapperRef}></div>
     </>
   );

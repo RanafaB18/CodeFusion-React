@@ -245,7 +245,7 @@ const DefaultScreen = ({
           roomLink={roomLink}
           visible={visible}
         />
-        {showClipBoardModal && <AnimatedModal />}
+        {showClipBoardModal.show && <AnimatedModal />}
       </main>
     </YjsContext.Provider>
   );

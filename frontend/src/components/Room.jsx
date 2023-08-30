@@ -24,7 +24,7 @@ const Room = ({
 }) => {
   // let roomLink;
   const [visible, setVisible] = useState(false);
-  const [showClipBoardModal, setShowClipBoardModal] = useState(false);
+  const [showClipBoardModal, setShowClipBoardModal] = useState({ text:"Paste and send anywhere to invite others to join!", show: false});
   // const [showUserJoined, setUserJoined] = useState(false)
   const [roomLink, setRoomLink] = useState("");
   const [participants, setParticipants] = useState([]);
@@ -42,6 +42,8 @@ const Room = ({
   const [editors, setEditors] = useState([]);
   const [editorYtext, setEditorYtext] = useState([]);
   const [awarenessTabs, setAwarenessTabs] = useState({});
+  const [codeText, setCodeText] = useState("")
+  const [copy, setCopy] = useState(false)
   const [off, setOff] = useState({
     microphone: isMuted,
     video: !showStream,
@@ -155,9 +157,9 @@ const Room = ({
   const copyLink = async () => {
     navigator.clipboard.writeText(roomLink).then(
       () => {
-        setShowClipBoardModal(true);
+        setShowClipBoardModal({text:"Paste and send anywhere to invite others to join!", show:true});
         setTimeout(() => {
-          setShowClipBoardModal(false);
+          setShowClipBoardModal({text:"Paste and send anywhere to invite others to join!", show:false});
           setVisible(false);
         }, 3000);
       },
@@ -209,6 +211,9 @@ const Room = ({
           setOff,
           setAwarenessTabs,
           setEditors,
+          setCopy,
+          copy,
+          setCodeText,
           editorYtext,
           setEditorYtext,
           windowWidth,
@@ -222,6 +227,9 @@ const Room = ({
           invite,
           showRenameModal,
           setShowRenameModal,
+          showClipBoardModal,
+          setShowClipBoardModal,
+          setVisible,
         }}
       >
         <Menu theme="dark" id={"menu"}>
