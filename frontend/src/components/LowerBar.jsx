@@ -42,7 +42,7 @@ const LowerBar = () => {
       </div> */}
       {docs[currentIndex]?.typeOfTab === "code" && <LanguagesDropdown />}
       <div className={`flex justify-around w-1/4 md:w-3/12 ${docs[currentIndex]?.typeOfTab === "code" ? "lg:w-3/12" : "lg:w-2/12"}`}>
-      <button
+      {docs[currentIndex]?.typeOfTab === "code" && <button
           className="bg-bluish
           text-white text-md
       font-semibold rounded-md px-4
@@ -52,7 +52,7 @@ const LowerBar = () => {
           }}
         >
           Copy Code
-        </button>
+        </button>}
         <button
           className="bg-bluish
           text-white text-md
