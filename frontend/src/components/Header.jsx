@@ -25,8 +25,7 @@ const Header = () => {
   }, [menuRef]);
   return (
     <header className="bg-blackish py-5 w-full h-full">
-      <nav>
-        <div className="md:max-w-5xl md:mx-auto xl:max-w-screen-xl">
+      <nav className={"md:max-w-5xl md:mx-auto xl:max-w-screen-2xl"}>
           <div className="flex justify-between px-3">
             <Link to={"/"} className="flex items-center">
               <img
@@ -72,7 +71,7 @@ const Header = () => {
               <div className="lg:hidden">{visible && <NavBar />}</div>
             </div>
           </div>
-        </div>
+
       </nav>
     </header>
   );
